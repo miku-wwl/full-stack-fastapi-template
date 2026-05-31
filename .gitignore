@@ -7,3 +7,15 @@ node_modules/
 /playwright-report/
 /blob-report/
 /playwright/.cache/
+# Mac 系统垃圾文件
+.DS_Store
+
+# Python 缓存
+__pycache__/
+*.pyc
+
+# SQLite 数据库文件（假设你的数据库叫这个，或者用 *.db 通配符）
+*.db
+*.sqlite3
+
+.ipynb_checkpoints/
