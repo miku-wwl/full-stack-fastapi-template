@@ -31,6 +31,10 @@ import { Route as LayoutBadgesRouteImport } from './routes/_layout/badges'
 import { Route as LayoutAvatarsRouteImport } from './routes/_layout/avatars'
 import { Route as LayoutAlertsRouteImport } from './routes/_layout/alerts'
 import { Route as LayoutAdminRouteImport } from './routes/_layout/admin'
+import { Route as LayoutComplianceRouteImport } from './routes/_layout/compliance'
+import { Route as LayoutHistoryRouteImport } from './routes/_layout/history'
+import { Route as LayoutRatesRouteImport } from './routes/_layout/rates'
+import { Route as LayoutRemittanceRouteImport } from './routes/_layout/remittance'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -141,6 +145,26 @@ const LayoutAdminRoute = LayoutAdminRouteImport.update({
   path: '/admin',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutComplianceRoute = LayoutComplianceRouteImport.update({
+  id: '/compliance',
+  path: '/compliance',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutHistoryRoute = LayoutHistoryRouteImport.update({
+  id: '/history',
+  path: '/history',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutRatesRoute = LayoutRatesRouteImport.update({
+  id: '/rates',
+  path: '/rates',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutRemittanceRoute = LayoutRemittanceRouteImport.update({
+  id: '/remittance',
+  path: '/remittance',
+  getParentRoute: () => LayoutRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof LayoutIndexRoute
@@ -157,11 +181,15 @@ export interface FileRoutesByFullPath {
   '/blank': typeof LayoutBlankRoute
   '/buttons': typeof LayoutButtonsRoute
   '/calendar': typeof LayoutCalendarRoute
+  '/compliance': typeof LayoutComplianceRoute
   '/form-elements': typeof LayoutFormElementsRoute
+  '/history': typeof LayoutHistoryRoute
   '/images': typeof LayoutImagesRoute
   '/items': typeof LayoutItemsRoute
   '/line-chart': typeof LayoutLineChartRoute
   '/profile': typeof LayoutProfileRoute
+  '/rates': typeof LayoutRatesRoute
+  '/remittance': typeof LayoutRemittanceRoute
   '/settings': typeof LayoutSettingsRoute
   '/videos': typeof LayoutVideosRoute
 }
@@ -179,11 +207,15 @@ export interface FileRoutesByTo {
   '/blank': typeof LayoutBlankRoute
   '/buttons': typeof LayoutButtonsRoute
   '/calendar': typeof LayoutCalendarRoute
+  '/compliance': typeof LayoutComplianceRoute
   '/form-elements': typeof LayoutFormElementsRoute
+  '/history': typeof LayoutHistoryRoute
   '/images': typeof LayoutImagesRoute
   '/items': typeof LayoutItemsRoute
   '/line-chart': typeof LayoutLineChartRoute
   '/profile': typeof LayoutProfileRoute
+  '/rates': typeof LayoutRatesRoute
+  '/remittance': typeof LayoutRemittanceRoute
   '/settings': typeof LayoutSettingsRoute
   '/videos': typeof LayoutVideosRoute
   '/': typeof LayoutIndexRoute
@@ -204,11 +236,15 @@ export interface FileRoutesById {
   '/_layout/blank': typeof LayoutBlankRoute
   '/_layout/buttons': typeof LayoutButtonsRoute
   '/_layout/calendar': typeof LayoutCalendarRoute
+  '/_layout/compliance': typeof LayoutComplianceRoute
   '/_layout/form-elements': typeof LayoutFormElementsRoute
+  '/_layout/history': typeof LayoutHistoryRoute
   '/_layout/images': typeof LayoutImagesRoute
   '/_layout/items': typeof LayoutItemsRoute
   '/_layout/line-chart': typeof LayoutLineChartRoute
   '/_layout/profile': typeof LayoutProfileRoute
+  '/_layout/rates': typeof LayoutRatesRoute
+  '/_layout/remittance': typeof LayoutRemittanceRoute
   '/_layout/settings': typeof LayoutSettingsRoute
   '/_layout/videos': typeof LayoutVideosRoute
   '/_layout/': typeof LayoutIndexRoute
@@ -230,11 +266,15 @@ export interface FileRouteTypes {
     | '/blank'
     | '/buttons'
     | '/calendar'
+    | '/compliance'
     | '/form-elements'
+    | '/history'
     | '/images'
     | '/items'
     | '/line-chart'
     | '/profile'
+    | '/rates'
+    | '/remittance'
     | '/settings'
     | '/videos'
   fileRoutesByTo: FileRoutesByTo
@@ -252,11 +292,15 @@ export interface FileRouteTypes {
     | '/blank'
     | '/buttons'
     | '/calendar'
+    | '/compliance'
     | '/form-elements'
+    | '/history'
     | '/images'
     | '/items'
     | '/line-chart'
     | '/profile'
+    | '/rates'
+    | '/remittance'
     | '/settings'
     | '/videos'
     | '/'
@@ -276,11 +320,15 @@ export interface FileRouteTypes {
     | '/_layout/blank'
     | '/_layout/buttons'
     | '/_layout/calendar'
+    | '/_layout/compliance'
     | '/_layout/form-elements'
+    | '/_layout/history'
     | '/_layout/images'
     | '/_layout/items'
     | '/_layout/line-chart'
     | '/_layout/profile'
+    | '/_layout/rates'
+    | '/_layout/remittance'
     | '/_layout/settings'
     | '/_layout/videos'
     | '/_layout/'
@@ -450,6 +498,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutAdminRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/compliance': {
+      id: '/_layout/compliance'
+      path: '/compliance'
+      fullPath: '/compliance'
+      preLoaderRoute: typeof LayoutComplianceRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/history': {
+      id: '/_layout/history'
+      path: '/history'
+      fullPath: '/history'
+      preLoaderRoute: typeof LayoutHistoryRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/rates': {
+      id: '/_layout/rates'
+      path: '/rates'
+      fullPath: '/rates'
+      preLoaderRoute: typeof LayoutRatesRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/remittance': {
+      id: '/_layout/remittance'
+      path: '/remittance'
+      fullPath: '/remittance'
+      preLoaderRoute: typeof LayoutRemittanceRouteImport
+      parentRoute: typeof LayoutRoute
+    }
   }
 }
 
@@ -463,11 +539,15 @@ interface LayoutRouteChildren {
   LayoutBlankRoute: typeof LayoutBlankRoute
   LayoutButtonsRoute: typeof LayoutButtonsRoute
   LayoutCalendarRoute: typeof LayoutCalendarRoute
+  LayoutComplianceRoute: typeof LayoutComplianceRoute
   LayoutFormElementsRoute: typeof LayoutFormElementsRoute
+  LayoutHistoryRoute: typeof LayoutHistoryRoute
   LayoutImagesRoute: typeof LayoutImagesRoute
   LayoutItemsRoute: typeof LayoutItemsRoute
   LayoutLineChartRoute: typeof LayoutLineChartRoute
   LayoutProfileRoute: typeof LayoutProfileRoute
+  LayoutRatesRoute: typeof LayoutRatesRoute
+  LayoutRemittanceRoute: typeof LayoutRemittanceRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
   LayoutVideosRoute: typeof LayoutVideosRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
@@ -483,11 +563,15 @@ const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutBlankRoute: LayoutBlankRoute,
   LayoutButtonsRoute: LayoutButtonsRoute,
   LayoutCalendarRoute: LayoutCalendarRoute,
+  LayoutComplianceRoute: LayoutComplianceRoute,
   LayoutFormElementsRoute: LayoutFormElementsRoute,
+  LayoutHistoryRoute: LayoutHistoryRoute,
   LayoutImagesRoute: LayoutImagesRoute,
   LayoutItemsRoute: LayoutItemsRoute,
   LayoutLineChartRoute: LayoutLineChartRoute,
   LayoutProfileRoute: LayoutProfileRoute,
+  LayoutRatesRoute: LayoutRatesRoute,
+  LayoutRemittanceRoute: LayoutRemittanceRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
   LayoutVideosRoute: LayoutVideosRoute,
   LayoutIndexRoute: LayoutIndexRoute,

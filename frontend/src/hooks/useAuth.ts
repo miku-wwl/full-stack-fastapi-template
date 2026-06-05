@@ -43,6 +43,10 @@ const useAuth = () => {
       formData: data,
     })
     localStorage.setItem("access_token", response.access_token)
+    // Store role for quick access without needing to fetch /users/me
+    if (response.role) {
+      localStorage.setItem("user_role", response.role)
+    }
   }
 
   const loginMutation = useMutation({
@@ -55,7 +59,13 @@ const useAuth = () => {
 
   const logout = () => {
     localStorage.removeItem("access_token")
+    localStorage.removeItem("user_role")
+    queryClient.clear()
     navigate({ to: "/login" })
+  }
+
+  const isAuditor = () => {
+    return user?.role === "auditor" || localStorage.getItem("user_role") === "auditor"
   }
 
   return {
@@ -63,6 +73,7 @@ const useAuth = () => {
     loginMutation,
     logout,
     user,
+    isAuditor,
   }
 }
 

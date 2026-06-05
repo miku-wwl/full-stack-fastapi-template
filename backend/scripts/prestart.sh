@@ -6,8 +6,5 @@ set -x
 # Let the DB start
 python app/backend_pre_start.py
 
-# Run migrations
-alembic upgrade head
-
-# Create initial data in DB
+# Create tables and initial data
 python app/initial_data.py
