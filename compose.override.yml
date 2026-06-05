@@ -30,8 +30,7 @@ services:
             - .venv
         - path: ./backend/pyproject.toml
           action: rebuild
-    volumes:
-      - ./backend/htmlcov:/app/backend/htmlcov
+    volumes: []
     environment:
       SMTP_HOST: "mailcatcher"
       SMTP_PORT: "1025"
@@ -73,9 +72,7 @@ services:
       - MAILCATCHER_HOST=http://mailcatcher:1080
       - PLAYWRIGHT_HTML_HOST=0.0.0.0
       - CI=${CI}
-    volumes:
-      - ./frontend/blob-report:/app/frontend/blob-report
-      - ./frontend/test-results:/app/frontend/test-results
+    volumes: []
     ports:
       - 9323:9323
 

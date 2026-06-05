@@ -55,6 +55,7 @@ export type PrivateUserCreate = {
 export type Token = {
     access_token: string;
     token_type?: string;
+    role?: string;
 };
 
 export type UpdatePassword = {
@@ -67,6 +68,7 @@ export type UserCreate = {
     is_active?: boolean;
     is_superuser?: boolean;
     full_name?: (string | null);
+    role?: string;
     password: string;
 };
 
@@ -75,6 +77,7 @@ export type UserPublic = {
     is_active?: boolean;
     is_superuser?: boolean;
     full_name?: (string | null);
+    role?: string;
     id: string;
     created_at?: (string | null);
 };
@@ -83,6 +86,7 @@ export type UserRegister = {
     email: string;
     password: string;
     full_name?: (string | null);
+    role?: string;
 };
 
 export type UsersPublic = {
