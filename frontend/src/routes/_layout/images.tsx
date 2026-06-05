@@ -1,0 +1,1 @@
+import { createFileRoute } from "@tanstack/react-router"; import Images from "@/pages/UiElements/Images"; export const Route = createFileRoute("/_layout/images")({ component: Images });

@@ -1,0 +1,1 @@
+import { createFileRoute } from "@tanstack/react-router"; import BasicTables from "@/pages/Tables/BasicTables"; export const Route = createFileRoute("/_layout/basic-tables")({ component: BasicTables });

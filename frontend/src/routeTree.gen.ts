@@ -15,8 +15,21 @@ import { Route as RecoverPasswordRouteImport } from './routes/recover-password'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as LayoutRouteImport } from './routes/_layout'
 import { Route as LayoutIndexRouteImport } from './routes/_layout/index'
+import { Route as LayoutVideosRouteImport } from './routes/_layout/videos'
 import { Route as LayoutSettingsRouteImport } from './routes/_layout/settings'
+import { Route as LayoutProfileRouteImport } from './routes/_layout/profile'
+import { Route as LayoutLineChartRouteImport } from './routes/_layout/line-chart'
 import { Route as LayoutItemsRouteImport } from './routes/_layout/items'
+import { Route as LayoutImagesRouteImport } from './routes/_layout/images'
+import { Route as LayoutFormElementsRouteImport } from './routes/_layout/form-elements'
+import { Route as LayoutCalendarRouteImport } from './routes/_layout/calendar'
+import { Route as LayoutButtonsRouteImport } from './routes/_layout/buttons'
+import { Route as LayoutBlankRouteImport } from './routes/_layout/blank'
+import { Route as LayoutBasicTablesRouteImport } from './routes/_layout/basic-tables'
+import { Route as LayoutBarChartRouteImport } from './routes/_layout/bar-chart'
+import { Route as LayoutBadgesRouteImport } from './routes/_layout/badges'
+import { Route as LayoutAvatarsRouteImport } from './routes/_layout/avatars'
+import { Route as LayoutAlertsRouteImport } from './routes/_layout/alerts'
 import { Route as LayoutAdminRouteImport } from './routes/_layout/admin'
 
 const SignupRoute = SignupRouteImport.update({
@@ -48,14 +61,79 @@ const LayoutIndexRoute = LayoutIndexRouteImport.update({
   path: '/',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutVideosRoute = LayoutVideosRouteImport.update({
+  id: '/videos',
+  path: '/videos',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutSettingsRoute = LayoutSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
   getParentRoute: () => LayoutRoute,
 } as any)
+const LayoutProfileRoute = LayoutProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutLineChartRoute = LayoutLineChartRouteImport.update({
+  id: '/line-chart',
+  path: '/line-chart',
+  getParentRoute: () => LayoutRoute,
+} as any)
 const LayoutItemsRoute = LayoutItemsRouteImport.update({
   id: '/items',
   path: '/items',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutImagesRoute = LayoutImagesRouteImport.update({
+  id: '/images',
+  path: '/images',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutFormElementsRoute = LayoutFormElementsRouteImport.update({
+  id: '/form-elements',
+  path: '/form-elements',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutCalendarRoute = LayoutCalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutButtonsRoute = LayoutButtonsRouteImport.update({
+  id: '/buttons',
+  path: '/buttons',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutBlankRoute = LayoutBlankRouteImport.update({
+  id: '/blank',
+  path: '/blank',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutBasicTablesRoute = LayoutBasicTablesRouteImport.update({
+  id: '/basic-tables',
+  path: '/basic-tables',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutBarChartRoute = LayoutBarChartRouteImport.update({
+  id: '/bar-chart',
+  path: '/bar-chart',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutBadgesRoute = LayoutBadgesRouteImport.update({
+  id: '/badges',
+  path: '/badges',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutAvatarsRoute = LayoutAvatarsRouteImport.update({
+  id: '/avatars',
+  path: '/avatars',
+  getParentRoute: () => LayoutRoute,
+} as any)
+const LayoutAlertsRoute = LayoutAlertsRouteImport.update({
+  id: '/alerts',
+  path: '/alerts',
   getParentRoute: () => LayoutRoute,
 } as any)
 const LayoutAdminRoute = LayoutAdminRouteImport.update({
@@ -65,14 +143,27 @@ const LayoutAdminRoute = LayoutAdminRouteImport.update({
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof LayoutIndexRoute
   '/login': typeof LoginRoute
   '/recover-password': typeof RecoverPasswordRoute
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/admin': typeof LayoutAdminRoute
+  '/alerts': typeof LayoutAlertsRoute
+  '/avatars': typeof LayoutAvatarsRoute
+  '/badges': typeof LayoutBadgesRoute
+  '/bar-chart': typeof LayoutBarChartRoute
+  '/basic-tables': typeof LayoutBasicTablesRoute
+  '/blank': typeof LayoutBlankRoute
+  '/buttons': typeof LayoutButtonsRoute
+  '/calendar': typeof LayoutCalendarRoute
+  '/form-elements': typeof LayoutFormElementsRoute
+  '/images': typeof LayoutImagesRoute
   '/items': typeof LayoutItemsRoute
+  '/line-chart': typeof LayoutLineChartRoute
+  '/profile': typeof LayoutProfileRoute
   '/settings': typeof LayoutSettingsRoute
-  '/': typeof LayoutIndexRoute
+  '/videos': typeof LayoutVideosRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -80,8 +171,21 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/admin': typeof LayoutAdminRoute
+  '/alerts': typeof LayoutAlertsRoute
+  '/avatars': typeof LayoutAvatarsRoute
+  '/badges': typeof LayoutBadgesRoute
+  '/bar-chart': typeof LayoutBarChartRoute
+  '/basic-tables': typeof LayoutBasicTablesRoute
+  '/blank': typeof LayoutBlankRoute
+  '/buttons': typeof LayoutButtonsRoute
+  '/calendar': typeof LayoutCalendarRoute
+  '/form-elements': typeof LayoutFormElementsRoute
+  '/images': typeof LayoutImagesRoute
   '/items': typeof LayoutItemsRoute
+  '/line-chart': typeof LayoutLineChartRoute
+  '/profile': typeof LayoutProfileRoute
   '/settings': typeof LayoutSettingsRoute
+  '/videos': typeof LayoutVideosRoute
   '/': typeof LayoutIndexRoute
 }
 export interface FileRoutesById {
@@ -92,21 +196,47 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/signup': typeof SignupRoute
   '/_layout/admin': typeof LayoutAdminRoute
+  '/_layout/alerts': typeof LayoutAlertsRoute
+  '/_layout/avatars': typeof LayoutAvatarsRoute
+  '/_layout/badges': typeof LayoutBadgesRoute
+  '/_layout/bar-chart': typeof LayoutBarChartRoute
+  '/_layout/basic-tables': typeof LayoutBasicTablesRoute
+  '/_layout/blank': typeof LayoutBlankRoute
+  '/_layout/buttons': typeof LayoutButtonsRoute
+  '/_layout/calendar': typeof LayoutCalendarRoute
+  '/_layout/form-elements': typeof LayoutFormElementsRoute
+  '/_layout/images': typeof LayoutImagesRoute
   '/_layout/items': typeof LayoutItemsRoute
+  '/_layout/line-chart': typeof LayoutLineChartRoute
+  '/_layout/profile': typeof LayoutProfileRoute
   '/_layout/settings': typeof LayoutSettingsRoute
+  '/_layout/videos': typeof LayoutVideosRoute
   '/_layout/': typeof LayoutIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
+    | '/'
     | '/login'
     | '/recover-password'
     | '/reset-password'
     | '/signup'
     | '/admin'
+    | '/alerts'
+    | '/avatars'
+    | '/badges'
+    | '/bar-chart'
+    | '/basic-tables'
+    | '/blank'
+    | '/buttons'
+    | '/calendar'
+    | '/form-elements'
+    | '/images'
     | '/items'
+    | '/line-chart'
+    | '/profile'
     | '/settings'
-    | '/'
+    | '/videos'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -114,8 +244,21 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/admin'
+    | '/alerts'
+    | '/avatars'
+    | '/badges'
+    | '/bar-chart'
+    | '/basic-tables'
+    | '/blank'
+    | '/buttons'
+    | '/calendar'
+    | '/form-elements'
+    | '/images'
     | '/items'
+    | '/line-chart'
+    | '/profile'
     | '/settings'
+    | '/videos'
     | '/'
   id:
     | '__root__'
@@ -125,8 +268,21 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/signup'
     | '/_layout/admin'
+    | '/_layout/alerts'
+    | '/_layout/avatars'
+    | '/_layout/badges'
+    | '/_layout/bar-chart'
+    | '/_layout/basic-tables'
+    | '/_layout/blank'
+    | '/_layout/buttons'
+    | '/_layout/calendar'
+    | '/_layout/form-elements'
+    | '/_layout/images'
     | '/_layout/items'
+    | '/_layout/line-chart'
+    | '/_layout/profile'
     | '/_layout/settings'
+    | '/_layout/videos'
     | '/_layout/'
   fileRoutesById: FileRoutesById
 }
@@ -171,7 +327,7 @@ declare module '@tanstack/react-router' {
     '/_layout': {
       id: '/_layout'
       path: ''
-      fullPath: ''
+      fullPath: '/'
       preLoaderRoute: typeof LayoutRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -182,6 +338,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutIndexRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/videos': {
+      id: '/_layout/videos'
+      path: '/videos'
+      fullPath: '/videos'
+      preLoaderRoute: typeof LayoutVideosRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/settings': {
       id: '/_layout/settings'
       path: '/settings'
@@ -189,11 +352,95 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof LayoutSettingsRouteImport
       parentRoute: typeof LayoutRoute
     }
+    '/_layout/profile': {
+      id: '/_layout/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof LayoutProfileRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/line-chart': {
+      id: '/_layout/line-chart'
+      path: '/line-chart'
+      fullPath: '/line-chart'
+      preLoaderRoute: typeof LayoutLineChartRouteImport
+      parentRoute: typeof LayoutRoute
+    }
     '/_layout/items': {
       id: '/_layout/items'
       path: '/items'
       fullPath: '/items'
       preLoaderRoute: typeof LayoutItemsRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/images': {
+      id: '/_layout/images'
+      path: '/images'
+      fullPath: '/images'
+      preLoaderRoute: typeof LayoutImagesRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/form-elements': {
+      id: '/_layout/form-elements'
+      path: '/form-elements'
+      fullPath: '/form-elements'
+      preLoaderRoute: typeof LayoutFormElementsRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/calendar': {
+      id: '/_layout/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof LayoutCalendarRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/buttons': {
+      id: '/_layout/buttons'
+      path: '/buttons'
+      fullPath: '/buttons'
+      preLoaderRoute: typeof LayoutButtonsRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/blank': {
+      id: '/_layout/blank'
+      path: '/blank'
+      fullPath: '/blank'
+      preLoaderRoute: typeof LayoutBlankRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/basic-tables': {
+      id: '/_layout/basic-tables'
+      path: '/basic-tables'
+      fullPath: '/basic-tables'
+      preLoaderRoute: typeof LayoutBasicTablesRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/bar-chart': {
+      id: '/_layout/bar-chart'
+      path: '/bar-chart'
+      fullPath: '/bar-chart'
+      preLoaderRoute: typeof LayoutBarChartRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/badges': {
+      id: '/_layout/badges'
+      path: '/badges'
+      fullPath: '/badges'
+      preLoaderRoute: typeof LayoutBadgesRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/avatars': {
+      id: '/_layout/avatars'
+      path: '/avatars'
+      fullPath: '/avatars'
+      preLoaderRoute: typeof LayoutAvatarsRouteImport
+      parentRoute: typeof LayoutRoute
+    }
+    '/_layout/alerts': {
+      id: '/_layout/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof LayoutAlertsRouteImport
       parentRoute: typeof LayoutRoute
     }
     '/_layout/admin': {
@@ -208,15 +455,41 @@ declare module '@tanstack/react-router' {
 
 interface LayoutRouteChildren {
   LayoutAdminRoute: typeof LayoutAdminRoute
+  LayoutAlertsRoute: typeof LayoutAlertsRoute
+  LayoutAvatarsRoute: typeof LayoutAvatarsRoute
+  LayoutBadgesRoute: typeof LayoutBadgesRoute
+  LayoutBarChartRoute: typeof LayoutBarChartRoute
+  LayoutBasicTablesRoute: typeof LayoutBasicTablesRoute
+  LayoutBlankRoute: typeof LayoutBlankRoute
+  LayoutButtonsRoute: typeof LayoutButtonsRoute
+  LayoutCalendarRoute: typeof LayoutCalendarRoute
+  LayoutFormElementsRoute: typeof LayoutFormElementsRoute
+  LayoutImagesRoute: typeof LayoutImagesRoute
   LayoutItemsRoute: typeof LayoutItemsRoute
+  LayoutLineChartRoute: typeof LayoutLineChartRoute
+  LayoutProfileRoute: typeof LayoutProfileRoute
   LayoutSettingsRoute: typeof LayoutSettingsRoute
+  LayoutVideosRoute: typeof LayoutVideosRoute
   LayoutIndexRoute: typeof LayoutIndexRoute
 }
 
 const LayoutRouteChildren: LayoutRouteChildren = {
   LayoutAdminRoute: LayoutAdminRoute,
+  LayoutAlertsRoute: LayoutAlertsRoute,
+  LayoutAvatarsRoute: LayoutAvatarsRoute,
+  LayoutBadgesRoute: LayoutBadgesRoute,
+  LayoutBarChartRoute: LayoutBarChartRoute,
+  LayoutBasicTablesRoute: LayoutBasicTablesRoute,
+  LayoutBlankRoute: LayoutBlankRoute,
+  LayoutButtonsRoute: LayoutButtonsRoute,
+  LayoutCalendarRoute: LayoutCalendarRoute,
+  LayoutFormElementsRoute: LayoutFormElementsRoute,
+  LayoutImagesRoute: LayoutImagesRoute,
   LayoutItemsRoute: LayoutItemsRoute,
+  LayoutLineChartRoute: LayoutLineChartRoute,
+  LayoutProfileRoute: LayoutProfileRoute,
   LayoutSettingsRoute: LayoutSettingsRoute,
+  LayoutVideosRoute: LayoutVideosRoute,
   LayoutIndexRoute: LayoutIndexRoute,
 }
 

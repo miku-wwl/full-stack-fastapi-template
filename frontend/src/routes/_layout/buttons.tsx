@@ -1,0 +1,1 @@
+import { createFileRoute } from "@tanstack/react-router"; import Buttons from "@/pages/UiElements/Buttons"; export const Route = createFileRoute("/_layout/buttons")({ component: Buttons });

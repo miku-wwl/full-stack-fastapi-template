@@ -1,0 +1,1 @@
+import { createFileRoute } from "@tanstack/react-router"; import FormElements from "@/pages/Forms/FormElements"; export const Route = createFileRoute("/_layout/form-elements")({ component: FormElements });

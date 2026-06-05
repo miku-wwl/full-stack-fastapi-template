@@ -1,0 +1,1 @@
+import { createFileRoute } from "@tanstack/react-router"; import Alerts from "@/pages/UiElements/Alerts"; export const Route = createFileRoute("/_layout/alerts")({ component: Alerts });
