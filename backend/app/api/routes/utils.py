@@ -27,5 +27,5 @@ def test_email(email_to: EmailStr) -> Message:
 
 
 @router.get("/health-check/")
-async def health_check() -> bool:
-    return True
+async def health_check() -> Message:
+    return Message(message="Hello World")
