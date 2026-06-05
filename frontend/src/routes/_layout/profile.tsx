@@ -1,0 +1,1 @@
+import { createFileRoute } from "@tanstack/react-router"; import UserProfiles from "@/pages/UserProfiles"; export const Route = createFileRoute("/_layout/profile")({ component: UserProfiles });

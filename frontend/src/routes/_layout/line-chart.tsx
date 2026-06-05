@@ -1,0 +1,1 @@
+import { createFileRoute } from "@tanstack/react-router"; import LineChart from "@/pages/Charts/LineChart"; export const Route = createFileRoute("/_layout/line-chart")({ component: LineChart });

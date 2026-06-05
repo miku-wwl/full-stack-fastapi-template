@@ -1,0 +1,1 @@
+import { createFileRoute } from "@tanstack/react-router"; import Avatars from "@/pages/UiElements/Avatars"; export const Route = createFileRoute("/_layout/avatars")({ component: Avatars });

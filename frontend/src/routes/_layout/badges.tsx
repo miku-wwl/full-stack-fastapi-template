@@ -1,0 +1,1 @@
+import { createFileRoute } from "@tanstack/react-router"; import Badges from "@/pages/UiElements/Badges"; export const Route = createFileRoute("/_layout/badges")({ component: Badges });
