@@ -16,6 +16,7 @@ class UserBase(SQLModel):
     is_active: bool = True
     is_superuser: bool = False
     full_name: str | None = Field(default=None, max_length=255)
+    role: str = Field(default="customer", max_length=20)
 
 
 # Properties to receive via API on creation
@@ -27,6 +28,7 @@ class UserRegister(SQLModel):
     email: EmailStr = Field(max_length=255)
     password: str = Field(min_length=8, max_length=128)
     full_name: str | None = Field(default=None, max_length=255)
+    role: str = Field(default="customer")
 
 
 # Properties to receive via API on update, all are optional
@@ -117,6 +119,7 @@ class Message(SQLModel):
 class Token(SQLModel):
     access_token: str
     token_type: str = "bearer"
+    role: str = "customer"
 
 
 # Contents of JWT token
