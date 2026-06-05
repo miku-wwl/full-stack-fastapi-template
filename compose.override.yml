@@ -78,4 +78,3 @@ services:
       - ./frontend/test-results:/app/frontend/test-results
     ports:
       - 9323:9323
-

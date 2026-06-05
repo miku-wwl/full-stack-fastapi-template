@@ -45,7 +45,7 @@ The final deliverable will be a deployed full-stack compliance web application. 
 ForeXchange: High-Availability Real-Time Remittance and Compliance Telemetry Dashboard
 
 ## Introduction
-While basic currency applications handle simple static conversions, commercial cross-border remittance demands highly scalable architectures, real-time telemetry (rate tracking), and rigid compliance checks to prevent financial crime. This project addresses the lack of transparent, secure, and production-ready architectures for monitoring international money exchanges. The objective is to engineer a robust, database-driven foreign exchange platform that seamlessly handles concurrent user sessions, live rate simulations, automated fee compliance calculations, and immutable transaction histories. 
+While basic currency applications handle simple static conversions, commercial cross-border remittance demands highly scalable architectures, real-time telemetry (rate tracking), and rigid compliance checks to prevent financial crime. This project addresses the lack of transparent, secure, and production-ready architectures for monitoring international money exchanges. The objective is to engineer a robust, database-driven foreign exchange platform that seamlessly handles concurrent user sessions, live rate simulations, automated fee compliance calculations, and immutable transaction histories.
 
 ## Technologies and Tools Used
 The solution will leverage the modern Python web ecosystem via the FastAPI template:
