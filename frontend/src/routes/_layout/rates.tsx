@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router"
 import { useForexRates } from "@/hooks/useForexRates"
 import RateCard from "@/components/forex/RateCard"
+import RateChart from "@/components/forex/RateChart"
 
 export const Route = createFileRoute("/_layout/rates")({
   component: RatesPage,
@@ -83,6 +84,11 @@ function RatesPage() {
             Waiting for market data...
           </p>
         </div>
+      )}
+
+      {/* Rate Trend Chart */}
+      {!isLoading && !isError && rates && rates.length > 0 && (
+        <RateChart defaultPair="USD/EUR" />
       )}
 
       {/* Rate cards grid */}
