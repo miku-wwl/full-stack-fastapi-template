@@ -1,7 +1,11 @@
-import { useTheme } from "../../context/ThemeContext";
+import { useTheme } from "../../components/theme-provider";
 
 export const ThemeToggleButton: React.FC = () => {
-  const { toggleTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
+
+  const toggleTheme = () => {
+    setTheme(resolvedTheme === "dark" ? "light" : "dark");
+  };
 
   return (
     <button
