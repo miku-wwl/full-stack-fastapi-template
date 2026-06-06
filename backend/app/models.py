@@ -226,3 +226,28 @@ class DashboardSummary(SQLModel):
     total_volume_usd: float
     flagged_count: int
     avg_processing_time_ms: float = 0.0
+
+
+# ──────────────────────────────────────────────
+# Transaction Create & Rate Lock models (Day 7)
+# ──────────────────────────────────────────────
+
+class TransactionCreate(SQLModel):
+    pair: str  # e.g. "USD/EUR"
+    source_amount: float
+    recipient_name: str
+    recipient_iban: str
+    purpose: str = "personal"
+    locked_rate_id: str  # UUID from /rates/lock
+
+
+class RateLockResponse(SQLModel):
+    lock_id: str
+    pair: str
+    rate: float
+    bid: float
+    ask: float
+    fee_percentage: float = 0.5
+    fee_amount: float = 0.0
+    expires_at: str  # ISO timestamp
+    valid_seconds: int = 30
