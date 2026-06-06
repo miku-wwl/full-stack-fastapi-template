@@ -8,6 +8,7 @@ import {
 } from "../../icons";
 import StatCard from "../../components/Common/StatCard";
 import RecentTransactions from "../../components/forex/RecentTransactions";
+import RateChart from "../../components/forex/RateChart";
 import PageMeta from "../../components/Common/PageMeta";
 import { DashboardService } from "../../client";
 
@@ -170,6 +171,9 @@ export default function Home() {
             </div>
           </div>
         </div>
+
+        {/* Rate Trend Chart */}
+        <RateChart defaultPair="USD/EUR" height={320} />
 
         {/* Recent Transactions */}
         <div>
