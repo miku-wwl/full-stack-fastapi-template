@@ -1,8 +1,9 @@
 import uuid
 from datetime import datetime, timezone
+from typing import Any
 
 from pydantic import EmailStr
-from sqlalchemy import DateTime
+from sqlalchemy import DateTime, JSON
 from sqlmodel import Field, Relationship, SQLModel
 
 
@@ -188,3 +189,81 @@ class RateWithPair(SQLModel):
     spread: float
     change_pct: float
     timestamp: datetime | None = None
+
+
+# ──────────────────────────────────────────────
+# Transaction models
+# ──────────────────────────────────────────────
+
+class TransactionBase(SQLModel):
+    user_id: uuid.UUID = Field(foreign_key="user.id", index=True)
+    pair_id: uuid.UUID = Field(foreign_key="currencypair.id")
+    source_amount: float
+    target_amount: float | None = None
+    locked_rate: float
+    fee_amount: float = 0.0
+    fee_percentage: float = 0.0
+    recipient_name: str = Field(max_length=255)
+    recipient_iban: str = Field(max_length=34)
+    purpose: str = Field(default="personal", max_length=50)
+    status: str = Field(default="pending", max_length=20)
+    compliance_status: str | None = Field(default=None, max_length=20)
+    compliance_score: int | None = None
+    compliance_details: dict[str, Any] | None = Field(default=None, sa_type=JSON)
+
+
+class Transaction(TransactionBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    created_at: datetime | None = Field(
+        default_factory=get_datetime_utc,
+        sa_type=DateTime(timezone=True),  # type: ignore
+    )
+    updated_at: datetime | None = Field(
+        default_factory=get_datetime_utc,
+        sa_type=DateTime(timezone=True),  # type: ignore
+    )
+    completed_at: datetime | None = Field(
+        default=None,
+        sa_type=DateTime(timezone=True),  # type: ignore
+    )
+
+
+class TransactionPublic(SQLModel):
+    id: uuid.UUID
+    user_id: uuid.UUID
+    pair_id: uuid.UUID
+    source_amount: float
+    target_amount: float | None = None
+    locked_rate: float
+    fee_amount: float
+    fee_percentage: float
+    recipient_name: str
+    recipient_iban: str
+    purpose: str
+    status: str
+    compliance_status: str | None = None
+    compliance_score: int | None = None
+    created_at: datetime | None = None
+    updated_at: datetime | None = None
+    completed_at: datetime | None = None
+    # Joined fields
+    pair: str | None = None
+    base_currency: str | None = None
+    quote_currency: str | None = None
+
+
+class TransactionsPublic(SQLModel):
+    data: list[TransactionPublic]
+    count: int
+
+
+# ──────────────────────────────────────────────
+# Dashboard models
+# ──────────────────────────────────────────────
+
+class DashboardSummary(SQLModel):
+    active_pairs: int
+    today_transactions: int
+    total_volume_usd: float
+    flagged_count: int
+    avg_processing_time_ms: float = 0.0
