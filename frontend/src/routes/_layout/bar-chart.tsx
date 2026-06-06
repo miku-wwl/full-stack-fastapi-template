@@ -1,1 +1,0 @@
-import { createFileRoute } from "@tanstack/react-router"; import BarChart from "@/pages/Charts/BarChart"; export const Route = createFileRoute("/_layout/bar-chart")({ component: BarChart });

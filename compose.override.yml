@@ -30,8 +30,7 @@ services:
             - .venv
         - path: ./backend/pyproject.toml
           action: rebuild
-    volumes:
-      - ./backend/htmlcov:/app/backend/htmlcov
+    volumes: []
     environment:
       SMTP_HOST: "mailcatcher"
       SMTP_PORT: "1025"

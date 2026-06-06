@@ -9,6 +9,14 @@ export type Body_login_login_access_token = {
     client_secret?: (string | null);
 };
 
+export type DashboardSummary = {
+    active_pairs: number;
+    today_transactions: number;
+    total_volume_usd: number;
+    flagged_count: number;
+    avg_processing_time_ms?: number;
+};
+
 export type HTTPValidationError = {
     detail?: Array<ValidationError>;
 };
@@ -52,9 +60,53 @@ export type PrivateUserCreate = {
     is_verified?: boolean;
 };
 
+/**
+ * Rate response including pair info.
+ */
+export type RateWithPair = {
+    pair: string;
+    base_currency: string;
+    quote_currency: string;
+    bid: number;
+    ask: number;
+    mid: number;
+    spread: number;
+    change_pct: number;
+    timestamp?: (string | null);
+};
+
 export type Token = {
     access_token: string;
     token_type?: string;
+    role?: string;
+};
+
+export type TransactionPublic = {
+    id: string;
+    user_id: string;
+    pair_id: string;
+    source_amount: number;
+    target_amount?: (number | null);
+    locked_rate: number;
+    fee_amount: number;
+    fee_percentage: number;
+    recipient_name: string;
+    recipient_iban: string;
+    purpose: string;
+    status: string;
+    compliance_status?: (string | null);
+    compliance_score?: (number | null);
+    created_at?: (string | null);
+    updated_at?: (string | null);
+    completed_at?: (string | null);
+    pair?: (string | null);
+    base_currency?: (string | null);
+    quote_currency?: (string | null);
+};
+
+export type TransactionsPublic = {
+    data: Array<TransactionPublic>;
+    count: number;
 };
 
 export type UpdatePassword = {
@@ -67,6 +119,7 @@ export type UserCreate = {
     is_active?: boolean;
     is_superuser?: boolean;
     full_name?: (string | null);
+    role?: string;
     password: string;
 };
 
@@ -75,6 +128,7 @@ export type UserPublic = {
     is_active?: boolean;
     is_superuser?: boolean;
     full_name?: (string | null);
+    role?: string;
     id: string;
     created_at?: (string | null);
 };
@@ -83,6 +137,7 @@ export type UserRegister = {
     email: string;
     password: string;
     full_name?: (string | null);
+    role?: string;
 };
 
 export type UsersPublic = {
@@ -95,6 +150,7 @@ export type UserUpdate = {
     is_active?: boolean;
     is_superuser?: boolean;
     full_name?: (string | null);
+    role?: string;
     password?: (string | null);
 };
 
@@ -112,6 +168,8 @@ export type ValidationError = {
         [key: string]: unknown;
     };
 };
+
+export type DashboardReadDashboardSummaryResponse = (DashboardSummary);
 
 export type ItemsReadItemsData = {
     limit?: number;
@@ -177,6 +235,31 @@ export type PrivateCreateUserData = {
 
 export type PrivateCreateUserResponse = (UserPublic);
 
+export type RatesReadRatesLiveResponse = (Array<RateWithPair>);
+
+export type RatesReadRatePairData = {
+    pair: string;
+};
+
+export type RatesReadRatePairResponse = (RateWithPair);
+
+export type TransactionsReadTransactionsData = {
+    limit?: number;
+    skip?: number;
+    /**
+     * Filter by status
+     */
+    status?: (string | null);
+};
+
+export type TransactionsReadTransactionsResponse = (TransactionsPublic);
+
+export type TransactionsReadTransactionData = {
+    transactionId: string;
+};
+
+export type TransactionsReadTransactionResponse = (TransactionPublic);
+
 export type UsersReadUsersData = {
     limit?: number;
     skip?: number;
@@ -237,4 +320,4 @@ export type UtilsTestEmailData = {
 
 export type UtilsTestEmailResponse = (Message);
 
-export type UtilsHealthCheckResponse = (boolean);
+export type UtilsHealthCheckResponse = (Message);

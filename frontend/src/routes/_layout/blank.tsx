@@ -1,1 +1,0 @@
-import { createFileRoute } from "@tanstack/react-router"; import Blank from "@/pages/Blank"; export const Route = createFileRoute("/_layout/blank")({ component: Blank });
