@@ -154,14 +154,57 @@ def seed_forex_data() -> None:
     logger.info("Forex seed data complete")
 
 
+def _auto_process_transactions(session: Session, phase: int) -> None:
+    """Auto-transition transactions — one phase per call so status changes are visible.
+
+    Phase 0 (even ticks): pending → processing
+    Phase 1 (odd ticks):  processing → completed (85%) or flagged (15%)
+    """
+    now = datetime.now(timezone.utc)
+
+    if phase == 0:
+        # pending → processing
+        pending = session.exec(
+            select(Transaction).where(Transaction.status == "pending").limit(10)
+        ).all()
+        for tx in pending:
+            tx.status = "processing"
+            tx.updated_at = now
+            logger.info("Transaction %s: pending → processing", tx.id)
+        if pending:
+            session.commit()
+
+    else:
+        # processing → completed / flagged
+        processing = session.exec(
+            select(Transaction).where(Transaction.status == "processing").limit(10)
+        ).all()
+        for tx in processing:
+            if random.random() < 0.15:
+                tx.status = "flagged"
+                tx.compliance_status = "flagged"
+                tx.compliance_score = random.randint(70, 95)
+            else:
+                tx.status = "completed"
+                tx.compliance_status = "pass"
+                tx.compliance_score = random.randint(0, 30)
+                tx.completed_at = now
+            tx.updated_at = now
+            logger.info("Transaction %s: processing → %s", tx.id, tx.status)
+        if processing:
+            session.commit()
+
+
 def start_rate_generator(interval_seconds: int = 5) -> threading.Thread:
-    """Start a background thread that generates new rate snapshots periodically."""
+    """Start a background thread that generates new rate snapshots and auto-processes transactions."""
     simulator = ForexSimulator()
 
     def _generate_rates() -> None:
+        phase = 0  # 0 = promote, 1 = finalize
         while True:
             try:
                 with Session(engine) as session:
+                    # Generate rate snapshots
                     pairs = session.exec(
                         select(CurrencyPair).where(CurrencyPair.is_active == True)
                     ).all()
@@ -172,8 +215,13 @@ def start_rate_generator(interval_seconds: int = 5) -> threading.Thread:
 
                     session.commit()
                     logger.debug(f"Generated {len(pairs)} rate snapshots")
+
+                    # Auto-process transactions — one phase per tick
+                    _auto_process_transactions(session, phase)
+                    phase = 1 - phase  # toggle 0↔1
+
             except Exception as e:
-                logger.error(f"Error generating rates: {e}")
+                logger.error(f"Error in background thread: {e}")
 
             time.sleep(interval_seconds)
 
