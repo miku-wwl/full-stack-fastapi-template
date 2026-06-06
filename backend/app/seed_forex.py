@@ -101,6 +101,37 @@ def seed_transactions(session: Session) -> None:
     logger.info(f"Seeded {len(mock_recipients)} demo transactions")
 
 
+def backfill_rate_history(session: Session, pairs: list[CurrencyPair]) -> None:
+    """Generate historical snapshots for the past 24h at ~5min intervals."""
+    existing = session.exec(
+        select(RateSnapshot).where(RateSnapshot.timestamp < datetime.now(timezone.utc) - timedelta(hours=1))
+    ).first()
+    if existing:
+        logger.info("Historical backfill already exists, skipping")
+        return
+
+    simulator = ForexSimulator()
+    now = datetime.now(timezone.utc)
+    interval = timedelta(minutes=5)
+    hours_back = 24
+    ticks = (hours_back * 60) // 5  # 288 ticks
+
+    logger.info("Backfilling %d historical ticks x %d pairs...", ticks, len(pairs))
+    count = 0
+    for i in range(ticks, 0, -1):
+        ts = now - interval * i
+        for pair in pairs:
+            snap = simulator.generate_snapshot(pair)
+            snap.timestamp = ts
+            session.add(snap)
+            count += 1
+        if i % 72 == 0:  # flush every 6 hours
+            session.flush()
+
+    session.commit()
+    logger.info("Backfilled %d historical snapshots (24h)", count)
+
+
 def seed_forex_data() -> None:
     """Seed currency pairs, generate initial rate snapshots, and demo transactions."""
     logger.info("Seeding forex data...")
@@ -113,6 +144,9 @@ def seed_forex_data() -> None:
         # Generate initial snapshots
         snapshots = generate_rate_snapshots(session, pairs)
         logger.info(f"Generated {len(snapshots)} initial rate snapshots")
+
+        # Backfill 24h history for charts
+        backfill_rate_history(session, pairs)
 
         # Seed demo transactions
         seed_transactions(session)
