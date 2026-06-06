@@ -1,9 +1,10 @@
 """Forex rates API endpoints."""
 
+from datetime import datetime, timedelta, timezone
 from typing import Any
 
-from fastapi import APIRouter, HTTPException
-from sqlmodel import select
+from fastapi import APIRouter, HTTPException, Query
+from sqlmodel import func, select
 
 from app.api.deps import CurrentUser, SessionDep
 from app.models import (
@@ -27,7 +28,6 @@ def read_rates_live(
 
     results = []
     for pair in pairs:
-        # Get the latest snapshot for this pair
         latest = session.exec(
             select(RateSnapshot)
             .where(RateSnapshot.pair_id == pair.id)
@@ -60,7 +60,6 @@ def read_rate_pair(
     current_user: CurrentUser,
 ) -> Any:
     """Get latest rate for a specific currency pair (e.g. USD-EUR or USD/EUR)."""
-    # Support both USD-EUR and USD/EUR formats
     pair = pair.replace("-", "/").upper()
     parts = pair.split("/")
     if len(parts) != 2:
@@ -100,3 +99,98 @@ def read_rate_pair(
         change_pct=latest.change_pct,
         timestamp=latest.timestamp,
     )
+
+
+# ──────────────────────────────────────────────
+# History endpoint (Day 6)
+# ──────────────────────────────────────────────
+
+_RANGE_MAP = {
+    "1h": timedelta(hours=1),
+    "6h": timedelta(hours=6),
+    "24h": timedelta(hours=24),
+    "7d": timedelta(days=7),
+}
+
+_INTERVAL_MAP = {
+    "1m": timedelta(minutes=1),
+    "5m": timedelta(minutes=5),
+    "1h": timedelta(hours=1),
+}
+
+
+@router.get("/history/{pair}", response_model=list[dict[str, Any]])
+def read_rate_history(
+    pair: str,
+    session: SessionDep,
+    current_user: CurrentUser,
+    range: str = Query("24h", description="Time range: 1h, 6h, 24h, 7d"),
+    interval: str = Query("5m", description="Sampling interval: 1m, 5m, 1h"),
+) -> Any:
+    """
+    Get historical rate data for a currency pair.
+    Returns time-series of {timestamp, bid, ask, mid} downsampled by interval.
+    """
+    # Parse pair
+    pair = pair.replace("-", "/").upper()
+    parts = pair.split("/")
+    if len(parts) != 2:
+        raise HTTPException(status_code=400, detail="Invalid pair format. Use BASE-QUOTE (e.g. USD-EUR)")
+
+    base, quote = parts
+    currency_pair = session.exec(
+        select(CurrencyPair).where(
+            CurrencyPair.base_currency == base,
+            CurrencyPair.quote_currency == quote,
+            CurrencyPair.is_active == True,
+        )
+    ).first()
+
+    if not currency_pair:
+        raise HTTPException(status_code=404, detail=f"Currency pair {pair} not found")
+
+    # Validate range / interval
+    if range not in _RANGE_MAP:
+        raise HTTPException(status_code=400, detail=f"Invalid range. Choose: {', '.join(_RANGE_MAP)}")
+    if interval not in _INTERVAL_MAP:
+        raise HTTPException(status_code=400, detail=f"Invalid interval. Choose: {', '.join(_INTERVAL_MAP)}")
+
+    # Time window
+    since = datetime.now(timezone.utc) - _RANGE_MAP[range]
+
+    # Query snapshots in window, ordered by time
+    rows = session.exec(
+        select(RateSnapshot)
+        .where(
+            RateSnapshot.pair_id == currency_pair.id,
+            RateSnapshot.timestamp >= since,
+        )
+        .order_by(RateSnapshot.timestamp.asc())
+    ).all()
+
+    if not rows:
+        return []
+
+    # Downsample: pick one row per interval bucket
+    bucket_secs = int(_INTERVAL_MAP[interval].total_seconds())
+    bucketed: dict[int, RateSnapshot] = {}
+
+    for row in rows:
+        epoch = int(row.timestamp.timestamp())
+        bucket_key = (epoch // bucket_secs) * bucket_secs
+        # Keep the latest snapshot in each bucket
+        if bucket_key not in bucketed or row.timestamp > bucketed[bucket_key].timestamp:
+            bucketed[bucket_key] = row
+
+    # Build sorted result
+    result = []
+    for ts in sorted(bucketed):
+        snap = bucketed[ts]
+        result.append({
+            "timestamp": snap.timestamp.isoformat(),
+            "bid": snap.bid,
+            "ask": snap.ask,
+            "mid": snap.mid,
+        })
+
+    return result
