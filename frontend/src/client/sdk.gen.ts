@@ -3,7 +3,29 @@
 import type { CancelablePromise } from './core/CancelablePromise';
 import { OpenAPI } from './core/OpenAPI';
 import { request as __request } from './core/request';
-import type { ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+import type { DashboardReadDashboardSummaryResponse, ItemsReadItemsData, ItemsReadItemsResponse, ItemsCreateItemData, ItemsCreateItemResponse, ItemsReadItemData, ItemsReadItemResponse, ItemsUpdateItemData, ItemsUpdateItemResponse, ItemsDeleteItemData, ItemsDeleteItemResponse, LoginLoginAccessTokenData, LoginLoginAccessTokenResponse, LoginTestTokenResponse, LoginRecoverPasswordData, LoginRecoverPasswordResponse, LoginResetPasswordData, LoginResetPasswordResponse, LoginRecoverPasswordHtmlContentData, LoginRecoverPasswordHtmlContentResponse, PrivateCreateUserData, PrivateCreateUserResponse, RatesReadRatesLiveResponse, RatesReadRatePairData, RatesReadRatePairResponse, TransactionsReadTransactionsData, TransactionsReadTransactionsResponse, TransactionsReadTransactionData, TransactionsReadTransactionResponse, UsersReadUsersData, UsersReadUsersResponse, UsersCreateUserData, UsersCreateUserResponse, UsersReadUserMeResponse, UsersDeleteUserMeResponse, UsersUpdateUserMeData, UsersUpdateUserMeResponse, UsersUpdatePasswordMeData, UsersUpdatePasswordMeResponse, UsersRegisterUserData, UsersRegisterUserResponse, UsersReadUserByIdData, UsersReadUserByIdResponse, UsersUpdateUserData, UsersUpdateUserResponse, UsersDeleteUserData, UsersDeleteUserResponse, UtilsTestEmailData, UtilsTestEmailResponse, UtilsHealthCheckResponse } from './types.gen';
+
+export class DashboardService {
+    /**
+     * Read Dashboard Summary
+     * Get dashboard aggregate statistics.
+     *
+     * Returns:
+     * - active_pairs: Number of active currency pairs
+     * - today_transactions: Number of transactions created today
+     * - total_volume_usd: Total USD-equivalent volume of today's transactions
+     * - flagged_count: Number of flagged/compliance-alert transactions
+     * - avg_processing_time_ms: Average processing time in milliseconds
+     * @returns DashboardSummary Successful Response
+     * @throws ApiError
+     */
+    public static readDashboardSummary(): CancelablePromise<DashboardReadDashboardSummaryResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/dashboard/summary'
+        });
+    }
+}
 
 export class ItemsService {
     /**
@@ -235,6 +257,93 @@ export class PrivateService {
     }
 }
 
+export class RatesService {
+    /**
+     * Read Rates Live
+     * Get latest live rates for all active currency pairs.
+     * @returns RateWithPair Successful Response
+     * @throws ApiError
+     */
+    public static readRatesLive(): CancelablePromise<RatesReadRatesLiveResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/rates/live'
+        });
+    }
+    
+    /**
+     * Read Rate Pair
+     * Get latest rate for a specific currency pair (e.g. USD-EUR or USD/EUR).
+     * @param data The data for the request.
+     * @param data.pair
+     * @returns RateWithPair Successful Response
+     * @throws ApiError
+     */
+    public static readRatePair(data: RatesReadRatePairData): CancelablePromise<RatesReadRatePairResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/rates/live/{pair}',
+            path: {
+                pair: data.pair
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
+export class TransactionsService {
+    /**
+     * Read Transactions
+     * Retrieve transactions with pagination.
+     *
+     * Regular users see only their own transactions.
+     * Superusers and auditors see all transactions.
+     * @param data The data for the request.
+     * @param data.skip
+     * @param data.limit
+     * @param data.status Filter by status
+     * @returns TransactionsPublic Successful Response
+     * @throws ApiError
+     */
+    public static readTransactions(data: TransactionsReadTransactionsData = {}): CancelablePromise<TransactionsReadTransactionsResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/transactions',
+            query: {
+                skip: data.skip,
+                limit: data.limit,
+                status: data.status
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+    
+    /**
+     * Read Transaction
+     * Get a single transaction by ID.
+     * @param data The data for the request.
+     * @param data.transactionId
+     * @returns TransactionPublic Successful Response
+     * @throws ApiError
+     */
+    public static readTransaction(data: TransactionsReadTransactionData): CancelablePromise<TransactionsReadTransactionResponse> {
+        return __request(OpenAPI, {
+            method: 'GET',
+            url: '/api/v1/transactions/{transaction_id}',
+            path: {
+                transaction_id: data.transactionId
+            },
+            errors: {
+                422: 'Validation Error'
+            }
+        });
+    }
+}
+
 export class UsersService {
     /**
      * Read Users
@@ -456,7 +565,7 @@ export class UtilsService {
     
     /**
      * Health Check
-     * @returns boolean Successful Response
+     * @returns Message Successful Response
      * @throws ApiError
      */
     public static healthCheck(): CancelablePromise<UtilsHealthCheckResponse> {
