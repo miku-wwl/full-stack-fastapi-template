@@ -9,6 +9,7 @@ from sqlmodel import func, select
 from app.api.deps import CurrentUser, SessionDep
 from app.models import (
     CurrencyPair,
+    RateLockResponse,
     RateSnapshot,
     RateWithPair,
 )
@@ -194,3 +195,85 @@ def read_rate_history(
         })
 
     return result
+
+
+# ──────────────────────────────────────────────
+# Rate lock endpoint (Day 7)
+# ──────────────────────────────────────────────
+
+import uuid as _uuid
+import threading
+
+_rate_locks: dict[str, dict[str, Any]] = {}
+_rate_lock_mutex = threading.Lock()
+
+_LOCK_TTL_SECONDS = 30
+_FEE_PERCENTAGE = 0.5
+
+
+@router.post("/lock", response_model=RateLockResponse)
+def lock_rate(
+    pair: str,
+    source_amount: float = 1000.0,
+    session: SessionDep = None,
+    current_user: CurrentUser = None,
+) -> Any:
+    """
+    Lock the current exchange rate for a currency pair.
+    Returns a lock_id valid for 30 seconds.
+    """
+    from app.models import RateLockResponse
+
+    pair = pair.replace("-", "/").upper()
+    parts = pair.split("/")
+    if len(parts) != 2:
+        raise HTTPException(status_code=400, detail="Invalid pair format")
+
+    base, quote = parts
+    currency_pair = session.exec(
+        select(CurrencyPair).where(
+            CurrencyPair.base_currency == base,
+            CurrencyPair.quote_currency == quote,
+            CurrencyPair.is_active == True,
+        )
+    ).first()
+
+    if not currency_pair:
+        raise HTTPException(status_code=404, detail=f"Currency pair {pair} not found")
+
+    latest = session.exec(
+        select(RateSnapshot)
+        .where(RateSnapshot.pair_id == currency_pair.id)
+        .order_by(RateSnapshot.timestamp.desc())
+        .limit(1)
+    ).first()
+
+    if not latest:
+        raise HTTPException(status_code=404, detail=f"No rate data for {pair}")
+
+    lock_id = str(_uuid.uuid4())
+    expires_at = datetime.now(timezone.utc) + timedelta(seconds=_LOCK_TTL_SECONDS)
+    fee_amount = round(source_amount * _FEE_PERCENTAGE / 100, 2)
+
+    lock_data = {
+        "rate": latest.mid,
+        "pair_id": currency_pair.id,
+        "expires_at": expires_at,
+        "base_currency": base,
+        "quote_currency": quote,
+    }
+
+    with _rate_lock_mutex:
+        _rate_locks[lock_id] = lock_data
+
+    return RateLockResponse(
+        lock_id=lock_id,
+        pair=pair,
+        rate=latest.mid,
+        bid=latest.bid,
+        ask=latest.ask,
+        fee_percentage=_FEE_PERCENTAGE,
+        fee_amount=fee_amount,
+        expires_at=expires_at.isoformat(),
+        valid_seconds=_LOCK_TTL_SECONDS,
+    )
