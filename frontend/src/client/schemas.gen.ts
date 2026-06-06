@@ -57,6 +57,35 @@ export const Body_login_login_access_tokenSchema = {
     title: 'Body_login-login_access_token'
 } as const;
 
+export const DashboardSummarySchema = {
+    properties: {
+        active_pairs: {
+            type: 'integer',
+            title: 'Active Pairs'
+        },
+        today_transactions: {
+            type: 'integer',
+            title: 'Today Transactions'
+        },
+        total_volume_usd: {
+            type: 'number',
+            title: 'Total Volume Usd'
+        },
+        flagged_count: {
+            type: 'integer',
+            title: 'Flagged Count'
+        },
+        avg_processing_time_ms: {
+            type: 'number',
+            title: 'Avg Processing Time Ms',
+            default: 0
+        }
+    },
+    type: 'object',
+    required: ['active_pairs', 'today_transactions', 'total_volume_usd', 'flagged_count'],
+    title: 'DashboardSummary'
+} as const;
+
 export const HTTPValidationErrorSchema = {
     properties: {
         detail: {
@@ -251,6 +280,59 @@ export const PrivateUserCreateSchema = {
     title: 'PrivateUserCreate'
 } as const;
 
+export const RateWithPairSchema = {
+    properties: {
+        pair: {
+            type: 'string',
+            title: 'Pair'
+        },
+        base_currency: {
+            type: 'string',
+            title: 'Base Currency'
+        },
+        quote_currency: {
+            type: 'string',
+            title: 'Quote Currency'
+        },
+        bid: {
+            type: 'number',
+            title: 'Bid'
+        },
+        ask: {
+            type: 'number',
+            title: 'Ask'
+        },
+        mid: {
+            type: 'number',
+            title: 'Mid'
+        },
+        spread: {
+            type: 'number',
+            title: 'Spread'
+        },
+        change_pct: {
+            type: 'number',
+            title: 'Change Pct'
+        },
+        timestamp: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Timestamp'
+        }
+    },
+    type: 'object',
+    required: ['pair', 'base_currency', 'quote_currency', 'bid', 'ask', 'mid', 'spread', 'change_pct'],
+    title: 'RateWithPair',
+    description: 'Rate response including pair info.'
+} as const;
+
 export const TokenSchema = {
     properties: {
         access_token: {
@@ -261,11 +343,192 @@ export const TokenSchema = {
             type: 'string',
             title: 'Token Type',
             default: 'bearer'
+        },
+        role: {
+            type: 'string',
+            title: 'Role',
+            default: 'customer'
         }
     },
     type: 'object',
     required: ['access_token'],
     title: 'Token'
+} as const;
+
+export const TransactionPublicSchema = {
+    properties: {
+        id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Id'
+        },
+        user_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'User Id'
+        },
+        pair_id: {
+            type: 'string',
+            format: 'uuid',
+            title: 'Pair Id'
+        },
+        source_amount: {
+            type: 'number',
+            title: 'Source Amount'
+        },
+        target_amount: {
+            anyOf: [
+                {
+                    type: 'number'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Target Amount'
+        },
+        locked_rate: {
+            type: 'number',
+            title: 'Locked Rate'
+        },
+        fee_amount: {
+            type: 'number',
+            title: 'Fee Amount'
+        },
+        fee_percentage: {
+            type: 'number',
+            title: 'Fee Percentage'
+        },
+        recipient_name: {
+            type: 'string',
+            title: 'Recipient Name'
+        },
+        recipient_iban: {
+            type: 'string',
+            title: 'Recipient Iban'
+        },
+        purpose: {
+            type: 'string',
+            title: 'Purpose'
+        },
+        status: {
+            type: 'string',
+            title: 'Status'
+        },
+        compliance_status: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Compliance Status'
+        },
+        compliance_score: {
+            anyOf: [
+                {
+                    type: 'integer'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Compliance Score'
+        },
+        created_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Created At'
+        },
+        updated_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Updated At'
+        },
+        completed_at: {
+            anyOf: [
+                {
+                    type: 'string',
+                    format: 'date-time'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Completed At'
+        },
+        pair: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Pair'
+        },
+        base_currency: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Base Currency'
+        },
+        quote_currency: {
+            anyOf: [
+                {
+                    type: 'string'
+                },
+                {
+                    type: 'null'
+                }
+            ],
+            title: 'Quote Currency'
+        }
+    },
+    type: 'object',
+    required: ['id', 'user_id', 'pair_id', 'source_amount', 'locked_rate', 'fee_amount', 'fee_percentage', 'recipient_name', 'recipient_iban', 'purpose', 'status'],
+    title: 'TransactionPublic'
+} as const;
+
+export const TransactionsPublicSchema = {
+    properties: {
+        data: {
+            items: {
+                '$ref': '#/components/schemas/TransactionPublic'
+            },
+            type: 'array',
+            title: 'Data'
+        },
+        count: {
+            type: 'integer',
+            title: 'Count'
+        }
+    },
+    type: 'object',
+    required: ['data', 'count'],
+    title: 'TransactionsPublic'
 } as const;
 
 export const UpdatePasswordSchema = {
@@ -318,6 +581,12 @@ export const UserCreateSchema = {
             ],
             title: 'Full Name'
         },
+        role: {
+            type: 'string',
+            maxLength: 20,
+            title: 'Role',
+            default: 'customer'
+        },
         password: {
             type: 'string',
             maxLength: 128,
@@ -359,6 +628,12 @@ export const UserPublicSchema = {
                 }
             ],
             title: 'Full Name'
+        },
+        role: {
+            type: 'string',
+            maxLength: 20,
+            title: 'Role',
+            default: 'customer'
         },
         id: {
             type: 'string',
@@ -408,6 +683,11 @@ export const UserRegisterSchema = {
                 }
             ],
             title: 'Full Name'
+        },
+        role: {
+            type: 'string',
+            title: 'Role',
+            default: 'customer'
         }
     },
     type: 'object',
@@ -451,6 +731,12 @@ export const UserUpdateSchema = {
                 }
             ],
             title: 'Full Name'
+        },
+        role: {
+            type: 'string',
+            maxLength: 20,
+            title: 'Role',
+            default: 'customer'
         },
         password: {
             anyOf: [
