@@ -130,3 +130,61 @@ class TokenPayload(SQLModel):
 class NewPassword(SQLModel):
     token: str
     new_password: str = Field(min_length=8, max_length=128)
+
+
+# ──────────────────────────────────────────────
+# Forex models
+# ──────────────────────────────────────────────
+
+class CurrencyPairBase(SQLModel):
+    base_currency: str = Field(max_length=3, index=True)
+    quote_currency: str = Field(max_length=3, index=True)
+    is_active: bool = True
+
+
+class CurrencyPair(CurrencyPairBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    created_at: datetime | None = Field(
+        default_factory=get_datetime_utc,
+        sa_type=DateTime(timezone=True),  # type: ignore
+    )
+
+
+class CurrencyPairPublic(CurrencyPairBase):
+    id: uuid.UUID
+    created_at: datetime | None = None
+
+
+class RateSnapshotBase(SQLModel):
+    pair_id: uuid.UUID = Field(foreign_key="currencypair.id", index=True)
+    bid: float
+    ask: float
+    mid: float
+    spread: float
+    change_pct: float = 0.0
+
+
+class RateSnapshot(RateSnapshotBase, table=True):
+    id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
+    timestamp: datetime | None = Field(
+        default_factory=get_datetime_utc,
+        sa_type=DateTime(timezone=True),  # type: ignore
+    )
+
+
+class RateSnapshotPublic(RateSnapshotBase):
+    id: uuid.UUID
+    timestamp: datetime | None = None
+
+
+class RateWithPair(SQLModel):
+    """Rate response including pair info."""
+    pair: str
+    base_currency: str
+    quote_currency: str
+    bid: float
+    ask: float
+    mid: float
+    spread: float
+    change_pct: float
+    timestamp: datetime | None = None

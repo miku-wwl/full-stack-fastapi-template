@@ -16,6 +16,7 @@ export default function UserDropdown() {
 
   const displayName = user?.full_name || user?.email?.split("@")[0] || "User";
   const displayEmail = user?.email || "";
+  const userRole = user?.role || localStorage.getItem("user_role") || "customer";
 
   return (
     <div className="relative">
@@ -59,6 +60,13 @@ export default function UserDropdown() {
           </span>
           <span className="mt-0.5 block text-theme-xs text-gray-500 dark:text-gray-400">
             {displayEmail}
+          </span>
+          <span className={`mt-1 inline-block px-2 py-0.5 text-xs font-medium rounded-full ${
+            userRole === "auditor"
+              ? "bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400"
+              : "bg-emerald-100 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400"
+          }`}>
+            {userRole === "auditor" ? "Auditor" : "Customer"}
           </span>
         </div>
 

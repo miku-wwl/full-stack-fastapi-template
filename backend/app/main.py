@@ -1,3 +1,5 @@
+import logging
+
 import sentry_sdk
 from fastapi import FastAPI
 from fastapi.routing import APIRoute
@@ -5,6 +7,9 @@ from starlette.middleware.cors import CORSMiddleware
 
 from app.api.main import api_router
 from app.core.config import settings
+from app.seed_forex import seed_forex_data, start_rate_generator
+
+logger = logging.getLogger(__name__)
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:
@@ -31,3 +36,13 @@ if settings.all_cors_origins:
     )
 
 app.include_router(api_router, prefix=settings.API_V1_STR)
+
+
+@app.on_event("startup")
+def on_startup() -> None:
+    """Seed forex data and start background rate generator."""
+    try:
+        seed_forex_data()
+        start_rate_generator(interval_seconds=5)
+    except Exception as e:
+        logger.warning(f"Could not start forex simulator: {e}")
