@@ -11,6 +11,7 @@ from sqlmodel import Session, select
 from app.core.db import engine
 from app.forex import ForexSimulator, generate_rate_snapshots, seed_currency_pairs
 from app.models import CurrencyPair, RateSnapshot, Transaction, User
+from app.api.routes.compliance import _run_compliance_rules
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -180,10 +181,23 @@ def _auto_process_transactions(session: Session, phase: int) -> None:
             select(Transaction).where(Transaction.status == "processing").limit(10)
         ).all()
         for tx in processing:
-            if random.random() < 0.15:
+            # Always run compliance rules first — rule hits force a flag
+            score, rules = _run_compliance_rules(tx)
+            if score > 0:
+                # Rule engine flagged this transaction
                 tx.status = "flagged"
                 tx.compliance_status = "flagged"
-                tx.compliance_score = random.randint(70, 95)
+                tx.compliance_score = score
+                tx.compliance_details = {"rules": rules, "reviewed": False}
+                logger.info("Transaction %s: processing → flagged (score=%d, rules=%s)",
+                            tx.id, score, [r["rule"] for r in rules])
+            elif random.random() < 0.15:
+                # Random spot check
+                tx.status = "flagged"
+                tx.compliance_status = "flagged"
+                tx.compliance_score = random.randint(50, 80)
+                tx.compliance_details = {"rules": [{"rule": "RANDOM_SPOT_CHECK",
+                    "detail": "Transaction randomly selected for audit"}], "reviewed": False}
             else:
                 tx.status = "completed"
                 tx.compliance_status = "pass"
