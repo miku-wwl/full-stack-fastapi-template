@@ -238,7 +238,7 @@ sequenceDiagram
 | 端口 | 8000 | Uvicorn + 4 workers |
 | Ingress | External | 前端直接 HTTPS 调用 |
 | 传输 | HTTP (auto TLS) | Azure 自动提供 `*.azurecontainerapps.io` |
-| 后端 URL | `https://ca-backend-prod.greenocean-8c2b6881.australiaeast.azurecontainerapps.io` | 自动生成 FQDN |
+| 后端 URL | `https://ca-backend-prod.graysmoke-df9dedc7.australiaeast.azurecontainerapps.io` | 自动生成 FQDN |
 
 **vCPU 消耗计算：**
 ```
@@ -431,13 +431,13 @@ terraform apply -auto-approve
 
 # === 3. 构建前端 & 上传至 Blob ===
 cd frontend
-set VITE_API_URL=https://ca-backend-prod.greenocean-8c2b6881.australiaeast.azurecontainerapps.io
+set VITE_API_URL=https://ca-backend-prod.graysmoke-df9dedc7.australiaeast.azurecontainerapps.io
 npm install --legacy-peer-deps
 npm run build
 az storage blob upload-batch --account-name stfxprod79rfgv --account-key <KEY> --destination '$web' --source ./dist --overwrite
 
 # === 4. 验证 ===
-curl https://ca-backend-prod.greenocean-8c2b6881.australiaeast.azurecontainerapps.io/api/v1/utils/health-check/
+curl https://ca-backend-prod.graysmoke-df9dedc7.australiaeast.azurecontainerapps.io/api/v1/utils/health-check/
 # → {"message":"Hello World"}
 # 浏览器打开: https://stfxprod79rfgv.z8.web.core.windows.net/
 

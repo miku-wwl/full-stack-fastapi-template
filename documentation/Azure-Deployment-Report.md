@@ -40,6 +40,8 @@
 | 12 | Backend CrashLoopBackOff #2 | 缺少 `PROJECT_NAME` 环境变量 | → 添加 `PROJECT_NAME=ForeXchange` |
 | 13 | `npm install` peer dependency conflict | `@react-jvectormap/core` 需要 React 16-18，项目用 React 19 | → `npm install --legacy-peer-deps` |
 | 14 | `az storage blob upload-batch` 权限拒绝 | `--auth-mode login` 需要 Storage Blob Data Contributor 角色 | → 改用 `--account-key` 认证 |
+| 15 | 前端仍请求 `localhost:8000`（CORS 报错） | `VITE_API_URL` 未在构建时正确注入 | → 创建 `.env.production`，Vite 构建时自动读取 |
+| 16 | POST `/login/access-token` 返回 500 | 数据库表未创建 (`relation \"user\" does not exist`) | → ACA 启动命令加入 `bash scripts/prestart.sh` 建表+种子数据 |
 
 ### 1.3 成功部署的资源
 
@@ -76,7 +78,7 @@
 | 层 | URL |
 |----|-----|
 | **前端 (Blob Static)** | `https://stfxprod79rfgv.z8.web.core.windows.net/` |
-| **后端 (ACA)** | `https://ca-backend-prod.greenocean-8c2b6881.australiaeast.azurecontainerapps.io` |
+| **后端 (ACA)** | `https://ca-backend-prod.graysmoke-df9dedc7.australiaeast.azurecontainerapps.io` |
 | **PostgreSQL** | `psql-forexchange-prod.postgres.database.azure.com:5432` |
 | **Key Vault** | `https://kv-fx-prod-bb2e.vault.azure.net/` |
 | **Queue** | `remittance-queue` @ `stfxprod79rfgv.queue.core.windows.net` |
@@ -129,16 +131,31 @@ ACA Backend (2 副本): 2 vCPUs ← 33% usage
 
 ## 五、文件清单
 
+### 5.1 Terraform (`tf/`)
+
 ```
 tf/
-├── main.tf              # Provider + Resource Group (无 random provider)
+├── main.tf              # Provider + Resource Group
 ├── variables.tf          # 22 参数（dockerhub: minglai, location: australiaeast）
-├── terraform.tfvars      # 实际值（含密码，.gitignore 排除）
-├── terraform.tfvars.example  # 模板
+├── terraform.tfvars      # 实际值（含密码，.gitignore 排除，内网传递）
+├── terraform.tfvars.example  # 模板（可安全提交 Git）
 ├── outputs.tf            # 11 输出（URL + FQDN + KV + DB）
 ├── storage.tf            # StorageV2 (Blob $web + Queue 共用, 固定后缀)
 ├── postgresql.tf         # PostgreSQL Flexible B1ms + DB + 防火墙 + SSL
-├── containerapps.tf       # ACA Env + Backend (2 副本, minglai/forexchange-backend)
-├── keyvault.tf           # Key Vault + 5 Secrets（无 random_string）
+├── containerapps.tf       # ACA Env + Backend (2 副本, prestart 建表, minglai 镜像)
+├── keyvault.tf           # Key Vault + 5 Secrets
 └── .gitignore
 ```
+
+### 5.2 前端双环境配置 (`frontend/`)
+
+```
+frontend/
+├── .env                  # 本地开发: VITE_API_URL=http://localhost:8000
+├── .env.production       # 云端部署: VITE_API_URL=https://<backend-fqdn>（.gitignore 排除，内网传递）
+├── .env.production.example  # 模板（可安全提交 Git）
+└── .gitignore            # 已排除 *.local 和 .env.production
+```
+
+> **设计说明**: Vite 在 `npm run build`（production mode）时自动读取 `.env.production` 覆盖 `.env`，
+> 实现同一份代码本地连 `localhost`、云端连 Azure Backend，无需改代码。
