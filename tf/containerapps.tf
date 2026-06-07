@@ -55,14 +55,13 @@ resource "azurerm_container_app" "backend" {
     max_replicas = var.aca_max_replicas # 2 (学生 6 vCPU 硬限制)
 
     container {
-      name   = "backend"
-      # TODO: Replace with actual Docker Hub image after push:
-      #   docker build -t weilathefox/forexchange-backend:latest -f backend/Dockerfile .
-      #   docker push weilathefox/forexchange-backend:latest
-      # Then change image to: "docker.io/weilathefox/forexchange-backend:latest"
-      image  = "docker.io/minglai/forexchange-backend:latest"
-      cpu    = var.aca_backend_cpu    # 1.0
-      memory = var.aca_backend_memory # "2Gi"
+      name    = "backend"
+      image   = "docker.io/minglai/forexchange-backend:latest"
+      cpu     = var.aca_backend_cpu    # 1.0
+      memory  = var.aca_backend_memory # "2Gi"
+
+      # 启动命令：先建表+种子数据，再启动 FastAPI
+      args = ["bash", "-c", "bash scripts/prestart.sh && fastapi run --workers 4 app/main.py"]
 
       # ── 环境变量 ────────────────────────────────────────
 
