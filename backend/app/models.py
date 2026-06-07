@@ -202,6 +202,7 @@ class TransactionPublic(SQLModel):
     status: str
     compliance_status: str | None = None
     compliance_score: int | None = None
+    compliance_details: dict[str, Any] | None = None
     created_at: datetime | None = None
     updated_at: datetime | None = None
     completed_at: datetime | None = None
@@ -226,6 +227,24 @@ class DashboardSummary(SQLModel):
     total_volume_usd: float
     flagged_count: int
     avg_processing_time_ms: float = 0.0
+
+
+# ──────────────────────────────────────────────
+# Compliance models (Day 9)
+# ──────────────────────────────────────────────
+
+class ComplianceOverview(SQLModel):
+    flagged_count: int
+    reviewed_today: int
+    approved_today: int
+    rejected_today: int
+    pass_rate: float = 0.0
+
+
+class ComplianceReviewRequest(SQLModel):
+    action: str  # "approve" or "reject"
+    reason: str | None = None
+
 
 
 # ──────────────────────────────────────────────
