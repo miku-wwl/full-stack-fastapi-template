@@ -15,7 +15,7 @@ Azure Portal → 资源组 → rg-forexchange-prod
 
 | 验证项 | 步骤 | 期望 |
 |--------|------|------|
-| 资源存在 | 查看 Overview | 6+ 资源全部显示 "Succeeded" |
+| 资源存在 | 查看 Overview | 8+ 资源全部显示 "Succeeded" |
 | 位置 | 查看 Overview 顶部 | `australiaeast` |
 | Cost | 左侧 Cost Management | 查看当前费用 |
 
@@ -60,11 +60,12 @@ rg-forexchange-prod → ca-backend-prod
 
 | 验证项 | 步骤 | 期望 |
 |--------|------|------|
-| ACA 运行 | Overview → Application Url | URL 可访问 |
-| 副本 | Revisions and replicas | 1 个活跃副本 |
+| ACA 运行 | Overview → Application Url | URL 可访问，返回 `{"message":"Hello World"}` |
+| 副本 | Revisions and replicas | 2 个活跃副本 |
 | CPU/Mem | Containers → backend | 1 vCPU / 2 GiB |
 | Ingress | Settings → Ingress | **Enabled**, target port 8000 |
-| 缩放规则 | Settings → Scale | min=1, max=2 |
+| 缩放规则 | Settings → Scale | min=2, max=2 (固定) |
+| 环境变量 | Containers → backend → Environment variables | PROJECT_NAME=ForeXchange, ENVIRONMENT=production |
 
 📸 **截图位置**: `______`
 
@@ -151,18 +152,19 @@ terraform destroy -auto-approve
 
 | 场景 | 截图内容 |
 |------|----------|
-| 架构全景 | Resource Group Overview（5+ 资源同框） |
-| 前端 | 浏览器打开 Blob Static Website URL |
-| 后端 | `curl` 健康检查返回 `{"message":"Hello World"}` |
+| 架构全景 | Resource Group Overview（8+ 资源同框） |
+| 前端 | 浏览器打开 `https://stfxprod79rfgv.z8.web.core.windows.net/` |
+| 后端 | `curl https://ca-backend-prod.greenocean-8c2b6881.australiaeast.azurecontainerapps.io/api/v1/utils/health-check/` → `{"message":"Hello World"}` |
 | 数据库 | PostgreSQL → Metrics → Active Connections |
-| 弹性伸缩 | ACA → Scale → min=1, max=2 |
+| 固定副本 | ACA → Scale → min=2, max=2 |
 | 安全 | Key Vault → Secrets（打码后） |
 | 成本 | Cost Management → 月度费用明细 |
+| 日志 | Log Analytics → 查询 ACA 容器日志 |
 
 ### C.2 展示话术模板
 
 > "ForeXchange 是一个高可用实时换汇与合规审计平台，部署在 Azure australiaeast 区域。
 > 前端采用 Blob Static Website + SPA 架构，后端运行在 Azure Container Apps 上，
-> 支持 1-2 副本自动伸缩。数据库使用 PostgreSQL Flexible Server，
-> 异步换汇通过 Queue Storage 解耦。全栈通过 Terraform 代码化部署，
-> 一条命令即可完成所有资源的创建和销毁。"
+> 配置 2 固定副本确保高可用。数据库使用 PostgreSQL Flexible Server (B1ms)，
+> 异步换汇通过 Queue Storage 解耦。Docker 镜像通过 GitHub Actions 自动构建推送到 Docker Hub。
+> 全栈通过 Terraform 代码化部署，一条命令即可完成所有资源的创建和销毁。"
