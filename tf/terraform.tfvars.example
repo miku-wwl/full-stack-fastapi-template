@@ -1,0 +1,57 @@
+# ─────────────────────────────────────────────────────────────
+# ForeXchange — Terraform 变量值模板
+# 复制为 terraform.tfvars 并填入实际值
+# ⚠️ terraform.tfvars 不提交 Git！
+# ─────────────────────────────────────────────────────────────
+
+# ── Azure ────────────────────────────────────────────────────
+
+subscription_id = "7c73b89d-485e-43a9-8d66-b12b766d567f"
+location        = "australiaeast"
+environment     = "prod"
+
+# ── Docker Hub ───────────────────────────────────────────────
+
+dockerhub_username = "CHANGE_ME_your_dockerhub_username"
+backend_image_tag  = "latest"
+
+# ── PostgreSQL ───────────────────────────────────────────────
+
+postgres_admin_login    = "psqladmin"
+postgres_admin_password = "CHANGE_ME_YourStr0ngP@ssw0rd!"
+# SKU: B_Standard_B1ms (burstable, 1 vCore, 2 GB RAM)
+# Student cost: ~$30/month
+postgres_storage_mb     = 32768  # 32 GB
+
+# ── Redis ────────────────────────────────────────────────────
+
+# Basic C0 = 250 MB, ~$15/month
+redis_sku_name = "Basic"
+redis_family   = "C"
+redis_capacity = 0
+
+# ── Container Apps ───────────────────────────────────────────
+
+aca_backend_cpu    = 1.0
+aca_backend_memory = "2Gi"
+aca_min_replicas   = 1
+aca_max_replicas   = 2     # 学生 6 vCPU 限制下最大 2
+
+# ── App Secrets ──────────────────────────────────────────────
+
+# 至少 32 字符，用于 JWT 签名
+app_secret_key = "CHANGE_ME_generate_a_random_64_char_string_here_abcdefghijklmnop"
+
+first_superuser_email    = "admin@forexchange.io"
+first_superuser_password = "CHANGE_ME_AdminP@ssw0rd!"
+
+# ── Email (Optional — 学生可留空) ────────────────────────────
+
+smtp_host         = ""
+smtp_user         = ""
+smtp_password     = ""
+emails_from_email = "noreply@forexchange.io"
+
+# ── Sentry (Optional) ────────────────────────────────────────
+
+sentry_dsn = ""
