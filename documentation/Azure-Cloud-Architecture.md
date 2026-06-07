@@ -1,0 +1,711 @@
+# ForeXchange — Azure 云架构设计文档（学生订阅版）
+
+> **日期**: 2026-06-07  
+> **项目**: ForeXchange — 高可用实时换汇与合规审计平台  
+> **云平台**: Microsoft Azure  
+> **订阅**: Azure for Students (Subscription ID: `7c73b89d-485e-43a9-8d66-b12b766d567f`)  
+> **区域**: `australiaeast` 🇦🇺（亚太最低延迟）  
+> **配额**: **Total Regional vCPUs = 6**（学生订阅硬限制）  
+> **IaC**: Terraform 一键部署  
+> **镜像仓库**: Docker Hub  
+
+---
+
+## 0. 订阅信息与约束
+
+### 0.1 Azure for Students 实测数据
+
+| 项目 | 值 |
+|------|-----|
+| 订阅名称 | Azure for Students |
+| 订阅 ID | `7c73b89d-485e-43a9-8d66-b12b766d567f` |
+| Tenant ID | `96e2f052-4512-4d4c-b2c0-cd0d36ad6437` |
+| 用户 | `569144003@qq.com` |
+| 区域 | `australiaeast` ✅ |
+| 信用额度 | $100 USD |
+| 已部署资源 | `NetworkWatcherRG` (australiaeast) |
+
+### 0.2 vCPU 配额（关键限制）
+
+```
+Total Regional vCPUs:  6  ← 硬上限！
+  ├── 可用 Dv3/Dv4/DSv3/DSv4 Family: 4 vCPUs each (max 4 usable per family)
+  ├── 可用 BS Family:                4 vCPUs (burst)
+  ├── 可用 Basv2/Bsv2 Family:       10 vCPUs (burst 更优)
+  ├── 可用 Ev3/Ev4 Family:           4 vCPUs
+  ├── 可用 F Family:                 4 vCPUs
+  └── 可用 NC Family:                6 vCPUs (GPU, 不需要)
+
+当前已用: 0 / 6 vCPUs ✅ 全部可用
+```
+
+### 0.3 已注册的 Azure Providers
+
+| Provider | 状态 | 用途 |
+|----------|------|------|
+| `Microsoft.App` | ✅ Registered | Container Apps |
+| `Microsoft.Cache` | ✅ Registered | Redis Cache |
+| `Microsoft.DBforPostgreSQL` | ✅ Registered | PostgreSQL Flexible Server |
+| `Microsoft.Cdn` | ✅ Registered | CDN |
+| `Microsoft.Storage` | ✅ Registered | Blob + Queue Storage |
+| `Microsoft.KeyVault` | ✅ Registered | 机密管理 |
+
+---
+
+## 目录
+
+1. [架构总览](#1-架构总览)
+2. [数据流与请求路由](#2-数据流与请求路由)
+3. [组件详解](#3-组件详解)
+4. [高可用设计](#4-高可用设计)
+5. [安全设计](#5-安全设计)
+6. [Terraform 资源规划](#6-terraform-资源规划)
+7. [Docker 镜像与 CI/CD](#7-docker-镜像与-cicd)
+8. [成本估算](#8-成本估算)
+9. [架构图](#9-架构图)
+
+---
+
+## 1. 架构总览
+
+### 1.1 设计原则
+
+| 原则 | 说明 |
+|------|------|
+| **静态分离** | 前端 SPA 托管 Azure Blob Static Website + CDN，零服务端渲染 |
+| **读写分离** | 实时汇率走 Redis 缓存（多读少写），交易走 PostgreSQL（ACID 强一致） |
+| **异步解耦** | 换汇请求通过 Azure Queue 异步处理，削峰填谷 |
+| **无状态计算** | 后端 ACA 无状态，水平伸缩无依赖 |
+| **HTTPS 全链路** | CDN → Blob 静态站 HTTPS，ACA 自动 TLS，PostgreSQL 强制 SSL |
+| **一键部署** | Terraform 全栈 IaC，`terraform apply` 即可部署全部资源 |
+
+### 1.2 架构拓扑（逻辑层）
+
+```
+┌────────────────────────────────────────────────────────────────────┐
+│                          用户浏览器                                  │
+│                    https://forexchange.io                           │
+└──────────────┬──────────────────────────┬──────────────────────────┘
+               │ HTTPS:443                │ HTTPS:443 (API)
+               ▼                          ▼
+┌──────────────────────────┐  ┌──────────────────────────────────────┐
+│   Azure CDN + Blob       │  │       Azure Container Apps (ACA)     │
+│                          │  │                                      │
+│  Static Website Hosting  │  │  ┌──────────────────────────────┐   │
+│  ├─ index.html           │  │  │  Backend (FastAPI + Uvicorn) │   │
+│  ├─ assets/ (JS/CSS/img) │  │  │  CPU: 1.0 / Mem: 2Gi        │   │
+│  └─ 自定义域名 + TLS      │  │  │  min=1, max=10 (auto-scale) │   │
+└──────────────────────────┘  │  │  Port: 8000                  │   │
+                              │  │  Ingress: External            │   │
+                              │  └──────┬───────────┬───────────┘   │
+                              └─────────┼───────────┼───────────────┘
+                                        │           │
+                    ┌───────────────────┘           └──────────────────┐
+                    ▼                                                  ▼
+     ┌─────────────────────────────┐         ┌─────────────────────────────┐
+     │  Azure Cache for Redis      │         │  Azure PostgreSQL            │
+     │                             │         │  Flexible Server             │
+     │  Tier: Standard C1          │         │                              │
+     │  (1 GB, 1K connections)     │         │  Version: 16                 │
+     │                             │         │  SKU: B_Standard_B1ms        │
+     │  用途：                      │         │  (Burstable, 1 vCore, 2GB)   │
+     │  · 实时汇率缓存 (TTL 5s)     │         │  Storage: 32 GB              │
+     │  · Rate Lock 临时存储       │         │                              │
+     │  · Session / Token 黑名单   │         │  用途：                       │
+     │  · Dashboard 聚合数据缓存   │         │  · 用户 & 认证数据            │
+     │                             │         │  · 交易记录 (不可变账本)       │
+     │  命中策略：                  │         │  · 货币对配置                 │
+     │  · 汇率: Cache-Aside        │         │  · 合规审计日志               │
+     │  · 写操作: Write-Through    │         │                              │
+     └─────────────────────────────┘         └─────────────────────────────┘
+
+     ┌─────────────────────────────────────┐
+     │  Azure Queue Storage                │
+     │                                     │
+     │  Queue: remittance-queue            │
+     │  Account: Standard LRS              │
+     │                                     │
+     │  用途：                              │
+     │  · 汇款请求异步处理                   │
+     │  · 合规规则引擎触发                   │
+     │  · 削峰填谷 (peak shaving)           │
+     └─────────────────────────────────────┘
+```
+
+---
+
+## 2. 数据流与请求路由
+
+### 2.1 用户请求流程
+
+```mermaid
+sequenceDiagram
+    participant Browser as 🌐 用户浏览器
+    participant CDN as 📦 Azure CDN
+    participant Blob as 💾 Blob Storage<br/>(Static Site)
+    participant ACA as 🚀 Azure Container Apps<br/>(FastAPI Backend)
+    participant Redis as ⚡ Azure Redis Cache
+    participant Queue as 📨 Azure Queue Storage
+    participant PG as 🗄️ Azure PostgreSQL
+
+    Note over Browser,PG: ─── 页面加载 ───
+    Browser->>CDN: GET https://forexchange.io/
+    CDN->>Blob: (miss) fetch index.html
+    Blob-->>CDN: index.html + assets
+    CDN-->>Browser: 200 HTML/JS/CSS (edge cached)
+
+    Note over Browser,PG: ─── 登录 ───
+    Browser->>ACA: POST /api/v1/login/access-token
+    ACA->>PG: SELECT user WHERE email=?
+    PG-->>ACA: user row (hashed_password, role)
+    ACA-->>Browser: { access_token (JWT), role: "auditor" }
+
+    Note over Browser,PG: ─── 实时汇率轮询 (5s) ───
+    loop Every 5 seconds
+        Browser->>ACA: GET /api/v1/rates/live (Bearer JWT)
+        ACA->>Redis: GET rates:live:* (all pairs)
+        alt Cache Hit
+            Redis-->>ACA: [cached rates JSON]
+        else Cache Miss
+            ACA->>PG: SELECT latest snapshots
+            PG-->>ACA: rate data
+            ACA->>Redis: SET rates:live:* EX 5 (TTL=5s)
+        end
+        ACA-->>Browser: [{pair, bid, ask, mid, change_pct, ts}]
+    end
+
+    Note over Browser,PG: ─── 发起汇款 ───
+    Browser->>ACA: POST /api/v1/rates/lock (pair=USD/EUR)
+    ACA->>Redis: SET lock:{uuid} {rate} EX 30
+    ACA-->>Browser: { lock_id, rate, expires_at }
+
+    Browser->>ACA: POST /api/v1/transactions (lock_id, amount, IBAN)
+    ACA->>Redis: GET lock:{uuid}
+    Redis-->>ACA: {rate} (valid)
+    ACA->>PG: INSERT transaction (status=pending)
+    ACA->>Queue: PUSH { transaction_id, created_at }
+    ACA-->>Browser: { transaction_id, status: "pending" }
+
+    Note over Browser,PG: ─── 后台异步处理 (Queue Consumer) ───
+    Queue->>ACA: POP message (poll every 2s)
+    ACA->>PG: UPDATE transaction SET status='processing'
+    ACA->>ACA: run_compliance_rules(tx) → score
+    alt score > 0 (规则命中)
+        ACA->>PG: UPDATE status='flagged', compliance_score=X
+    else score == 0, pass
+        ACA->>PG: UPDATE status='completed'
+    end
+    ACA->>Redis: INVALIDATE dashboard:summary
+```
+
+### 2.2 读写分离策略
+
+| 数据类型 | 写路径 | 读路径 | 缓存策略 |
+|----------|--------|--------|----------|
+| **实时汇率** | ACA Background Thread → Redis (每 5s SET) | Frontend → ACA → Redis (GET) | Cache-Aside, TTL 5s |
+| **汇率历史** | 定时写入 PG + 可选 Redis 预热 | 直接查 PG（时序数据不适合全量缓存） | 无缓存 |
+| **交易记录** | ACA → PG INSERT | ACA → PG SELECT（分页） | 无缓存（不可变账本） |
+| **Dashboard 聚合** | ACA → Redis (每 15s 刷新) | Frontend → ACA → Redis | Write-Through, TTL 15s |
+| **用户会话/Token** | 登录时写入 | 每次请求验证 | JWT 自包含，无需 Redis |
+| **Rate Lock** | POST /rates/lock → Redis SET | POST /transactions → Redis GET + DEL | TTL 30s |
+
+---
+
+## 3. 组件详解
+
+### 3.1 Azure Blob Storage + CDN（前端静态托管）
+
+| 配置项 | 值 | 说明 |
+|--------|-----|------|
+| 存储账户类型 | StorageV2 (general purpose v2) | 支持静态网站 + Queue 共用 |
+| 复制 | **LRS** (本地冗余) | 学生预算友好 |
+| 静态网站 | ✅ 启用 | 入口文档: `index.html` |
+| CDN Profile | **Standard Microsoft** | 免费层无出站流量费优势 |
+| CDN Endpoint | HTTPS 自动 | 支持 `*.azureedge.net` |
+| 自定义域名 | 可选（学生演示无需） | 可使用 CDN 自带域名 |
+
+> **为什么共用 Storage Account**:  
+> - Blob 静态站 (`$web` container) + Queue Storage (`remittance-queue`) 可共用同一个 StorageV2 账户  
+> - 减少 Terraform 资源数量，简化管理  
+> - LRS 复制满足演示需求，跨境部署时再升级 GRS
+
+### 3.2 Azure Container Apps（后端计算）
+
+| 配置项 | 值 | 说明 |
+|--------|-----|------|
+| 环境 | Container Apps Environment | 共享网络与日志（免费） |
+| 最小/最大副本 | 1 / 2 | **最大 2 副本**（学生 6 vCPU 限制） |
+| CPU | 1.0 vCPU | 每副本 |
+| 内存 | 2.0 GiB | 每副本 |
+| 端口 | 8000 | Uvicorn + 2 workers（按副本 vCPU 调优） |
+| Ingress | External | 前端直接 HTTPS 调用 |
+| 传输 | HTTP (auto TLS) | Azure 自动提供 `*.azurecontainerapps.io` |
+
+**vCPU 消耗计算：**
+```
+ACA Backend:  1.0 vCPU × max 2 副本 = 2.0 vCPUs (peak)
+Redis:        0 vCPUs (PaaS, 不计入 VM quota)
+PostgreSQL:   0 vCPUs (PaaS, 不计入 VM quota)
+────────────────────────────────────────────
+ACA 总计:     2.0 / 6.0 vCPUs (33% usage)
+安全余量:     4.0 vCPUs 可用于扩展 或 前台 Worker
+```
+
+**自动伸缩规则（学生优化版）：**
+```
+CPU > 70% 持续 120s → scale up   (max 2)
+CPU < 20% 持续 300s → scale down (min 1)
+并发 HTTP > 50/副本 → scale up
+```
+
+**注意**: 学生订阅不推荐分离前台/后台 Worker 容器（额外消耗 vCPU）。汇率模拟器 + 队列消费者继续使用 FastAPI `threading.Thread` 后台线程（已在 `seed_forex.py` 实现），共享 1 个副本的 vCPU。
+
+### 3.3 Azure Cache for Redis（实时汇率缓存层）
+
+| 配置项 | 值 | 说明 |
+|--------|-----|------|
+| Tier | **Basic C0** | 256 MB 缓存, 256 并发连接, $15/月 |
+| TLS | 强制 (6380) | 加密传输 |
+| 最大内存策略 | `volatile-lru` | 仅驱逐带 TTL 的 key |
+| 非 SSL 端口 | 禁用 | 仅允许 6380 (SSL) |
+
+> **为什么 Basic C0 而非 Standard C1**:  
+> - 12 个货币对 × 5s TTL 缓存数据量 < 10 KB，256 MB 绰绰有余  
+> - 学生 6 vCPU 限制下，Redis PaaS 不消耗 vCPU quota  
+> - 如生产需要可后续升级到 Standard C1（1 GB, 1000 连接, $50/月）
+
+**Key 命名规范：**
+
+| Pattern | 类型 | TTL | 说明 |
+|---------|------|-----|------|
+| `rates:live:{pair}` | String (JSON) | 5s | 单个货币对实时汇率 |
+| `rates:live:all` | String (JSON Array) | 5s | 全量实时汇率快照 |
+| `lock:{uuid}` | String | 30s | 汇率锁定报价 |
+| `dashboard:summary:{user_id}` | String (JSON) | 15s | 仪表盘聚合数据（按用户） |
+| `compliance:overview` | String (JSON) | 15s | 合规审核统计数据 |
+
+**多读少写场景优化：**
+- 写入频率：每 5 秒 12 条 snapshot（后台定时器）≈ 2.4 writes/s
+- 读取频率：N 用户 × 5s 轮询 ≈ 可能数百 reads/s
+- Redis 轻松支撑 1000+ 连接，远高需求
+
+### 3.4 Azure PostgreSQL Flexible Server（事务数据库）
+
+| 配置项 | 值 | 说明 |
+|--------|-----|------|
+| Version | 16 | 最新主版本 |
+| SKU | **B_Standard_B1ms** | Burstable 1 vCore / 2 GB RAM |
+| Storage | **32 GB** | 足以支撑数年交易数据 |
+| 高可用 | Disabled | 学生无需多可用区，7 天 PITR 备份足够 |
+| 备份 | 7 天自动备份 + PITR | 保留期可调整 |
+| SSL | `require_secure_transport = on` | 强制加密连接 |
+| 防火墙 | 仅允许 Azure 服务 | `0.0.0.0` allow Azure IP range |
+
+> **注意**: B1ms 为 Burstable 计费模式，空闲时积累 CPU credit，突发时消耗。日常汇率轮询 + 少量交易写入在 credit 覆盖范围内。
+
+**核心表：**
+
+| 表 | 行估算 | 读写比 | 索引 |
+|----|--------|--------|------|
+| `user` | < 10K | 读为主 | email UNIQUE |
+| `currency_pair` | 12 (固定) | 只读 | base_currency, quote_currency |
+| `rate_snapshot` | ~288/天/对 (5min 间隔) × 12 对 = 3,456/天 | 写为主 | (pair_id, timestamp DESC) |
+| `transaction` | 按使用量 | 读写均衡 | (user_id, created_at), (status) |
+| `compliance_log` | 按 Flagged 量 | 写为主 | (transaction_id) |
+
+### 3.5 Azure Queue Storage（异步消息队列）
+
+| 配置项 | 值 | 说明 |
+|--------|-----|------|
+| 存储账户 | Standard LRS | 本地冗余 |
+| 队列名 | `remittance-queue` | 汇款异步处理队列 |
+| 消息大小 | < 64 KB | JSON: `{tx_id, created_at, retry_count}` |
+| TTL | 7 天 | 超时未处理消息自动过期 |
+| 可见性超时 | 30s | 处理中超时 → 自动重新可见 |
+| 最大投递次数 | 5 | 5 次仍失败 → 死信队列 (poison queue) |
+
+**消费者模式：后台轮询**
+- ACA 启动时 spawn 后台线程
+- 每 2s 拉取队列消息（`receive_messages(max_messages=5)`）
+- 处理完成 → `delete_message`
+- 异常/超时 → 消息自动重新可见（retry_count + 1）
+
+---
+
+## 4. 高可用设计（学生最大化版）
+
+### 4.1 在 6 vCPU 限制下达到的最高可用性
+
+```
+Layer 1 — CDN:           全球边缘节点 → 99.9% SLA (Microsoft CDN)
+Layer 2 — Blob (静态):    LRS 本地冗余 → 99.9% SLA
+Layer 3 — ACA (后端):     min=1, max=2 副本 → 跨 fault domain 自动切换
+Layer 4 — Redis:          Basic C0 → 无 SLA，但缓存 miss 降级到 PG 毫秒级查询
+Layer 5 — PostgreSQL:     Burstable → 7 天 PITR 备份 + 自动故障转移（限同一区域）
+Layer 6 — Queue:          LRS 持久化 → TTL 7d + 死信队列（5 次重试上限）
+```
+
+### 4.2 vCPU 弹性伸缩策略
+
+```
+副本数     vCPU 消耗      触发条件
+─────────────────────────────────────────
+  1         1/6 (17%)    空闲期间（夜间 / 周末）
+  2         2/6 (33%)    CPU > 70% / 并发 > 50
+  3+        ❌ 不推荐     会超过 Total Regional 6 限制（如启用了其他 VM）
+```
+
+### 4.3 故障场景处理
+
+| 场景 | 影响 | 恢复方案 |
+|------|------|----------|
+| Redis 不可用 | 汇率查询降级到 PG 直查 | 每次 5s 轮询查 PG（略增延迟 ~10ms），恢复后自动回切 |
+| PostgreSQL 不可用 | 无法创建交易 | Queue 消息积压，PG 恢复后消费 |
+| ACA 副本宕机 | 流量自动切换到另一副本 | ACA 自动重启 + reassign HTTP 流量 < 30s |
+| 前端 Blob 不可用 | HTML/JS 加载失败 | LRS 本地 3 副本，CDN edge 缓存 HTML |
+| 学生信用额度用完 | 所有资源暂停 | Azure 提前通知，可续费或导出数据 |
+
+### 4.4 缓存降级策略（已在架构中实现）
+
+- Redis GET miss → PostgreSQL `SELECT latest snapshots` → SET to Redis
+- Redis 完全不可用 → 每次直接查 PG（无缓存层）
+- 降级时响应延迟：Redis ~1ms vs PG ~5-10ms → 用户基本无感知
+
+---
+
+## 5. 安全设计
+
+### 5.1 网络安全
+
+| 层 | 措施 |
+|----|------|
+| CDN → 用户 | HTTPS 自动 TLS |
+| ACA Ingress | 外部可达 + Azure 自动托管 TLS |
+| Redis | 强制 SSL (port 6380)，禁用非 SSL |
+| PostgreSQL | `require_secure_transport = on` |
+| Queue Storage | 共享密钥 SAS Token |
+
+### 5.2 应用安全
+
+| 措施 | 说明 |
+|------|------|
+| JWT 认证 | HS256 + `SECRET_KEY`，过期时间 8 天 |
+| 密码哈希 | passlib + bcrypt |
+| CORS | 只允许前端域名 |
+| 安全响应头 | `X-Content-Type-Options`, `X-Frame-Options`, `X-XSS-Protection`, `Referrer-Policy`, `Permissions-Policy` |
+| RBAC | User.role (`customer` / `auditor`)，含路由守卫 + API 守卫 |
+| IBAN 校验 | 前端 + 后端双重校验 |
+
+### 5.3 机密管理
+
+| 机密 | 存储位置 |
+|------|----------|
+| `SECRET_KEY` (JWT) | Key Vault → ACA env secret ref |
+| `POSTGRES_PASSWORD` | Key Vault → ACA env secret ref |
+| `FIRST_SUPERUSER_PASSWORD` | Key Vault → ACA env secret ref |
+| Queue 连接字符串 | Key Vault → ACA env secret ref |
+| Redis 连接字符串 | Key Vault → ACA env secret ref |
+
+---
+
+## 6. Terraform 资源规划
+
+### 6.1 资源清单（精简版 — 共用 Storage Account）
+
+```
+terraform/
+├── main.tf                # Provider (azurerm) + Resource Group
+├── variables.tf           # 所有变量定义
+├── terraform.tfvars       # 变量值（不提交 Git）
+├── outputs.tf             # 输出（CDN URL / Backend FQDN）
+├── storage.tf             # Storage Account（Blob 静态站 + Queue 共用）
+├── cdn.tf                 # CDN Profile + Endpoint → Blob
+├── redis.tf               # Redis Basic C0
+├── postgresql.tf          # PostgreSQL Flexible Server B1ms
+├── containerapps.tf       # ACA Environment + Backend App (max=2 replicas)
+└── keyvault.tf            # Key Vault + Secrets
+```
+
+### 6.2 资源数量精简
+
+| 原设计 | 精简后 | 原因 |
+|--------|--------|------|
+| 2 个 Storage Account（Static + Queue） | **1 个共用** | 减少资源，降低成本 |
+| Redis Standard C1 | **Basic C0** | $15 vs $50 |
+| ACA max=10 副本 | **max=2 副本** | 学生 6 vCPU 限制 |
+| ACA Frontend Container | **移除（Blob 替代）** | 0 vCPU 消耗 |
+| Monitor (独立) | **Log Analytics 仅必需** | 无复杂监控 |
+| Private Link | **不使用** | 公网 + 防火墙白名单 |
+
+### 6.3 Terraform Location
+
+```hcl
+# main.tf
+provider "azurerm" {
+  features {}
+  subscription_id = var.subscription_id  # 7c73b89d-...
+}
+
+resource "azurerm_resource_group" "rg" {
+  name     = "rg-forexchange-prod"
+  location = "australiaeast"  # 仅此区域
+}
+
+# 所有资源统一使用
+# location = azurerm_resource_group.rg.location
+```
+
+### 6.4 Deployment Flow（学生版）
+
+```bash
+# === 0. 前置 === (已完成 az login → 569144003@qq.com)
+
+# === 1. 构建 & 推送后端镜像 ===
+docker build -t <dockerhub>/forexchange-backend:latest -f backend/Dockerfile .
+docker push <dockerhub>/forexchange-backend:latest
+
+# === 2. Terraform 一键部署全栈 ===
+cd terraform
+terraform init
+terraform plan    # 预览：确认 vCPU ≤ 2/6
+terraform apply -auto-approve
+
+# === 3. 构建前端 & 上传至 CDN ===
+cd frontend && bun run build
+az storage blob upload-batch \
+  --account-name $(terraform output -raw storage_account_name) \
+  --destination '$web' --source ./dist --overwrite
+
+# === 4. 验证 ===
+terraform output frontend_url   # CDN endpoint
+terraform output backend_url    # ACA Endpoint
+
+# === 5. 不使用时的省钱命令 ===
+# 停止容器（缩容到 0）
+az containerapp update --name ca-backend-prod --resource-group rg-forexchange-prod --min-replicas 0
+# 停止 PostgreSQL（保留 7 天后自动删除）
+az postgres flexible-server stop -g rg-forexchange-prod -n psql-forexchange-prod
+# Redis + Storage 不可停止（固定 $15/月）
+# 重新启动：
+az containerapp update --name ca-backend-prod -g rg-forexchange-prod --min-replicas 1
+az postgres flexible-server start -g rg-forexchange-prod -n psql-forexchange-prod
+```
+
+---
+
+## 7. Docker 镜像与 CI/CD
+
+### 7.1 镜像仓库
+
+| 镜像 | Docker Hub Path | 用途 |
+|------|----------------|------|
+| `forexchange-backend` | `<user>/forexchange-backend:latest` | FastAPI 后端 |
+| （前端不需要镜像） | — | 静态站托管于 Blob |
+
+### 7.2 Dockerfile（后端 — 保留现有）
+
+```dockerfile
+FROM python:3.10
+COPY --from=ghcr.io/astral-sh/uv:0.9.26 /uv /uvx /bin/
+# ... (现有 Dockerfile 不变)
+CMD ["fastapi", "run", "--workers", "4", "app/main.py"]
+```
+
+### 7.3 CI/CD 推荐（后续实现）
+
+```
+GitHub Push → GitHub Actions
+  ├─ Build Backend Image → Push Docker Hub
+  ├─ Build Frontend (bun run build)
+  ├─ Upload Frontend to Blob Storage
+  └─ terraform apply (optional auto-deploy)
+```
+
+---
+
+## 8. 成本估算（学生优化版）
+
+### 8.1 月度费用明细
+
+| 资源 | SKU | 月费 (USD) | 备注 |
+|------|-----|-----------|------|
+| **Blob Storage** | LRS, < 1 GB | **~$0.05** | $0.018/GB + 少量事务费 |
+| **CDN** | Standard Microsoft | **~$0** | 出站流量极小 |
+| **Container Apps** | 1-2 副本, 1 vCPU / 2 GiB | **~$15-25** | 按 vCPU/秒 + 内存/秒计费 |
+| **Redis Cache** | Basic C0 (250 MB) | **~$15** | 固定月费 |
+| **PostgreSQL** | B_Standard_B1ms, 32 GB | **~$30** | 含存储 |
+| **Queue Storage** | LRS (共用 Storage Account) | **~$0** | 计入 Storage Account |
+| **Log Analytics** | Per GB (ACA 必需) | **~$2-5** | 低流量 |
+| **Key Vault** | Standard | **~$1** | 固定月费 |
+| **合计** | | **~$63-76/月** | |
+
+### 8.2 学生 $100 信用额度可用时长
+
+```
+$100 ÷ ~$70/月 ≈ 1.4 个月（全额）
+```
+
+> **延长策略**: 
+> - CDN: 出站流量极小（SPA assets 一次性加载）→ 接近 $0
+> - Container Apps: 当天完成后可缩容到 min=0（冷启动约 30s）→ 不使用时 0 费用
+> - Redis C0: 不可暂停，但 $15/月稳定
+> - PostgreSQL: 可手动停止（保留 7 天自动删除）→ az postgres flexible-server stop
+> - **优化后月费**: 仅保留 Redis + Storage ≈ **$15/月**（不使用时停止计算）
+
+### 8.3 vCPU 配额安全分析
+
+```
+配额上限:        6 vCPUs
+ACA Backend:     2 vCPUs (max)  ← 33% usage
+ACA Frontend:    0 vCPUs (Blob 托管)
+安全余量:        4 vCPUs (67%)
+
+✅ 完全在配额内，不会触发 Any quota exceeded 错误
+```
+
+---
+
+## 9. 架构图
+
+### 9.1 Azure 资源拓扑图
+
+```mermaid
+graph TB
+    subgraph "用户端"
+        U[🌐 用户浏览器<br/>CDN Endpoint]
+    end
+
+    subgraph "Azure australiaeast 🇦🇺"
+        subgraph "前端层 (0 vCPU)"
+            CDN[📦 Azure CDN<br/>Standard Microsoft]
+            BLOB[💾 Blob Storage LRS<br/>Static Website: `$web`<br/>Queue: remittance-queue]
+            CDN -->|origin| BLOB
+        end
+
+        subgraph "计算层 (2 vCPU max)"
+            BE[🚀 Backend ACA<br/>FastAPI + 2 workers<br/>1 vCPU / 2 GiB<br/>min=1 max=2]
+            BG[⚙️ Background Threads<br/>Rate Simulator 5s<br/>Queue Consumer 2s<br/>共享副本 vCPU]
+            BE --- BG
+        end
+
+        subgraph "数据层 (PaaS, 0 vCPU)"
+            REDIS[⚡ Redis Basic C0<br/>250 MB / SSL:6380<br/>TTL: 5s-30s<br/>~$15/月]
+            PG[🗄️ PostgreSQL B1ms<br/>Flexible Server 16<br/>1 vCore / 2GB RAM<br/>32GB / SSL enforced]
+        end
+
+        subgraph "管理"
+            KV[🔐 Key Vault<br/>Standard tier]
+            LAW[📊 Log Analytics<br/>PerGB2018]
+        end
+    end
+
+    U -->|HTTPS| CDN
+    U -->|HTTPS /api/v1/*| BE
+
+    BE -->|read/write cache| REDIS
+    BE -->|read/write tx| PG
+    BE -->|push/poll messages| BLOB
+    BE -->|secrets| KV
+    BE -->|logs/metrics| LAW
+
+    style U fill:#c8e6c9,stroke:#2e7d32
+    style CDN fill:#e3f2fd,stroke:#1565c0
+    style BLOB fill:#e3f2fd,stroke:#1565c0
+    style BE fill:#fff3e0,stroke:#e65100
+    style BG fill:#fff3e0,stroke:#e65100,stroke-dasharray: 5 5
+    style REDIS fill:#fce4ec,stroke:#c62828
+    style PG fill:#e8eaf6,stroke:#283593
+    style KV fill:#eceff1,stroke:#37474f
+    style LAW fill:#e0f2f1,stroke:#00695c
+```
+
+### 9.2 请求流程序列图
+
+```mermaid
+sequenceDiagram
+    participant U as 🌐 User
+    participant CDN as 📦 CDN
+    participant BE as 🚀 Backend ACA
+    participant R as ⚡ Redis
+    participant Q as 📨 Queue
+    participant DB as 🗄️ PostgreSQL
+
+    Note over U,DB: ═══ 页面加载 (Static SPA) ═══
+    U->>CDN: GET /
+    CDN->>U: index.html + JS/CSS (edge cached)
+
+    Note over U,DB: ═══ 实时汇率轮询 (5s interval) ═══
+    loop 每 5 秒
+        U->>BE: GET /rates/live
+        BE->>R: GET rates:live:all
+        alt hit
+            R-->>BE: cached data
+        else miss
+            BE->>DB: SELECT latest snapshots
+            DB-->>BE: [rates]
+            BE->>R: SET rates:live:all EX 5
+        end
+        BE-->>U: JSON rates array
+    end
+
+    Note over U,DB: ═══ 发起汇款 ═══
+    U->>BE: POST /rates/lock
+    BE->>R: SET lock:{id} EX 30
+    BE-->>U: { lock_id, rate, expires }
+
+    U->>BE: POST /transactions
+    BE->>R: GET lock:{id}
+    BE->>DB: INSERT transaction (pending)
+    BE->>Q: PUSH {tx_id}
+    BE-->>U: { transaction_id, status: pending }
+
+    Note over U,DB: ═══ 异步处理 ═══
+    Q->>BE: POP message
+    BE->>DB: UPDATE status=processing
+    BE->>BE: run_compliance_rules()
+    alt 规则命中
+        BE->>DB: UPDATE status=flagged
+    else 通过
+        BE->>DB: UPDATE status=completed
+    end
+    BE->>R: INVALIDATE dashboard:summary
+```
+
+### 9.3 CDN + Blob 前端架构
+
+```mermaid
+graph LR
+    subgraph "Frontend 部署架构"
+        DEV[👨‍💻 Developer<br/>bun run build]
+        DIST[📁 dist/<br/>index.html<br/>assets/*.js<br/>assets/*.css<br/>images/*]
+        AZCLI[🔧 az storage blob upload-batch<br/>--destination `$web`]
+        BLOB2[💾 Blob Storage<br/>`$web` container<br/>Static Website enabled]
+        CDN2[📦 Azure CDN<br/>Endpoint: forexchange.azureedge.net<br/>Custom Domain: forexchange.io]
+    end
+
+    DEV -->|bun run build| DIST
+    DIST -->|azcopy / az cli| AZCLI
+    AZCLI -->|upload| BLOB2
+    BLOB2 -->|origin| CDN2
+    CDN2 -->|HTTPS| USERS[🌐 Users]
+```
+
+---
+
+## 附录 A: 与原设计文档的差异
+
+| 项目 | 原设计 (ForeXchange-Design.md) | 本次调整 | 原因 |
+|------|-------------------------------|----------|------|
+| 前端托管 | ACA Container (0.5 CPU / 1 GiB) | **Blob Static Website + CDN** | 前端纯静态 SPA，不需要容器；Blob 成本极低 + CDN 全球加速 |
+| 缓存层 | 无 | **Azure Redis Cache (C1)** | 实时汇率多读少写 (5s 轮询)，Redis 大幅降低 PG 读压力 |
+| 前端后端网络 | ACA 内网 Nginx proxy → Backend | **公网 HTTPS → ACA** | 简化网络拓扑，ACA 自带 TLS |
+| Key Vault | 已设计 | 增加 Redis/Blob 连接串 | 完整机密管理 |
+| CDN | 无 | **新增** | 前端全球加速 + 自定义域名 TLS |
+
+## 附录 B: 待开发清单
+
+- [ ] Terraform 代码（`cdn.tf`, `storage.tf`, `redis.tf`, 修改 `containerapps.tf`）
+- [ ] 后端 Redis 集成（`app/services/rate_cache.py`）
+- [ ] 后端 Queue 消费者重构（从 threading 改为 Azure Queue SDK 轮询）
+- [ ] 前端部署脚本（`az storage blob upload-batch`）
+- [ ] CI/CD Pipeline（GitHub Actions）
