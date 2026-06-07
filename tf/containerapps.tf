@@ -83,8 +83,12 @@ resource "azurerm_container_app" "backend" {
         value = var.postgres_admin_login
       }
       env {
+        name  = "PROJECT_NAME"
+        value = "ForeXchange"
+      }
+      env {
         name  = "ENVIRONMENT"
-        value = var.environment
+        value = "production"
       }
       env {
         name  = "DOMAIN"

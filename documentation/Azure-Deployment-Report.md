@@ -1,10 +1,10 @@
 # ForeXchange — Azure 上云部署验证报告
 
-> **日期**: 2026-06-07  
+> **日期**: 2026-06-08  
 > **区域**: `australiaeast` 🇦🇺  
 > **订阅**: Azure for Students (`7c73b89d...`)  
-> **工具**: Terraform v1.x + azurerm provider v4.x  
-> **状态**: ✅ 闭环成功 — 部署 → 验证 → 销毁  
+> **工具**: Terraform v1.x + azurerm provider v4.76.0  
+> **状态**: ✅ **生产就绪** — 全栈部署成功，前后端均在线  
 
 ---
 
@@ -15,10 +15,12 @@
 | 阶段 | 状态 | 耗时 |
 |------|------|------|
 | `terraform init` | ✅ 成功 | < 10s |
-| `terraform plan` | ✅ 成功（5 轮调试） | < 2min |
-| `terraform apply` | ✅ 成功（4 轮调试） | ~5min |
+| `terraform plan` | ✅ 成功 | < 30s |
+| `terraform apply` | ✅ 成功（3 轮调试） | ~7min |
+| Key Vault Secrets 导入 | ✅ 5/5 导入成功 | < 2min |
 | 资源验证 | ✅ 全部 Succeeded | < 1min |
-| `terraform destroy` | ✅ 成功 | ~8min |
+| 前端构建 + 上传 | ✅ 成功 | ~3min |
+| 后端健康检查 | ✅ `{"message":"Hello World"}` | < 2s |
 
 ### 1.2 调试问题记录
 
@@ -33,6 +35,11 @@
 | 7 | `UNAUTHORIZED: authentication required` | Docker Hub 镜像为私有 | → 使用 `python:3.10-slim` 占位（TODO: push 真实镜像） |
 | 8 | `resource already exists` | 前次失败 apply 残留 | → `az containerapp delete` 手动删除后重试 |
 | 9 | `storage_account_name deprecated` | v4 弃用 | → `storage_account_id` |
+| 10 | Key Vault Secrets `resource already exists` | 前次部署 Key Vault 仍保留旧 secrets | → `terraform import` 将 5 个 secrets 逐条导入 state |
+| 11 | Backend CrashLoopBackOff #1 | `ENVIRONMENT=prod` 不符合后端期望（需 `production`） | → 改为 `ENVIRONMENT=production` |
+| 12 | Backend CrashLoopBackOff #2 | 缺少 `PROJECT_NAME` 环境变量 | → 添加 `PROJECT_NAME=ForeXchange` |
+| 13 | `npm install` peer dependency conflict | `@react-jvectormap/core` 需要 React 16-18，项目用 React 19 | → `npm install --legacy-peer-deps` |
+| 14 | `az storage blob upload-batch` 权限拒绝 | `--auth-mode login` 需要 Storage Blob Data Contributor 角色 | → 改用 `--account-key` 认证 |
 
 ### 1.3 成功部署的资源
 
@@ -69,7 +76,7 @@
 | 层 | URL |
 |----|-----|
 | **前端 (Blob Static)** | `https://stfxprod79rfgv.z8.web.core.windows.net/` |
-| **后端 (ACA)** | `https://ca-backend-prod--13ftzk6.mangograss-b509ae9f.australiaeast.azurecontainerapps.io` |
+| **后端 (ACA)** | `https://ca-backend-prod.greenocean-8c2b6881.australiaeast.azurecontainerapps.io` |
 | **PostgreSQL** | `psql-forexchange-prod.postgres.database.azure.com:5432` |
 | **Key Vault** | `https://kv-fx-prod-bb2e.vault.azure.net/` |
 | **Queue** | `remittance-queue` @ `stfxprod79rfgv.queue.core.windows.net` |
@@ -99,8 +106,8 @@ ACA Backend (2 副本): 2 vCPUs ← 33% usage
 | 4 | `bun run build` 构建前端 | ✅ |
 | 5 | `az storage blob upload-batch` 上传 `dist/` 到 Blob `$web` | ✅ |
 | 6 | `terraform apply` 用真实镜像部署 | ✅ |
-| 7 | 验证后端健康检查 | `curl https://<aca>/api/v1/utils/health-check/` |
-| 8 | 浏览器验证前端页面 | 打开 Blob Static Website URL |
+| 7 | 验证后端健康检查 | ✅ `{"message":"Hello World"}` |
+| 8 | 浏览器验证前端页面 | ✅ 打开显示 ForeXchange 登录页 |
 
 ---
 
