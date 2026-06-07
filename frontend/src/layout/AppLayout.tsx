@@ -3,9 +3,12 @@ import { Outlet } from '@tanstack/react-router';
 import AppHeader from "./AppHeader";
 import Backdrop from "./Backdrop";
 import AppSidebar from "./AppSidebar";
+import { useOnlineStatus } from "@/hooks/useOnlineStatus";
+import { WifiOff } from "lucide-react";
 
 const LayoutContent: React.FC = () => {
   const { isExpanded, isHovered, isMobileOpen } = useSidebar();
+  const isOnline = useOnlineStatus();
 
   return (
     <div className="min-h-screen xl:flex">
@@ -19,6 +22,12 @@ const LayoutContent: React.FC = () => {
         } ${isMobileOpen ? "ml-0" : ""}`}
       >
         <AppHeader />
+        {!isOnline && (
+          <div className="flex items-center justify-center gap-2 bg-amber-50 dark:bg-amber-950 px-4 py-2 text-sm text-amber-800 dark:text-amber-200 border-b border-amber-200 dark:border-amber-800">
+            <WifiOff className="h-4 w-4" />
+            You are offline. Some features may be unavailable.
+          </div>
+        )}
         <div className="p-4 mx-auto max-w-(--breakpoint-2xl) md:p-6">
           <Outlet />
         </div>

@@ -11,6 +11,7 @@ import { HelmetProvider } from "react-helmet-async"
 import { ApiError, OpenAPI } from "./client"
 import { ThemeProvider } from "./components/theme-provider"
 import { Toaster } from "./components/ui/sonner"
+import { toast } from "sonner"
 import "./index.css"
 import { routeTree } from "./routeTree.gen"
 
@@ -22,7 +23,11 @@ OpenAPI.TOKEN = async () => {
 const handleApiError = (error: Error) => {
   if (error instanceof ApiError && [401, 403].includes(error.status)) {
     localStorage.removeItem("access_token")
-    window.location.href = "/login"
+    localStorage.removeItem("user_role")
+    toast.error(error.status === 401 ? "Session expired. Please log in again." : "Access denied.")
+    setTimeout(() => {
+      window.location.href = "/login"
+    }, 800)
   }
 }
 const queryClient = new QueryClient({
