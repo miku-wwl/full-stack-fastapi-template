@@ -17,13 +17,13 @@ output "frontend_url" {
 # ── Backend ──────────────────────────────────────────────────
 
 output "backend_fqdn" {
-  description = "Backend Container App FQDN"
-  value       = azurerm_container_app.backend.latest_revision_fqdn
+  description = "Backend Container App stable FQDN (does NOT change on re-apply)"
+  value       = "${azurerm_container_app.backend.name}.${azurerm_container_app_environment.env.default_domain}"
 }
 
 output "backend_url" {
-  description = "Backend full URL"
-  value       = "https://${azurerm_container_app.backend.latest_revision_fqdn}"
+  description = "Backend full URL (stable)"
+  value       = "https://${azurerm_container_app.backend.name}.${azurerm_container_app_environment.env.default_domain}"
 }
 
 # ── PostgreSQL ───────────────────────────────────────────────
@@ -68,7 +68,7 @@ output "deployment_summary" {
 ═══════════════════════════════════════════════════════════════
 
   Frontend:  ${azurerm_storage_account.shared.primary_web_endpoint}
-  Backend:   ${azurerm_container_app.backend.latest_revision_fqdn}
+  Backend:   ${azurerm_container_app.backend.name}.${azurerm_container_app_environment.env.default_domain}
   PostgreSQL: ${azurerm_postgresql_flexible_server.db.fqdn}
 
 ═══════════════════════════════════════════════════════════════

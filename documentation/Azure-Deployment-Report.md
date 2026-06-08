@@ -42,6 +42,29 @@
 | 14 | `az storage blob upload-batch` 权限拒绝 | `--auth-mode login` 需要 Storage Blob Data Contributor 角色 | → 改用 `--account-key` 认证 |
 | 15 | 前端仍请求 `localhost:8000`（CORS 报错） | `VITE_API_URL` 未在构建时正确注入 | → 创建 `.env.production`，Vite 构建时自动读取 |
 | 16 | POST `/login/access-token` 返回 500 | 数据库表未创建 (`relation \"user\" does not exist`) | → ACA 启动命令加入 `bash scripts/prestart.sh` 建表+种子数据 |
+| 17 | Key Vault Secrets 在手动删 RG 后仍 `already exists` | Key Vault 软删除：secrets 删除后保留 90 天，重建同名 KV 时旧 secrets 仍在 | → 见下方 §1.2.1 详细分析；根治方案：`keyvault.tf` 加 `purge_soft_delete_on_destroy = true` |
+
+#### 1.2.1 案例：Key Vault 软删除导致 "resource already exists"
+
+**现象**：手动在 Portal 删除 Resource Group → 删本地 `terraform.tfstate` → `terraform apply` 报错：
+```
+Error: a resource with the ID "https://kv-fx-prod-bb2e.vault.azure.net/secrets/..." already exists
+```
+
+**根因**：Azure Key Vault 默认启用**软删除（soft-delete）**，secrets 被删除后并不真删，而是保留 90 天（可恢复状态）。手动删 RG 绕过了 Terraform 的正常 destroy 流程，Terraform 不知道这些 secrets 还存在。重建同名 KV 后，旧 secrets 仍在 KV 中，Terraform 尝试创建同名 secret 时报冲突。
+
+**临时修复**：
+```bash
+# 将 5 个残留 secrets 逐条导入 Terraform state
+terraform import azurerm_key_vault_secret.postgres_password "https://kv-fx-prod-bb2e.vault.azure.net/secrets/postgres-password/<version-id>"
+terraform import azurerm_key_vault_secret.app_secret_key "https://kv-fx-prod-bb2e.vault.azure.net/secrets/app-secret-key/<version-id>"
+# ... (共 5 条)
+terraform apply -auto-approve  # 同步 state
+```
+
+**根治方案**：`keyvault.tf` 添加 `purge_soft_delete_on_destroy = true`，之后 `terraform destroy` 会彻底清除 KV 及全部 secrets，不再残留。
+
+**教训**：始终用 `terraform destroy` 而非手动删 RG。学生场景反复 create/destroy，软删除是常见陷阱。
 
 ### 1.3 成功部署的资源
 
@@ -78,7 +101,7 @@
 | 层 | URL |
 |----|-----|
 | **前端 (Blob Static)** | `https://stfxprod79rfgv.z8.web.core.windows.net/` |
-| **后端 (ACA)** | `https://ca-backend-prod.graysmoke-df9dedc7.australiaeast.azurecontainerapps.io` |
+| **后端 (ACA)** | `https://ca-backend-prod.wittyisland-5741be7f.australiaeast.azurecontainerapps.io` |
 | **PostgreSQL** | `psql-forexchange-prod.postgres.database.azure.com:5432` |
 | **Key Vault** | `https://kv-fx-prod-bb2e.vault.azure.net/` |
 | **Queue** | `remittance-queue` @ `stfxprod79rfgv.queue.core.windows.net` |
@@ -152,10 +175,11 @@ tf/
 ```
 frontend/
 ├── .env                  # 本地开发: VITE_API_URL=http://localhost:8000
-├── .env.production       # 云端部署: VITE_API_URL=https://<backend-fqdn>（.gitignore 排除，内网传递）
+├── .env.production       # 云端部署（deploy-frontend.ps1 自动生成，.gitignore 排除）
 ├── .env.production.example  # 模板（可安全提交 Git）
+├── deploy-frontend.ps1   # 一键部署脚本：读 terraform output → 更新 .env → 构建 → 上传
 └── .gitignore            # 已排除 *.local 和 .env.production
 ```
 
-> **设计说明**: Vite 在 `npm run build`（production mode）时自动读取 `.env.production` 覆盖 `.env`，
-> 实现同一份代码本地连 `localhost`、云端连 Azure Backend，无需改代码。
+> **设计说明**: `deploy-frontend.ps1` 自动从 `terraform output` 读取后端 URL，
+> 写入 `.env.production` 后构建上传。**每次 destroy 后重建无需手动改任何 URL。**

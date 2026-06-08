@@ -15,6 +15,9 @@ resource "azurerm_key_vault" "kv" {
 
   sku_name = "standard"
 
+  # 学生场景：destroy 时彻底清除，避免 90 天软删除残留
+  purge_soft_delete_on_destroy = true
+
   # 允许当前用户（你 / CLI 登录身份）访问
   access_policy {
     tenant_id = data.azurerm_client_config.current.tenant_id
