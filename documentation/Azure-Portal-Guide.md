@@ -154,7 +154,7 @@ terraform destroy -auto-approve
 |------|----------|
 | 架构全景 | Resource Group Overview（8+ 资源同框） |
 | 前端 | 浏览器打开 `https://stfxprod79rfgv.z8.web.core.windows.net/` |
-| 后端 | `curl https://ca-backend-prod.graysmoke-df9dedc7.australiaeast.azurecontainerapps.io/api/v1/utils/health-check/` → `{"message":"Hello World"}` |
+| 后端 | `curl https://ca-backend-prod.wittyisland-5741be7f.australiaeast.azurecontainerapps.io/api/v1/utils/health-check/` → `{"message":"Hello World"}` |
 | 数据库 | PostgreSQL → Metrics → Active Connections |
 | 固定副本 | ACA → Scale → min=2, max=2 |
 | 安全 | Key Vault → Secrets（打码后） |

@@ -76,7 +76,7 @@ function CompliancePage() {
   const { data: overview, isLoading: overviewLoading } = useQuery<ComplianceOverview>({
     queryKey: ["compliance-overview"],
     queryFn: async () => {
-      const res = await fetch("/api/v1/compliance/overview", { headers: await authHeaders() })
+      const res = await fetch(`${OpenAPI.BASE}/api/v1/compliance/overview`, { headers: await authHeaders() })
       if (!res.ok) throw new Error("Failed")
       return res.json()
     },
@@ -86,7 +86,7 @@ function CompliancePage() {
   const { data: flagged, isLoading: flaggedLoading } = useQuery<FlaggedList>({
     queryKey: ["compliance-flagged"],
     queryFn: async () => {
-      const res = await fetch("/api/v1/compliance/flagged", { headers: await authHeaders() })
+      const res = await fetch(`${OpenAPI.BASE}/api/v1/compliance/flagged`, { headers: await authHeaders() })
       if (!res.ok) throw new Error("Failed")
       return res.json()
     },
@@ -103,7 +103,7 @@ function CompliancePage() {
       action: string
       reason?: string
     }) => {
-      const res = await fetch(`/api/v1/compliance/review/${txId}`, {
+      const res = await fetch(`${OpenAPI.BASE}/api/v1/compliance/review/${txId}`, {
         method: "POST",
         headers: { "Content-Type": "application/json", ...(await authHeaders()) },
         body: JSON.stringify({ action, reason: reason || null }),
