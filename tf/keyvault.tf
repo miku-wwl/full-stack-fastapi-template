@@ -15,8 +15,8 @@ resource "azurerm_key_vault" "kv" {
 
   sku_name = "standard"
 
-  # 学生场景：destroy 时彻底清除，避免 90 天软删除残留
-  purge_soft_delete_on_destroy = true
+  # 学生场景：禁用清除保护，允许彻底删除
+  purge_protection_enabled = false
 
   # 允许当前用户（你 / CLI 登录身份）访问
   access_policy {
@@ -28,7 +28,7 @@ resource "azurerm_key_vault" "kv" {
     ]
 
     secret_permissions = [
-      "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore"
+      "Get", "List", "Set", "Delete", "Recover", "Backup", "Restore", "Purge"
     ]
   }
 
