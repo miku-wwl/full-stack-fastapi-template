@@ -8,6 +8,24 @@
 docker compose up -d --build
 ```
 
+## Pylint
+
+后端使用 Pylint 做 Python 静态检查，配置位于 `backend/pyproject.toml`。
+
+```bash
+cd backend
+uv sync
+uv run pylint app
+```
+
+GitHub Actions 工作流位于 `.github/workflows/pylint.yml`。向 `main`、`cloudarch`
+或 `cloudarchitf` 推送，以及创建或更新影响后端的 Pull Request 时，会自动运行
+Pylint；也可以在 GitHub 仓库的 **Actions > Pylint > Run workflow** 手动执行。
+
+如果要禁止未通过 Pylint 的代码合并，在 GitHub 仓库进入
+**Settings > Branches > Branch protection rules**，为目标分支启用
+**Require status checks to pass before merging**，并选择 `Pylint / pylint`。
+
 | 服务 | 地址 |
 |------|------|
 | 前端仪表盘 | http://localhost:5173 |

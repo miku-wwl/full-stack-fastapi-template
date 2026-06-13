@@ -25,6 +25,7 @@ dependencies = [
 dev = [
     "pytest<8.0.0,>=7.4.3",
     "mypy<2.0.0,>=1.8.0",
+    "pylint<5.0.0,>=4.0.5",
     "ty>=0.0.25",
     "ruff<1.0.0,>=0.2.2",
     "prek>=0.2.24,<1.0.0",
@@ -65,6 +66,27 @@ ignore = [
 [tool.ruff.lint.pyupgrade]
 # Preserve types, even if a file imports `from __future__ import annotations`.
 keep-runtime-typing = true
+
+[tool.pylint.main]
+ignore-paths = ["^alembic/"]
+py-version = "3.10"
+
+[tool.pylint.messages_control]
+disable = [
+    "duplicate-code",  # Small API handlers intentionally share query fragments.
+    "invalid-name",  # Pydantic settings include environment-style names.
+    "line-too-long",  # Ruff is the source of truth for formatting rules.
+    "missing-class-docstring",
+    "missing-function-docstring",
+    "missing-module-docstring",
+    "no-member",  # SQLModel fields are generated dynamically.
+    "not-callable",  # SQLAlchemy's func namespace is generated dynamically.
+    "singleton-comparison",  # SQLAlchemy boolean expressions require ==.
+    "too-few-public-methods",  # Common for Pydantic models and middleware.
+]
+
+[tool.pylint.reports]
+fail-under = 8.0
 
 [tool.coverage.run]
 source = ["app"]
