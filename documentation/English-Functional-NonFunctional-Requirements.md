@@ -4,7 +4,6 @@
 >
 > **Assessment 2 — Group Activity:** Verification List of Functional and Non-Functional Requirements
 >
-> **GitHub Repository:** `https://github.com/<your-org>/full-stack-fastapi-template` *(replace with your actual repo URL)*
 
 ---
 
