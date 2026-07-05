@@ -151,16 +151,22 @@ export default function SignUpForm() {
                     checked={isChecked}
                     onChange={setIsChecked}
                   />
-                  <p className="inline-block font-normal text-gray-500 dark:text-gray-400">
-                    By creating an account means you agree to the{" "}
-                    <span className="text-gray-800 dark:text-white/90">
-                      Terms and Conditions,
-                    </span>{" "}
-                    and our{" "}
-                    <span className="text-gray-800 dark:text-white">
-                      Privacy Policy
-                    </span>
-                  </p>
+                  <div className="space-y-2">
+                    <p className="inline-block font-normal text-gray-500 dark:text-gray-400">
+                      By creating an account means you agree to the{" "}
+                      <span className="text-gray-800 dark:text-white/90">
+                        Terms and Conditions,
+                      </span>{" "}
+                      and our{" "}
+                      <a href="/privacy" className="text-brand-500 hover:text-brand-600 dark:text-brand-400 underline">
+                        Privacy Policy
+                      </a>
+                    </p>
+                    <p className="text-xs text-gray-400 dark:text-gray-500 leading-relaxed">
+                      Your data (email, name) is encrypted and used only for remittance processing.
+                      You have the right to access, correct, and delete your data at any time.
+                    </p>
+                  </div>
                 </div>
                 {/* <!-- Button --> */}
                 <div>

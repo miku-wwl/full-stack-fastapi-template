@@ -26,6 +26,11 @@ const useAuth = () => {
     enabled: isLoggedIn(),
   })
 
+  // Sync user name to localStorage for components outside React Query context
+  if (user?.full_name) {
+    localStorage.setItem("user_name", user.full_name)
+  }
+
   const signUpMutation = useMutation({
     mutationFn: (data: UserRegister) =>
       UsersService.registerUser({ requestBody: data }),
@@ -60,6 +65,7 @@ const useAuth = () => {
   const logout = () => {
     localStorage.removeItem("access_token")
     localStorage.removeItem("user_role")
+    localStorage.removeItem("user_name")
     queryClient.clear()
     navigate({ to: "/login" })
   }

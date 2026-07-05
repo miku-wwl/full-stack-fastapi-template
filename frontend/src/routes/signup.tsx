@@ -172,6 +172,14 @@ function SignUp() {
             >
               Sign Up
             </LoadingButton>
+
+            <p className="text-xs text-gray-400 dark:text-gray-500 text-center leading-relaxed">
+              By creating an account, you agree to our{" "}
+              <a href="/privacy" className="underline underline-offset-2 hover:text-gray-600 dark:hover:text-gray-300">
+                Privacy Policy
+              </a>.
+              Your data is encrypted and used only for remittance processing.
+            </p>
           </div>
 
           <div className="text-center text-sm">

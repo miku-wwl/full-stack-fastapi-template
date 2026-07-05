@@ -300,3 +300,23 @@ layer(base);
 @utility menu-item-active {
   @apply bg-brand-50 text-brand-500 dark:bg-brand-500/[0.12] dark:text-brand-400;
 }
+
+@utility menu-item-inactive {
+  @apply text-gray-600 dark:text-gray-400;
+}
+
+@utility menu-item-text {
+  @apply text-gray-700 dark:text-gray-300;
+}
+
+@utility menu-item-icon-inactive {
+  @apply text-gray-400 dark:text-gray-500;
+}
+
+@utility menu-item-icon-active {
+  @apply text-brand-500 dark:text-brand-400;
+}
+
+@utility menu-item-icon-size {
+  @apply size-6;
+}

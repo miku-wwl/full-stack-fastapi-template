@@ -1,4 +1,5 @@
 import { useState, useEffect, useCallback } from "react";
+import { useTranslation } from "react-i18next";
 import { OpenAPI } from "../../client";
 
 const PAIRS = [
@@ -43,6 +44,7 @@ function validateIBAN(iban: string): boolean {
 }
 
 export default function RemittanceForm({ className = "" }: RemittanceFormProps) {
+  const { t } = useTranslation();
   // Form state
   const [pair, setPair] = useState("USD/EUR");
   const [sourceAmount, setSourceAmount] = useState("1000");
@@ -76,7 +78,7 @@ export default function RemittanceForm({ className = "" }: RemittanceFormProps) 
   const handleLock = useCallback(async () => {
     const amount = parseFloat(sourceAmount);
     if (!amount || amount < 1) {
-      setLockError("Amount must be at least 1");
+      setLockError(t("remittance.invalidAmount"));
       return;
     }
     setLockError("");
@@ -87,7 +89,7 @@ export default function RemittanceForm({ className = "" }: RemittanceFormProps) 
       setLock(result as RateLock);
       setCountdown(result.valid_seconds);
     } catch (e: any) {
-      setLockError(e.message || "Failed to lock rate");
+      setLockError(e.message || t("remittance.failedLock"));
     } finally {
       setLocking(false);
     }
@@ -98,7 +100,7 @@ export default function RemittanceForm({ className = "" }: RemittanceFormProps) 
     e.preventDefault();
     if (!lock) return;
     if (!validateIBAN(recipientIBAN)) {
-      setSubmitResult({ success: false, message: "Invalid IBAN format" });
+      setSubmitResult({ success: false, message: t("remittance.invalidIban") });
       return;
     }
     setSubmitting(true);
@@ -112,14 +114,14 @@ export default function RemittanceForm({ className = "" }: RemittanceFormProps) 
         purpose,
         locked_rate_id: lock.lock_id,
       });
-      setSubmitResult({ success: true, message: `Transaction created: ${result.id?.substring(0, 8)}...` });
+      setSubmitResult({ success: true, message: t("remittance.created", { id: result.id?.substring(0, 8) }) });
       // Reset form
       setRecipientName("");
       setRecipientIBAN("");
       setLock(null);
       setCountdown(0);
     } catch (e: any) {
-      setSubmitResult({ success: false, message: e.message || "Failed to create transaction" });
+      setSubmitResult({ success: false, message: e.message || t("remittance.failedCreate") });
     } finally {
       setSubmitting(false);
     }
@@ -135,7 +137,7 @@ export default function RemittanceForm({ className = "" }: RemittanceFormProps) 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Currency Pair
+            {t("remittance.currencyPair")}
           </label>
           <select
             value={pair}
@@ -147,7 +149,7 @@ export default function RemittanceForm({ className = "" }: RemittanceFormProps) 
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Source Amount
+            {t("remittance.sourceAmount")}
           </label>
           <div className="relative">
             <input
@@ -171,14 +173,14 @@ export default function RemittanceForm({ className = "" }: RemittanceFormProps) 
         {!lock && (
           <div>
             <div className="flex items-center justify-between mb-2">
-              <span className="text-sm text-gray-500 dark:text-gray-400">Lock exchange rate before submitting</span>
+              <span className="text-sm text-gray-500 dark:text-gray-400">{t("remittance.lockRate")}</span>
               <button
                 type="button"
                 onClick={handleLock}
                 disabled={locking}
                 className="px-4 py-2 bg-blue-500 text-white text-sm font-medium rounded-lg hover:bg-blue-600 disabled:opacity-50 transition-colors"
               >
-                {locking ? "Locking..." : "Lock Rate"}
+                {locking ? t("remittance.locking") : t("remittance.lockRateBtn")}
               </button>
             </div>
             {lockError && <p className="text-sm text-red-500">{lockError}</p>}
@@ -189,15 +191,15 @@ export default function RemittanceForm({ className = "" }: RemittanceFormProps) 
           <div className="space-y-2">
             <div className="flex items-center justify-between">
               <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                Rate Locked: 1 {pair.split("/")[0]} = {lock.rate.toFixed(6)} {pair.split("/")[1]}
+                {t("remittance.rateLocked", { from: pair.split("/")[0], rate: lock.rate.toFixed(6), to: pair.split("/")[1] })}
               </span>
               <span className={`text-sm font-mono font-semibold ${countdown <= 10 ? "text-red-500" : "text-green-600"}`}>
                 {countdown}s
               </span>
             </div>
             <div className="flex items-center justify-between text-sm text-gray-500 dark:text-gray-400">
-              <span>Fee: {lock.fee_percentage}% = {lock.fee_amount.toFixed(2)} {pair.split("/")[0]}</span>
-              <span>You'll receive: ≈ <strong className="text-gray-800 dark:text-white">{targetAmount} {pair.split("/")[1]}</strong></span>
+              <span>{t("remittance.fee", { pct: lock.fee_percentage, amount: lock.fee_amount.toFixed(2), currency: pair.split("/")[0] })}</span>
+              <span>{t("remittance.youReceive", { amount: targetAmount, currency: pair.split("/")[1] })}</span>
             </div>
             <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-1.5">
               <div
@@ -209,7 +211,7 @@ export default function RemittanceForm({ className = "" }: RemittanceFormProps) 
         )}
 
         {lock && countdown <= 0 && (
-          <p className="text-sm text-red-500">Rate lock expired. Please lock again.</p>
+          <p className="text-sm text-red-500">{t("remittance.lockExpired")}</p>
         )}
       </div>
 
@@ -217,20 +219,20 @@ export default function RemittanceForm({ className = "" }: RemittanceFormProps) 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Recipient Name <span className="text-red-500">*</span>
+            {t("remittance.recipientName")} <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
             value={recipientName}
             onChange={(e) => setRecipientName(e.target.value)}
             className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
-            placeholder="e.g. Jean Dupont"
+            placeholder={t("remittance.namePlaceholder")}
             required
           />
         </div>
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
-            Recipient IBAN <span className="text-red-500">*</span>
+            {t("remittance.recipientIban")} <span className="text-red-500">*</span>
           </label>
           <input
             type="text"
@@ -241,29 +243,29 @@ export default function RemittanceForm({ className = "" }: RemittanceFormProps) 
                 ? "border-red-400 focus:ring-red-500"
                 : "border-gray-300 dark:border-gray-600 focus:ring-blue-500"
             }`}
-            placeholder="e.g. FR7630001007941234567890185"
+            placeholder={t("remittance.ibanPlaceholder")}
             required
           />
           {recipientIBAN && !ibanValid && (
-            <p className="text-xs text-red-500 mt-1">Invalid IBAN format</p>
+            <p className="text-xs text-red-500 mt-1">{t("remittance.invalidIban")}</p>
           )}
         </div>
       </div>
 
       {/* Purpose */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Purpose</label>
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">{t("remittance.purpose")}</label>
         <select
           value={purpose}
           onChange={(e) => setPurpose(e.target.value)}
           className="w-full rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-sm dark:border-gray-600 dark:bg-gray-800 dark:text-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
         >
-          <option value="personal">Personal</option>
-          <option value="family_support">Family Support</option>
-          <option value="business">Business</option>
-          <option value="education">Education</option>
-          <option value="travel">Travel</option>
-          <option value="medical">Medical</option>
+          <option value="personal">{t("remittance.purposePersonal")}</option>
+          <option value="family_support">{t("remittance.purposeFamily")}</option>
+          <option value="business">{t("remittance.purposeBusiness")}</option>
+          <option value="education">{t("remittance.purposeEducation")}</option>
+          <option value="travel">{t("remittance.purposeTravel")}</option>
+          <option value="medical">{t("remittance.purposeMedical")}</option>
         </select>
       </div>
 
@@ -273,7 +275,7 @@ export default function RemittanceForm({ className = "" }: RemittanceFormProps) 
         disabled={!isValid || submitting}
         className="w-full py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
       >
-        {submitting ? "Submitting..." : "Submit Transfer"}
+        {submitting ? t("remittance.submitting") : t("remittance.submitTransfer")}
       </button>
 
       {/* Result feedback */}

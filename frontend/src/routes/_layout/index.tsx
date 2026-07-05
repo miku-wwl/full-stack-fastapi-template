@@ -5,7 +5,7 @@ export const Route = createFileRoute("/_layout/")({
   head: () => ({
     meta: [
       {
-        title: "Dashboard - ForeXchange",
+        title: "page.dashboard.title - ForeXchange",
       },
     ],
   }),

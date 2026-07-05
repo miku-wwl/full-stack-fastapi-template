@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { ArrowDownIcon, ArrowUpIcon } from "../../icons";
 import type { RateWithPair } from "../../client";
 
@@ -11,6 +12,7 @@ interface RateCardProps {
  * - Red background/gradient for negative change_pct
  */
 export default function RateCard({ rate }: RateCardProps) {
+  const { t } = useTranslation();
   const isPositive = rate.change_pct >= 0;
   const isNegative = rate.change_pct < 0;
 
@@ -47,7 +49,7 @@ export default function RateCard({ rate }: RateCardProps) {
 
       {/* Mid Rate - Large */}
       <div className="mb-4">
-        <span className="text-sm text-gray-500 dark:text-gray-400">Mid</span>
+        <span className="text-sm text-gray-500 dark:text-gray-400">{t("rates.mid")}</span>
         <div
           className={`text-2xl font-bold mt-0.5 ${
             isPositive
@@ -64,13 +66,13 @@ export default function RateCard({ rate }: RateCardProps) {
       {/* Bid / Ask row */}
       <div className="grid grid-cols-2 gap-3 mb-3">
         <div className="p-2.5 rounded-lg bg-green-50 dark:bg-green-900/20">
-          <span className="text-xs text-gray-500 dark:text-gray-400">Bid</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400">{t("rates.bid")}</span>
           <div className="text-sm font-semibold text-green-700 dark:text-green-400 mt-0.5">
             {formatRate(rate.bid)}
           </div>
         </div>
         <div className="p-2.5 rounded-lg bg-red-50 dark:bg-red-900/20">
-          <span className="text-xs text-gray-500 dark:text-gray-400">Ask</span>
+          <span className="text-xs text-gray-500 dark:text-gray-400">{t("rates.ask")}</span>
           <div className="text-sm font-semibold text-red-700 dark:text-red-400 mt-0.5">
             {formatRate(rate.ask)}
           </div>
@@ -80,7 +82,7 @@ export default function RateCard({ rate }: RateCardProps) {
       {/* Spread + Time */}
       <div className="flex items-center justify-between text-xs text-gray-400 dark:text-gray-500 pt-2 border-t border-gray-100 dark:border-gray-800">
         <span>
-          Spread: {formatRate(rate.spread)}
+          {t("rates.spread")} {formatRate(rate.spread)}
         </span>
         <span>
           {rate.timestamp

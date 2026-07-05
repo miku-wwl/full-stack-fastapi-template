@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router"
+import { useTranslation } from "react-i18next"
 import { useForexRates } from "@/hooks/useForexRates"
 import RateCard from "@/components/forex/RateCard"
 import RateChart from "@/components/forex/RateChart"
@@ -8,13 +9,14 @@ export const Route = createFileRoute("/_layout/rates")({
   head: () => ({
     meta: [
       {
-        title: "Live Rates - ForeXchange",
+        title: "page.rates.title - ForeXchange",
       },
     ],
   }),
 })
 
 function RatesPage() {
+  const { t } = useTranslation()
   const { data: rates, isLoading, isError, error, dataUpdatedAt } = useForexRates()
 
   return (
@@ -23,10 +25,10 @@ function RatesPage() {
       <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h1 className="text-2xl font-bold tracking-tight text-gray-800 dark:text-white">
-            Live Rates
+            {t("page.rates.title")}
           </h1>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Real-time currency exchange rates · Auto-refreshes every 5s
+            {t("page.rates.subtitle")}
           </p>
         </div>
         {dataUpdatedAt > 0 && (
@@ -66,10 +68,10 @@ function RatesPage() {
       {isError && !isLoading && (
         <div className="flex flex-col items-center justify-center rounded-lg border border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-900/20 p-12">
           <p className="text-red-600 dark:text-red-400 font-medium">
-            Failed to load live rates
+            {t("rates.errorTitle")}
           </p>
           <p className="text-sm text-red-500 dark:text-red-400/70 mt-1">
-            {error?.message || "Please check your connection and try again."}
+            {error?.message || t("rates.errorRetry")}
           </p>
         </div>
       )}
@@ -78,10 +80,10 @@ function RatesPage() {
       {!isLoading && !isError && rates?.length === 0 && (
         <div className="flex flex-col items-center justify-center rounded-lg border border-dashed border-gray-300 dark:border-gray-700 p-12">
           <p className="text-gray-500 dark:text-gray-400 font-medium">
-            No active currency pairs
+            {t("rates.noPairs")}
           </p>
           <p className="text-sm text-gray-400 dark:text-gray-500 mt-1">
-            Waiting for market data...
+            {t("rates.waitingData")}
           </p>
         </div>
       )}
