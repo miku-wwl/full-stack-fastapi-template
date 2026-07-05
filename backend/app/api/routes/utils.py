@@ -29,3 +29,40 @@ def test_email(email_to: EmailStr) -> Message:
 @router.get("/health-check/")
 async def health_check() -> Message:
     return Message(message="Hello World")
+
+
+@router.get("/data-sovereignty/", response_model=dict)
+async def data_sovereignty() -> dict:
+    """
+    Return the data sovereignty and privacy principles that ForeXchange follows.
+
+    This endpoint documents the system's approach to data collection, storage,
+    access control, and user rights — aligned with Te Mana Raraunga (Māori Data
+    Sovereignty Network) principles and the New Zealand Privacy Act 2020.
+    """
+    return {
+        "principles": [
+            "collection_consent",
+            "encrypted_storage",
+            "role_based_access",
+            "right_to_deletion",
+            "audit_trail",
+        ],
+        "data_categories": [
+            "email",
+            "full_name",
+            "recipient_iban",
+            "transaction_history",
+        ],
+        "retention_policy": "Data is retained until account deletion request",
+        "encryption": {
+            "in_transit": "TLS 1.2+",
+            "at_rest": "PostgreSQL encryption",
+            "passwords": "Argon2id + Bcrypt hashing",
+        },
+        "access_control": "JWT-based role access (Customer / Auditor)",
+        "standards": [
+            "Te Mana Raraunga — Māori Data Sovereignty Principles",
+            "New Zealand Privacy Act 2020",
+        ],
+    }

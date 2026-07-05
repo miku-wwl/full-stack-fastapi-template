@@ -88,4 +88,8 @@ def on_startup() -> None:
         seed_forex_data()
         start_rate_generator(interval_seconds=5)
     except Exception as e:
-        logger.warning(f"Could not start forex simulator: {e}")
+        logger.warning("Could not start forex simulator: %s", e)
+        logger.warning(
+            "App started without forex data. Rates and transactions "
+            "will be unavailable until the issue is resolved."
+        )

@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import Chart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 import { OpenAPI } from "../../client";
@@ -27,6 +28,7 @@ export default function RateChart({
   className = "",
   height = 350,
 }: RateChartProps) {
+  const { t } = useTranslation();
   const [pair, setPair] = useState(defaultPair);
   const [range, setRange] = useState("24h");
 
@@ -110,7 +112,7 @@ export default function RateChart({
       {/* Controls */}
       <div className="flex flex-col gap-3 mb-4 sm:flex-row sm:items-center sm:justify-between">
         <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-          Rate Trend
+          {t("rates.rateTrend")}
         </h3>
         <div className="flex items-center gap-2">
           {/* Pair selector */}

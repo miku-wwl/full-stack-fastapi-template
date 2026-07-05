@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { createFileRoute, redirect } from "@tanstack/react-router"
+import { useTranslation } from "react-i18next"
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query"
 import {
   AlertTriangle,
@@ -59,11 +60,12 @@ export const Route = createFileRoute("/_layout/compliance")({
     }
   },
   head: () => ({
-    meta: [{ title: "Compliance Audit - ForeXchange" }],
+    meta: [{ title: "compliance.title" }],
   }),
 })
 
 function CompliancePage() {
+  const { t } = useTranslation()
   const queryClient = useQueryClient()
   const [modalTx, setModalTx] = useState<TxPublic | null>(null)
   const [rejectReason, setRejectReason] = useState("")
@@ -145,9 +147,9 @@ function CompliancePage() {
   return (
     <div className="flex flex-col gap-6">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight">Compliance Audit</h1>
-        <p className="text-muted-foreground">
-          Review flagged transactions and compliance alerts (Auditor only)
+        <h1 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{t("page.compliance.title")}</h1>
+        <p className="text-gray-500 dark:text-gray-400">
+          {t("page.compliance.subtitle")}
         </p>
       </div>
 
@@ -155,31 +157,31 @@ function CompliancePage() {
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-5">
         <StatCard
           icon={<AlertTriangle className="h-5 w-5 text-amber-600" />}
-          label="Flagged"
+          label={t("compliance.flagged")}
           value={overview?.flagged_count ?? "—"}
           loading={overviewLoading}
         />
         <StatCard
           icon={<Clock className="h-5 w-5 text-blue-600" />}
-          label="Reviewed Today"
+          label={t("compliance.reviewedToday")}
           value={overview?.reviewed_today ?? "—"}
           loading={overviewLoading}
         />
         <StatCard
           icon={<CheckCircle2 className="h-5 w-5 text-green-600" />}
-          label="Approved"
+          label={t("compliance.approved")}
           value={overview?.approved_today ?? "—"}
           loading={overviewLoading}
         />
         <StatCard
           icon={<XCircle className="h-5 w-5 text-red-600" />}
-          label="Rejected"
+          label={t("compliance.rejected")}
           value={overview?.rejected_today ?? "—"}
           loading={overviewLoading}
         />
         <StatCard
           icon={<ShieldCheck className="h-5 w-5 text-emerald-600" />}
-          label="Pass Rate"
+          label={t("compliance.passRate")}
           value={`${overview?.pass_rate ?? 0}%`}
           loading={overviewLoading}
         />
@@ -188,40 +190,40 @@ function CompliancePage() {
       {/* Flagged transactions table */}
       <div className="rounded-2xl border border-gray-200 bg-white dark:border-gray-800 dark:bg-white/[0.03] overflow-hidden">
         <div className="px-5 py-4 border-b border-gray-100 dark:border-gray-800">
-          <h2 className="text-sm font-semibold">
-            Flagged Transactions{" "}
+          <h2 className="text-sm font-semibold text-gray-800 dark:text-gray-100">
+            {t("compliance.flaggedTransactions")}{" "}
             {flagged ? `(${flagged.count})` : ""}
           </h2>
         </div>
 
         {flaggedLoading ? (
-          <div className="p-8 text-center text-muted-foreground text-sm">
-            Loading...
+          <div className="p-8 text-center text-gray-500 dark:text-gray-400 text-sm">
+            {t("compliance.loading")}
           </div>
         ) : !flagged || flagged.data.length === 0 ? (
-          <div className="p-8 text-center text-muted-foreground text-sm">
-            No flagged transactions — all clear ✅
+          <div className="p-8 text-center text-gray-500 dark:text-gray-400 text-sm">
+            {t("compliance.noFlagged")}
           </div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100 dark:border-gray-800 text-left">
-                  <th className="px-5 py-3 font-medium text-muted-foreground">ID</th>
-                  <th className="px-5 py-3 font-medium text-muted-foreground">Pair</th>
-                  <th className="px-5 py-3 font-medium text-muted-foreground text-right">
-                    Amount
+                  <th className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400">{t("compliance.colId")}</th>
+                  <th className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400">{t("compliance.colPair")}</th>
+                  <th className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-right">
+                    {t("compliance.colAmount")}
                   </th>
-                  <th className="px-5 py-3 font-medium text-muted-foreground">Recipient</th>
-                  <th className="px-5 py-3 font-medium text-muted-foreground">IBAN</th>
-                  <th className="px-5 py-3 font-medium text-muted-foreground text-center">
-                    Risk Score
+                  <th className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400">{t("compliance.colRecipient")}</th>
+                  <th className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400">{t("compliance.colIban")}</th>
+                  <th className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-center">
+                    {t("compliance.colRiskScore")}
                   </th>
-                  <th className="px-5 py-3 font-medium text-muted-foreground text-center">
-                    Rules
+                  <th className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-center">
+                    {t("compliance.colRules")}
                   </th>
-                  <th className="px-5 py-3 font-medium text-muted-foreground text-center">
-                    Actions
+                  <th className="px-5 py-3 font-medium text-gray-500 dark:text-gray-400 text-center">
+                    {t("compliance.colActions")}
                   </th>
                 </tr>
               </thead>
@@ -233,18 +235,18 @@ function CompliancePage() {
                       key={tx.id}
                       className="border-b border-gray-50 dark:border-gray-800/50 hover:bg-gray-50 dark:hover:bg-white/[0.02]"
                     >
-                      <td className="px-5 py-3 font-mono text-xs">
+                      <td className="px-5 py-3 font-mono text-xs text-gray-600 dark:text-gray-400">
                         {tx.id.slice(0, 8)}…
                       </td>
-                      <td className="px-5 py-3 font-medium">{tx.pair}</td>
-                      <td className="px-5 py-3 text-right font-mono">
+                      <td className="px-5 py-3 font-medium text-gray-800 dark:text-gray-200">{tx.pair}</td>
+                      <td className="px-5 py-3 text-right font-mono text-gray-700 dark:text-gray-300">
                         {tx.source_amount.toLocaleString(undefined, {
                           minimumFractionDigits: 2,
                           maximumFractionDigits: 2,
                         })}
                       </td>
-                      <td className="px-5 py-3">{tx.recipient_name}</td>
-                      <td className="px-5 py-3 font-mono text-xs">
+                      <td className="px-5 py-3 text-gray-700 dark:text-gray-300">{tx.recipient_name}</td>
+                      <td className="px-5 py-3 font-mono text-xs text-gray-600 dark:text-gray-400">
                         {tx.recipient_iban}
                       </td>
                       <td className="px-5 py-3 text-center">
@@ -276,7 +278,7 @@ function CompliancePage() {
                             className="inline-flex items-center gap-1 rounded-lg bg-green-50 px-3 py-1.5 text-xs font-medium text-green-700 hover:bg-green-100 dark:bg-green-950 dark:text-green-400 dark:hover:bg-green-900 disabled:opacity-50"
                           >
                             <ThumbsUp className="h-3.5 w-3.5" />
-                            Approve
+                            {t("compliance.approve")}
                           </button>
                           <button
                             type="button"
@@ -285,7 +287,7 @@ function CompliancePage() {
                             className="inline-flex items-center gap-1 rounded-lg bg-red-50 px-3 py-1.5 text-xs font-medium text-red-700 hover:bg-red-100 dark:bg-red-950 dark:text-red-400 dark:hover:bg-red-900 disabled:opacity-50"
                           >
                             <ThumbsDown className="h-3.5 w-3.5" />
-                            Reject
+                            {t("compliance.reject")}
                           </button>
                         </div>
                       </td>
@@ -302,8 +304,8 @@ function CompliancePage() {
       {modalTx && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-xl dark:bg-gray-900">
-            <h3 className="text-lg font-semibold">Reject Transaction</h3>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <h3 className="text-lg font-semibold">{t("compliance.rejectTitle")}</h3>
+            <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
               ID: <span className="font-mono">{modalTx.id.slice(0, 8)}…</span>
               {" "}&mdash; {modalTx.pair} —{" "}
               {modalTx.source_amount.toLocaleString(undefined, {
@@ -312,12 +314,12 @@ function CompliancePage() {
               })}
             </p>
             <label className="mt-4 block text-sm font-medium">
-              Reason for rejection
+              {t("compliance.rejectReason")}
             </label>
             <textarea
               className="mt-1 w-full rounded-lg border border-gray-200 p-3 text-sm dark:border-gray-800 dark:bg-gray-950"
               rows={3}
-              placeholder="e.g. Suspicious structuring pattern"
+              placeholder={t("compliance.rejectPlaceholder")}
               value={rejectReason}
               onChange={(e) => setRejectReason(e.target.value)}
             />
@@ -328,9 +330,9 @@ function CompliancePage() {
                   setModalTx(null)
                   setRejectReason("")
                 }}
-                className="rounded-lg px-4 py-2 text-sm font-medium text-muted-foreground hover:bg-gray-100 dark:hover:bg-gray-800"
+                className="rounded-lg px-4 py-2 text-sm font-medium text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800"
               >
-                Cancel
+                {t("compliance.cancel")}
               </button>
               <button
                 type="button"
@@ -338,7 +340,7 @@ function CompliancePage() {
                 disabled={!rejectReason.trim() || reviewMutation.isPending}
                 className="rounded-lg bg-red-600 px-4 py-2 text-sm font-medium text-white hover:bg-red-700 disabled:opacity-50"
               >
-                Confirm Reject
+                {t("compliance.confirmReject")}
               </button>
             </div>
           </div>

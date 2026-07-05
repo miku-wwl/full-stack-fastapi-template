@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import {
   Table,
   TableBody,
@@ -13,14 +14,15 @@ const statusConfig: Record<
   string,
   { color: "success" | "warning" | "error" | "info"; label: string }
 > = {
-  pending: { color: "warning", label: "Pending" },
-  processing: { color: "info", label: "Processing" },
-  completed: { color: "success", label: "Completed" },
-  flagged: { color: "error", label: "Flagged" },
-  rejected: { color: "error", label: "Rejected" },
+  pending: { color: "warning", label: "statusPending" },
+  processing: { color: "info", label: "statusProcessing" },
+  completed: { color: "success", label: "statusCompleted" },
+  flagged: { color: "error", label: "statusFlagged" },
+  rejected: { color: "error", label: "statusRejected" },
 };
 
 export default function RecentTransactions() {
+  const { t } = useTranslation();
   const { data, isLoading, isError } = useQuery({
     queryKey: ["transactions", "recent"],
     queryFn: () =>
@@ -36,29 +38,29 @@ export default function RecentTransactions() {
       <div className="flex flex-col gap-2 mb-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-            Recent Transactions
+            {t("recentTransactions.title")}
           </h3>
           <p className="text-sm text-gray-500 dark:text-gray-400">
-            Latest remittance activity across all currencies
+            {t("recentTransactions.subtitle")}
           </p>
         </div>
       </div>
 
       {isLoading && (
         <div className="py-8 text-center text-gray-400">
-          Loading transactions...
+          {t("recentTransactions.loading")}
         </div>
       )}
 
       {isError && (
         <div className="py-8 text-center text-red-500">
-          Failed to load transactions. Please try again.
+          {t("recentTransactions.error")}
         </div>
       )}
 
       {!isLoading && !isError && transactions.length === 0 && (
         <div className="py-8 text-center text-gray-400">
-          No transactions yet.
+          {t("recentTransactions.noData")}
         </div>
       )}
 
@@ -71,31 +73,31 @@ export default function RecentTransactions() {
                   isHeader
                   className="py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  ID
+                  {t("recentTransactions.colId")}
                 </TableCell>
                 <TableCell
                   isHeader
                   className="py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Pair
+                  {t("recentTransactions.colPair")}
                 </TableCell>
                 <TableCell
                   isHeader
                   className="py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Amount
+                  {t("recentTransactions.colAmount")}
                 </TableCell>
                 <TableCell
                   isHeader
                   className="py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Recipient
+                  {t("recentTransactions.colRecipient")}
                 </TableCell>
                 <TableCell
                   isHeader
                   className="py-3 font-medium text-gray-500 text-start text-theme-xs dark:text-gray-400"
                 >
-                  Status
+                  {t("recentTransactions.colStatus")}
                 </TableCell>
               </TableRow>
             </TableHeader>
@@ -127,7 +129,7 @@ export default function RecentTransactions() {
                         color={cfg.color}
                         variant="light"
                       >
-                        {cfg.label}
+                        {t("recentTransactions." + cfg.label)}
                       </Badge>
                     </TableCell>
                   </TableRow>

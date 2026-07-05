@@ -1,5 +1,6 @@
 import { useCallback } from "react";
 import { Link, useLocation } from '@tanstack/react-router';
+import { useTranslation } from "react-i18next";
 
 import {
   BoxCubeIcon,
@@ -22,22 +23,22 @@ type NavItem = {
 const mainItems: NavItem[] = [
   {
     icon: <GridIcon />,
-    name: "Dashboard",
+    name: "nav.dashboard",
     path: "/",
   },
   {
     icon: <ListIcon />,
-    name: "New Remittance",
+    name: "nav.remittance",
     path: "/remittance",
   },
   {
     icon: <TableIcon />,
-    name: "Transaction History",
+    name: "nav.history",
     path: "/history",
   },
   {
     icon: <BoxCubeIcon />,
-    name: "Live Rates",
+    name: "nav.rates",
     path: "/rates",
   },
 ];
@@ -45,7 +46,7 @@ const mainItems: NavItem[] = [
 const auditorItems: NavItem[] = [
   {
     icon: <LockIcon />,
-    name: "Compliance Audit",
+    name: "nav.compliance",
     path: "/compliance",
   },
 ];
@@ -53,12 +54,13 @@ const auditorItems: NavItem[] = [
 const settingsItems: NavItem[] = [
   {
     icon: <HorizontaLDots />,
-    name: "Settings",
+    name: "nav.settings",
     path: "/settings",
   },
 ];
 
 const AppSidebar: React.FC = () => {
+  const { t } = useTranslation();
   const { isExpanded, isMobileOpen, isHovered, setIsHovered } = useSidebar();
   const location = useLocation();
   const { isAuditor } = useAuth();
@@ -89,7 +91,7 @@ const AppSidebar: React.FC = () => {
                 {nav.icon}
               </span>
               {(isExpanded || isHovered || isMobileOpen) && (
-                <span className="menu-item-text">{nav.name}</span>
+                <span className="menu-item-text">{t(nav.name)}</span>
               )}
             </Link>
           )}
@@ -100,7 +102,7 @@ const AppSidebar: React.FC = () => {
 
   return (
     <aside
-      className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
+      className={`fixed mt-16 flex flex-col lg:mt-0 top-0 px-5 left-0 bg-white dark:bg-gray-900 dark:border-gray-800 text-gray-900 dark:text-gray-200 h-screen transition-all duration-300 ease-in-out z-50 border-r border-gray-200 
         ${
           isExpanded || isMobileOpen
             ? "w-[290px]"
@@ -140,7 +142,7 @@ const AppSidebar: React.FC = () => {
                 }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  "Navigation"
+                  t("sidebar.navigation")
                 ) : (
                   <HorizontaLDots className="size-6" />
                 )}
@@ -157,7 +159,7 @@ const AppSidebar: React.FC = () => {
                   }`}
                 >
                   {isExpanded || isHovered || isMobileOpen ? (
-                    "Admin"
+                    t("sidebar.admin")
                   ) : (
                     <HorizontaLDots className="size-6" />
                   )}
@@ -174,7 +176,7 @@ const AppSidebar: React.FC = () => {
                 }`}
               >
                 {isExpanded || isHovered || isMobileOpen ? (
-                  "System"
+                  t("sidebar.admin")
                 ) : (
                   <HorizontaLDots className="size-6" />
                 )}

@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { useTranslation } from "react-i18next";
 import {
   GridIcon,
   DollarLineIcon,
@@ -13,8 +14,10 @@ import PageMeta from "../../components/Common/PageMeta";
 import { DashboardService } from "../../client";
 
 const isAuditor = () => localStorage.getItem("user_role") === "auditor";
+const getUserName = () => localStorage.getItem("user_name") || "";
 
 export default function Home() {
+  const { t } = useTranslation();
   const { data: summary, isLoading } = useQuery({
     queryKey: ["dashboard", "summary"],
     queryFn: () => DashboardService.readDashboardSummary(),
@@ -23,9 +26,19 @@ export default function Home() {
   });
 
   const auditor = isAuditor();
+  const userName = getUserName();
 
   return (
     <>
+      {/* Kia ora greeting — Māori language welcome as a sign of cultural respect */}
+      <div className="mb-4">
+        <h1 className="text-2xl font-bold text-gray-800 dark:text-white/90">
+          {userName ? t("greeting.user", { name: userName }) : t("greeting.noUser")}
+        </h1>
+        <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          {t("landing.subtitle")}
+        </p>
+      </div>
       <PageMeta
         title="Dashboard - ForeXchange"
         description="ForeXchange real-time remittance dashboard"
@@ -37,7 +50,7 @@ export default function Home() {
             icon={
               <BoxCubeIcon className="text-blue-600 dark:text-blue-400 size-6" />
             }
-            label="Active Currency Pairs"
+            label={t("dashboard.activePairs")}
             value={summary?.active_pairs ?? 0}
             loading={isLoading}
           />
@@ -45,7 +58,7 @@ export default function Home() {
             icon={
               <GroupIcon className="text-green-600 dark:text-green-400 size-6" />
             }
-            label="Your Transactions"
+            label={t("dashboard.yourTransactions")}
             value={summary?.today_transactions ?? 0}
             loading={isLoading}
           />
@@ -53,7 +66,7 @@ export default function Home() {
             icon={
               <DollarLineIcon className="text-indigo-600 dark:text-indigo-400 size-6" />
             }
-            label="Total Volume (USD)"
+            label={t("dashboard.totalVolume")}
             value={summary?.total_volume_usd ?? 0}
             loading={isLoading}
           />
@@ -62,7 +75,7 @@ export default function Home() {
               icon={
                 <AlertHexaIcon className="text-red-600 dark:text-red-400 size-6" />
               }
-              label="Compliance Alerts"
+              label={t("dashboard.complianceAlerts")}
               value={summary?.flagged_count ?? 0}
               highlight={!!summary?.flagged_count && summary.flagged_count > 0}
               loading={isLoading}
@@ -79,31 +92,29 @@ export default function Home() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-                  Forex Market Status
+                  {t("dashboard.forexMarketStatus")}
                 </h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  Real-time rates updating every 5 seconds
+                  {t("dashboard.ratesUpdating")}
                 </p>
               </div>
             </div>
             <div className="flex items-center gap-2 mt-4">
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 text-xs font-medium">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
-                Live
+                {t("dashboard.live")}
               </span>
               <span className="text-sm text-gray-500 dark:text-gray-400">
-                {summary?.active_pairs ?? 0} pairs active
+                {summary?.active_pairs ?? 0} {t("dashboard.pairsActive")}
                 {auditor && (
-                  <> · {summary?.today_transactions ?? 0} transactions today</>
+                  <> · {summary?.today_transactions ?? 0} {t("dashboard.transactionsToday")}</>
                 )}
               </span>
             </div>
             {auditor && summary?.flagged_count && summary.flagged_count > 0 ? (
               <div className="mt-3 p-3 rounded-lg bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
                 <p className="text-sm text-red-700 dark:text-red-400 font-medium">
-                  ⚠️ {summary.flagged_count} transaction
-                  {summary.flagged_count !== 1 ? "s" : ""} flagged for compliance
-                  review
+                  ⚠️ {t("dashboard.flaggedReview", { count: summary.flagged_count, plural: summary.flagged_count !== 1 ? "s" : "" })}
                 </p>
               </div>
             ) : null}
@@ -117,10 +128,10 @@ export default function Home() {
               </div>
               <div>
                 <h3 className="text-lg font-semibold text-gray-800 dark:text-white/90">
-                  {auditor ? "System Overview" : "Your Summary"}
+                  {auditor ? t("dashboard.systemOverview") : t("dashboard.yourSummary")}
                 </h3>
                 <p className="text-sm text-gray-500 dark:text-gray-400">
-                  {auditor ? "Operational metrics" : "Your remittance activity"}
+                  {auditor ? t("dashboard.operationalMetrics") : t("dashboard.yourRemittanceActivity")}
                 </p>
               </div>
             </div>
@@ -128,18 +139,18 @@ export default function Home() {
               {auditor && (
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-500 dark:text-gray-400">
-                    Avg Processing Time
+                    {t("dashboard.avgProcessingTime")}
                   </span>
                   <span className="text-sm font-medium text-gray-800 dark:text-white/90">
                     {summary?.avg_processing_time_ms
                       ? `${(summary.avg_processing_time_ms / 1000).toFixed(1)}s`
-                      : "N/A"}
+                      : t("common.na")}
                   </span>
                 </div>
               )}
               <div className="flex justify-between items-center">
                 <span className="text-sm text-gray-500 dark:text-gray-400">
-                  Total Volume (USD)
+                  {t("dashboard.totalVolume")}
                 </span>
                 <span className="text-sm font-medium text-gray-800 dark:text-white/90">
                   $
@@ -159,7 +170,7 @@ export default function Home() {
               {auditor && (
                 <div className="flex justify-between items-center">
                   <span className="text-sm text-gray-500 dark:text-gray-400">
-                    Compliance Pass Rate
+                    {t("dashboard.compliancePassRate")}
                   </span>
                   <span className="text-sm font-medium text-green-600 dark:text-green-400">
                     {summary?.today_transactions && summary.flagged_count != null
