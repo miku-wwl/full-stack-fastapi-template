@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-07-10T12:00:00.000Z" agent="Mozilla/5.0" version="24.6.5">
+  <diagram name="Class Diagram" id="Class Diagram">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="1000" background="#ffffff">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="ForeXchange - UML Class Diagram" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;fontColor=#1a1a2e;" parent="1" vertex="1">
+          <mxGeometry x="250" y="5" width="900" height="32" as="geometry"/>
+        </mxCell>
+        <mxCell id="sub" value="MSE800 Assessment 2 | Group R | Zhe Wang, Weilai Wang" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=10;fontColor=#666666;" parent="1" vertex="1">
+          <mxGeometry x="250" y="35" width="900" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend-title" value="Legend" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=9;fontStyle=1;startSize=18;" parent="1" vertex="1">
+          <mxGeometry x="30" y="70" width="250" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg-inherit" value="△  Inheritance (extends/implements)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#5c6bc0;" parent="1" vertex="1">
+          <mxGeometry x="45" y="98" width="220" height="16" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg-fk" value="- - -◇  Foreign Key (FK) relationship" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#c62828;" parent="1" vertex="1">
+          <mxGeometry x="45" y="120" width="220" height="16" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg-class" value="«class»  Class name  (stereotype)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#666666;" parent="1" vertex="1">
+          <mxGeometry x="45" y="142" width="220" height="16" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg-note" value="table=True = DB table class&#10;FK = Foreign Key field" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#999999;" parent="1" vertex="1">
+          <mxGeometry x="45" y="164" width="220" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="sqlmodel" value="«external library»&#10;SQLModel" style="shape=umlClass;whiteSpace=wrap;html=1;fillColor=#e8eaf6;strokeColor=#5c6bc0;fontSize=9;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="360" y="75" width="150" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="userbase" value="«class»&#10;UserBase&#10;——&#10;+ email: EmailStr&#10;+ is_active: bool&#10;+ is_superuser: bool&#10;+ full_name: str | None&#10;+ role: str" style="shape=umlClass;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="360" y="140" width="200" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="usercreate" value="«class»&#10;UserCreate&#10;——&#10;+ password: str" style="shape=umlClass;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="620" y="140" width="170" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="userregister" value="«class»&#10;UserRegister&#10;——&#10;+ email: EmailStr&#10;+ password: str&#10;+ full_name: str | None" style="shape=umlClass;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="840" y="140" width="190" height="96" as="geometry"/>
+        </mxCell>
+        <mxCell id="usertable" value="«class» [table=True]&#10;User&#10;——&#10;+ id: UUID (PK)&#10;+ hashed_password: str&#10;+ created_at: datetime" style="shape=umlClass;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565c0;fontSize=8;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="360" y="300" width="200" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="userpublic" value="«class»&#10;UserPublic&#10;——&#10;+ id: UUID&#10;+ created_at: datetime | None" style="shape=umlClass;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="620" y="300" width="200" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="userupdate" value="«class»&#10;UserUpdate&#10;——&#10;+ email: EmailStr | None&#10;+ password: str | None" style="shape=umlClass;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="870" y="300" width="200" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-ub-sql" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5c6bc0;strokeWidth=1;startArrow=triangle;startFill=1;" parent="1" source="userbase" target="sqlmodel" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-uc-ub" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5c6bc0;strokeWidth=1;startArrow=triangle;startFill=1;" parent="1" source="usercreate" target="userbase" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-ut-ub" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5c6bc0;strokeWidth=1;startArrow=triangle;startFill=1;" parent="1" source="usertable" target="userbase" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-up-ub" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5c6bc0;strokeWidth=1;startArrow=triangle;startFill=1;" parent="1" source="userpublic" target="userbase" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-uu-ub" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5c6bc0;strokeWidth=1;startArrow=triangle;startFill=1;" parent="1" source="userupdate" target="userbase" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-ureg-sql" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5c6bc0;strokeWidth=1;startArrow=triangle;startFill=1;" parent="1" source="userregister" target="sqlmodel" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="cpbase" value="«class»&#10;CurrencyPairBase&#10;——&#10;+ base_currency: str&#10;+ quote_currency: str&#10;+ is_active: bool" style="shape=umlClass;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="360" y="440" width="200" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="cptable" value="«class» [table=True]&#10;CurrencyPair&#10;——&#10;+ id: UUID (PK)&#10;+ created_at: datetime" style="shape=umlClass;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565c0;fontSize=8;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="620" y="460" width="200" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-cp-cpb" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5c6bc0;strokeWidth=1;startArrow=triangle;startFill=1;" parent="1" source="cptable" target="cpbase" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="rsbase" value="«class»&#10;RateSnapshotBase&#10;——&#10;+ pair_id: UUID (FK)&#10;+ bid: float&#10;+ ask: float&#10;+ mid: float&#10;+ spread: float&#10;+ change_pct: float" style="shape=umlClass;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="360" y="580" width="200" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="rstable" value="«class» [table=True]&#10;RateSnapshot&#10;——&#10;+ id: UUID (PK)&#10;+ timestamp: datetime" style="shape=umlClass;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565c0;fontSize=8;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="620" y="610" width="200" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-rs-rsb" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5c6bc0;strokeWidth=1;startArrow=triangle;startFill=1;" parent="1" source="rstable" target="rsbase" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="txbase" value="«class»&#10;TransactionBase&#10;——&#10;+ user_id: UUID (FK)&#10;+ pair_id: UUID (FK)&#10;+ source_amount: float&#10;+ target_amount: float | None&#10;+ locked_rate: float&#10;+ fee_amount: float&#10;+ recipient_name: str&#10;+ recipient_iban: str&#10;+ purpose: str&#10;+ status: str&#10;+ compliance_score: int | None" style="shape=umlClass;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=7;" parent="1" vertex="1">
+          <mxGeometry x="360" y="750" width="210" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="txtable" value="«class» [table=True]&#10;Transaction&#10;——&#10;+ id: UUID (PK)&#10;+ created_at: datetime&#10;+ updated_at: datetime&#10;+ completed_at: datetime | None" style="shape=umlClass;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565c0;fontSize=8;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="620" y="790" width="200" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-tx-txb" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#5c6bc0;strokeWidth=1;startArrow=triangle;startFill=1;" parent="1" source="txtable" target="txbase" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="forexsim" value="«class»&#10;ForexSimulator&#10;——&#10;- base_rates: dict[str, float]&#10;- volatility: float&#10;- _last_rates: dict[str, float]&#10;——&#10;+ __init__(base_rates, volatility)&#10;+ generate_snapshot(pair): RateSnapshot&#10;- _get_base_rate(pair): float&#10;- _fluctuate(rate): float" style="shape=umlClass;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#e65100;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="870" y="440" width="220" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="shm" value="«class»&#10;SecurityHeadersMiddleware&#10;(BaseHTTPMiddleware)&#10;——&#10;+ dispatch(request, call_next): Response" style="shape=umlClass;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#c62828;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="870" y="640" width="220" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="fk-tx-user" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#c62828;strokeWidth=1;dashed=1;startArrow=odiamond;startFill=0;" parent="1" source="txbase" target="usertable" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="fk-tx-cp" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#c62828;strokeWidth=1;dashed=1;startArrow=odiamond;startFill=0;" parent="1" source="txbase" target="cptable" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="fk-rs-cp" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#c62828;strokeWidth=1;dashed=1;startArrow=odiamond;startFill=0;" parent="1" source="rsbase" target="cptable" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

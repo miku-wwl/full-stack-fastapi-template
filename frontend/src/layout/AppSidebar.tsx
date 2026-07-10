@@ -1,3 +1,5 @@
+/** Dashboard sidebar with role-based navigation menu items and submenu support. */
+
 import { useCallback } from "react";
 import { Link, useLocation } from '@tanstack/react-router';
 import { useTranslation } from "react-i18next";

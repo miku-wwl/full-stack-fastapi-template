@@ -1,5 +1,12 @@
 "use client";
 
+/**
+ * Theme context providing dark/light mode switching.
+ *
+ * Persists the user's preference to localStorage and toggles the 'dark'
+ * class on the document root element for Tailwind CSS dark mode support.
+ */
+
 import type React from "react";
 import { createContext, useState, useContext, useEffect } from "react";
 
@@ -12,6 +19,7 @@ type ThemeContextType = {
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
+/** Provider that reads/saves theme preference from localStorage and applies it to the DOM. */
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {
@@ -27,6 +35,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
     setIsInitialized(true);
   }, []);
 
+  // Sync theme changes to localStorage and the document class
   useEffect(() => {
     if (isInitialized) {
       localStorage.setItem("theme", theme);

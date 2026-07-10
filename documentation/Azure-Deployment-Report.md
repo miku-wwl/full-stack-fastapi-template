@@ -1,3 +1,33 @@
+# ForeXchange — Azure Deployment Verification Report
+
+> **Date**: 2026-07-10
+> **Project**: ForeXchange — Real-Time Remittance & Compliance Monitoring Platform
+> **Environment**: Azure Container Apps (ACA) + PostgreSQL Flexible Server
+> **IaC**: Terraform
+> **Language**: English (original Chinese version below)
+
+---
+
+## Deployment Overview
+
+This report documents the deployment process and verification of the ForeXchange application on Microsoft Azure using Terraform Infrastructure as Code.
+
+**Deployment Target:**
+- Azure Container Apps (backend API)
+- Azure PostgreSQL Flexible Server
+- Azure Key Vault (secrets management)
+- Azure Storage Account (queue storage)
+
+**Key Results:**
+- ✅ Terraform apply completed successfully
+- ✅ Backend API accessible via ACA endpoint
+- ✅ PostgreSQL connection verified
+- ✅ Health check endpoint returning 200
+
+See the Chinese section below for detailed deployment logs and troubleshooting steps.
+
+---
+
 # ForeXchange — Azure 上云部署验证报告
 
 > **日期**: 2026-06-08  

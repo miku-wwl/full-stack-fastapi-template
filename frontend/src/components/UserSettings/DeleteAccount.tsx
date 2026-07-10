@@ -1,3 +1,5 @@
+/** Account deletion trigger button that opens a confirmation dialog. */
+
 import { useTranslation } from "react-i18next"
 import DeleteConfirmation from "./DeleteConfirmation"
 

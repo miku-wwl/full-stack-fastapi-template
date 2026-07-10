@@ -1,3 +1,130 @@
+# ForeXchange — 10-Day Frontend Development Plan
+
+> **Date**: 2026-06-06
+> **Project**: ForeXchange — Real-Time Remittance & Compliance Monitoring Platform
+> **Language**: English (original Chinese version below)
+
+---
+
+## Schedule Overview
+
+| Phase | Day | Core Module | Key Deliverables |
+|-------|-----|-------------|------------------|
+| 1 | 1 | Route Scaffold | All page routes, guarded layout, auth check |
+| 2 | 2 | Auth UI | Login/Signup forms, useAuth hook, token management |
+| 3 | 3 | Layout & Nav | Sidebar, header, role-based menu |
+| 4 | 4 | Dashboard | Stat cards, recent transactions list |
+| 5 | 5 | Live Rates | Rate cards, 5s polling display |
+| 6 | 6 | Rate Charts | ApexCharts integration, 24h history |
+| 7 | 7 | Remittance | Remittance form, rate lock UI, validation |
+| 8 | 8 | History | Transaction table, pagination, detail modal |
+| 9 | 9 | Compliance | Audit overview, flagged list, review actions |
+| 10 | 10 | Polish | Error handling, responsive tweaks, final QA |
+
+---
+
+## Detailed Phase Plan
+
+### Phase 1: Route Scaffold
+
+**Goal**: All frontend routes accessible, protected routes redirect to login.
+
+**Tasks:**
+1. Initialise React + TypeScript + TanStack Router project
+2. Create all page route files (including protected layout `_layout.tsx`)
+3. Configure route guard — unauthorised redirect to login
+4. Run `npm run generate-client` to generate initial API SDK
+
+### Phase 2: Auth UI
+
+**Goal**: Login and registration with full validation.
+
+**Tasks:**
+1. Build login/signup pages with shared auth layout
+2. Implement `useAuth` hook for login, signup, logout
+3. Configure JWT token auto-injection into request headers
+4. Implement token persistence (localStorage)
+
+### Phase 3: Layout & Navigation
+
+**Goal**: Sidebar navigation with role-based menu items.
+
+**Tasks:**
+1. Implement AppSidebar with ForeXchange menu items
+2. Add role check — Auditor sees "Compliance Audit" menu
+3. Update AppHeader with user role badge
+4. Set correct `<title>` for all pages
+
+### Phase 4: Dashboard
+
+**Goal**: Homepage with statistics cards and recent transactions.
+
+**Tasks:**
+1. Create `StatCard` reusable component
+2. Create `RecentTransactions` component
+3. Integrate both into dashboard homepage
+
+### Phase 5: Live Rates
+
+**Goal**: Real-time rate display with auto-refresh.
+
+**Tasks:**
+1. Implement `useForexRates` hook with 5s polling
+2. Display rate cards for all 12 currency pairs
+3. Show bid/ask/mid/spread/change percentage
+
+### Phase 6: Rate Charts
+
+**Goal**: Interactive exchange rate charts.
+
+**Tasks:**
+1. Integrate ApexCharts library
+2. Create line chart for 24-hour rate history
+3. Add pair selector for switching currencies
+
+### Phase 7: Remittance
+
+**Goal**: Complete remittance form with rate locking.
+
+**Tasks:**
+1. Build remittance form with all fields
+2. Implement rate lock UI with countdown timer
+3. Add IBAN validation feedback
+4. Show confirmation after submission
+
+### Phase 8: History
+
+**Goal**: Transaction history with search and filtering.
+
+**Tasks:**
+1. Create transaction table component
+2. Implement pagination controls
+3. Add status filter dropdown
+4. Create transaction detail modal
+
+### Phase 9: Compliance
+
+**Goal**: Auditor compliance dashboard.
+
+**Tasks:**
+1. Build compliance overview cards
+2. Create flagged transactions list
+3. Implement approve/reject buttons with confirmation
+4. Display compliance details per transaction
+
+### Phase 10: Polish
+
+**Goal**: Final polish and quality assurance.
+
+**Tasks:**
+1. Add error boundaries to all pages
+2. Implement loading states (skeleton loaders)
+3. Responsive design fixes
+4. Dark mode consistency check
+5. Final QA and bug fixes
+
+---
+
 # ForeXchange — 前端分期开发与验证方案
 
 > 配套文档：[ForeXchange-Design.md](./ForeXchange-Design.md)  

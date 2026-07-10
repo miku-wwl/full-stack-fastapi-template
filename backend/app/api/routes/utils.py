@@ -1,3 +1,9 @@
+"""Utility endpoints for health checks, email testing, and data sovereignty info.
+
+Provides non-business endpoints used for infrastructure monitoring,
+configuration verification, and compliance documentation.
+"""
+
 from fastapi import APIRouter, Depends
 from pydantic.networks import EmailStr
 
@@ -14,9 +20,7 @@ router = APIRouter(prefix="/utils", tags=["utils"])
     status_code=201,
 )
 def test_email(email_to: EmailStr) -> Message:
-    """
-    Test emails.
-    """
+    """Send a test email to verify SMTP configuration (superuser only)."""
     email_data = generate_test_email(email_to=email_to)
     send_email(
         email_to=email_to,
@@ -28,6 +32,7 @@ def test_email(email_to: EmailStr) -> Message:
 
 @router.get("/health-check/")
 async def health_check() -> Message:
+    """Return a simple health check response for Docker and monitoring tools."""
     return Message(message="Hello World")
 
 

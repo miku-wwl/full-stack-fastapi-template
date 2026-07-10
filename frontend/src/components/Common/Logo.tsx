@@ -1,3 +1,5 @@
+/** Application logo that adapts to the current theme (dark/light mode). */
+
 import { Link } from "@tanstack/react-router"
 
 import { useTheme } from "@/components/theme-provider"

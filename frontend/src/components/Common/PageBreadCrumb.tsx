@@ -1,3 +1,5 @@
+/** Breadcrumb navigation showing the current page title within the dashboard layout. */
+
 import { Link } from '@tanstack/react-router';
 
 interface BreadcrumbProps {
@@ -22,6 +24,7 @@ const PageBreadcrumb: React.FC<BreadcrumbProps> = ({ pageTitle }) => {
             >
               Home
               <svg
+                aria-label="Breadcrumb separator"
                 className="stroke-current"
                 width="17"
                 height="16"

@@ -1,3 +1,162 @@
+# ForeXchange — 10-Day Backend Development Plan
+
+> **Date**: 2026-06-06
+> **Project**: ForeXchange — Real-Time Remittance & Compliance Monitoring Platform
+> **Language**: English (original Chinese version below)
+
+---
+
+## Schedule Overview
+
+| Day | Date | Core Module | Frontend-Backend Sync Focus |
+|-----|------|-------------|-----------------------------|
+| 1 | Jun 6 | Environment Setup + Route Scaffold | Backend framework + Frontend routing |
+| 2 | Jun 7 | Authentication System | JWT token flow + Role integration |
+| 3 | Jun 8 | Layout Navigation + Rate Basics | Sidebar role menu + Rate simulator |
+| 4 | Jun 9 | Dashboard Homepage | Stats aggregation API + Card components |
+| 5 | Jun 10 | Real-Time Exchange Rates | 5s polling endpoint + Rate display |
+| 6 | Jun 11 | Exchange Rate Charts | History API + ApexCharts integration |
+| 7 | Jun 12 | Remittance Form | Rate locking + Transaction creation |
+| 8 | Jun 13 | Transaction History | Pagination query + Detail modal |
+| 9 | Jun 14 | Compliance Audit | Rule engine + Review action endpoints |
+| 10 | Jun 15 | Polish & Launch | Full integration testing + Error handling |
+
+---
+
+## Daily Details
+
+### Day 1: Environment Setup + Route Scaffold + Backend Foundation
+
+**Goal**: Development environment ready, all page routes accessible, database connected.
+
+**Backend Tasks:**
+1. Set up FastAPI project structure (`main.py`, `models.py`, `crud.py`)
+2. Configure PostgreSQL connection with SQLModel ORM
+3. Complete `user` table migration (add `role` field, default `customer`)
+4. Implement health check endpoint `GET /api/v1/utils/health-check`
+5. Configure OpenAPI docs at `http://localhost:8000/docs`
+
+**Validation:**
+- Backend health check returns `{"message": "Hello World"}`
+- OpenAPI docs page accessible
+
+### Day 2: Authentication Flow (Login/Signup/JWT)
+
+**Goal**: Complete OAuth2 password flow authentication with correct role propagation.
+
+**Backend Tasks:**
+1. Complete auth endpoints: `POST /api/v1/login/access-token` (returns `role`)
+2. Implement user registration: `POST /api/v1/users/register` (supports `role`)
+3. Implement current user endpoint: `GET /api/v1/users/me` (returns full profile)
+4. Configure JWT signing key and expiration
+
+**Validation:**
+- New user registration stores correct `role` field
+- Login returns valid JWT token with role info
+
+### Day 3: Layout Navigation + Role Menus + Rate Basics
+
+**Goal**: Dashboard sidebar navigation complete, role-based menu display, rate data generation working.
+
+**Backend Tasks:**
+1. Create `currency_pair` and `rate_snapshot` tables
+2. Implement `ForexSimulator` class
+3. Write `seed_forex.py` seed script, initialise 12 currency pairs
+4. Configure background task for periodic rate snapshots (every 5 seconds)
+
+**Validation:**
+- Seed script populates 12 currency pair records
+- Rate snapshots generated every 5 seconds
+
+### Day 4: Dashboard Homepage + Backend Dashboard API
+
+**Goal**: Homepage displays 4 core statistics cards and recent transaction list.
+
+**Backend Tasks:**
+1. Implement dashboard summary endpoint: `GET /api/v1/dashboard/summary`
+2. Aggregate statistics: active pairs, today's transactions, total volume, flagged count
+
+**Validation:**
+- Dashboard summary returns correct aggregated data
+
+### Day 5: Real-Time Exchange Rates
+
+**Goal**: Real-time rate display with 5-second polling.
+
+**Backend Tasks:**
+1. Implement live rates endpoint: `GET /api/v1/rates/live`
+2. Implement single pair rate endpoint: `GET /api/v1/rates/live/{pair}`
+
+**Validation:**
+- Live rates endpoint returns data for all active pairs
+- Rates update every 5 seconds
+
+### Day 6: Exchange Rate Charts
+
+**Goal**: 24-hour exchange rate chart display.
+
+**Backend Tasks:**
+1. Implement rate history endpoint: `GET /api/v1/rates/history/{pair}`
+2. Return time-series data for ApexCharts
+
+**Validation:**
+- History endpoint returns 24h of data at ~5min intervals
+
+### Day 7: Remittance Form
+
+**Goal**: Complete cross-border remittance flow with rate locking.
+
+**Backend Tasks:**
+1. Implement rate lock endpoint: `POST /api/v1/rates/lock` (30s TTL)
+2. Implement transaction creation: `POST /api/v1/transactions/`
+3. Add IBAN validation and AML compliance screening
+
+**Validation:**
+- Rate lock returns valid 30-second lock
+- Transaction created with compliance check
+
+### Day 8: Transaction History
+
+**Goal**: Transaction list with pagination and status filtering.
+
+**Backend Tasks:**
+1. Implement transaction list endpoint: `GET /api/v1/transactions/` (with pagination)
+2. Support status filtering (pending/completed/flagged/rejected)
+
+**Validation:**
+- Paginated results returned correctly
+- Status filters work as expected
+
+### Day 9: Compliance Audit
+
+**Goal**: Complete compliance audit system for Auditor role.
+
+**Backend Tasks:**
+1. Implement compliance overview: `GET /api/v1/compliance/overview`
+2. Implement flagged transaction list
+3. Implement review action: `POST /api/v1/compliance/review/{tx_id}`
+4. Run 4 AML rules: large amount, high-risk country, random spot check, structuring
+
+**Validation:**
+- Compliance rules trigger correctly on flagged transactions
+- Auditor can approve/reject transactions
+
+### Day 10: Polish & Launch
+
+**Goal**: Full integration testing, error handling optimisation, final deployment.
+
+**Backend Tasks:**
+1. End-to-end integration testing
+2. Error handling review and optimisation
+3. Performance tuning
+4. Final deployment verification
+
+**Validation:**
+- All endpoints return appropriate responses
+- Error cases handled gracefully
+
+---
+
 # ForeXchange项目10天开发工期计划
 基于FastAPI后端架构与全量设计文档，制定以下**前后端同步开发、每日独立可验证**的10天工期计划，严格对齐前端10个Phase并补充对应后端开发任务：
 

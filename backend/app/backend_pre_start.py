@@ -1,3 +1,10 @@
+"""Backend pre-startup script — verifies database connectivity.
+
+Attempts to connect to the PostgreSQL database with retry logic
+(up to 5 minutes). Used by Docker Compose to ensure the database
+is ready before the application starts.
+"""
+
 import logging
 
 from sqlalchemy import Engine
@@ -20,6 +27,7 @@ wait_seconds = 1
     after=after_log(logger, logging.WARN),
 )
 def init(db_engine: Engine) -> None:
+    """Try to connect to the database; retry for up to 5 minutes if unavailable."""
     try:
         with Session(db_engine) as session:
             # Try to create session to check if DB is awake
@@ -30,6 +38,7 @@ def init(db_engine: Engine) -> None:
 
 
 def main() -> None:
+    """Entry point — run the database connectivity check."""
     logger.info("Initializing service")
     init(engine)
     logger.info("Service finished initializing")

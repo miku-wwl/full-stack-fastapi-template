@@ -1,3 +1,228 @@
+# ForeXchange — Azure Cloud Architecture Design Document
+
+> **Date**: 2026-06-08
+> **Project**: ForeXchange — Real-Time Remittance & Compliance Monitoring Platform
+> **Cloud Platform**: Microsoft Azure
+> **Subscription**: Azure for Students (Subscription ID: `7c73b89d-485e-43a9-8d66-b12b766d567f`)
+> **Region**: `australiaeast`
+> **Quota**: Total Regional vCPUs = 6 (student subscription hard limit)
+> **IaC**: Terraform one-click deployment
+> **Image Registry**: Docker Hub (`minglai/forexchange-backend`)
+
+---
+
+## 0. Subscription Constraints
+
+### 0.1 Azure for Students Measured Data
+
+| Item | Value |
+|------|-------|
+| Subscription Name | Azure for Students |
+| Subscription ID | `7c73b89d-485e-43a9-8d66-b12b766d567f` |
+| Tenant ID | `96e2f052-4512-4d4c-b2c0-cd0d36ad6437` |
+| User | `569144003@qq.com` |
+| Region | `australiaeast` ✅ |
+| Credit | $100 USD |
+| Deployed Resources | `NetworkWatcherRG` (australiaeast) |
+
+### 0.2 vCPU Quota (Critical Constraint)
+
+```
+Total Regional vCPUs:  6  ← Hard limit!
+  ├── Dv3/Dv4/DSv3/DSv4 Family: 4 vCPUs each (max 4 usable per family)
+  ├── BS Family:                 4 vCPUs (burst)
+  ├── Basv2/Bsv2 Family:        10 vCPUs (better burst)
+  ├── Ev3/Ev4 Family:            4 vCPUs
+  ├── F Family:                  4 vCPUs
+  └── NC Family:                 6 vCPUs (GPU, not needed)
+
+Current usage: 0 / 6 vCPUs ✅ All available
+```
+
+### 0.3 Registered Azure Providers
+
+| Provider | Status | Purpose |
+|----------|--------|---------|
+| `Microsoft.App` | ✅ Registered | Container Apps |
+| `Microsoft.Cache` | ✅ Registered | Redis Cache (retired, unused) |
+| `Microsoft.DBforPostgreSQL` | ✅ Registered | PostgreSQL Flexible Server |
+| `Microsoft.Cdn` | ✅ Registered | CDN |
+| `Microsoft.Storage` | ✅ Registered | Blob + Queue Storage |
+| `Microsoft.KeyVault` | ✅ Registered | Secrets Management |
+
+---
+
+## 1. Architecture Overview
+
+### 1.1 Design Principles
+
+| Principle | Description |
+|-----------|-------------|
+| **Static Separation** | Frontend SPA hosted on Azure Blob Static Website, zero server-side rendering |
+| **Read-Write Separation** | Real-time rates read directly from PostgreSQL; transactions go through ACID-compliant PostgreSQL |
+| **Async Decoupling** | Remittance requests processed asynchronously via Azure Queue |
+| **Stateless Compute** | Backend ACA stateless, 2 fixed replicas |
+| **HTTPS Everywhere** | Blob static site HTTPS, ACA auto TLS, PostgreSQL enforced SSL |
+| **One-Click Deploy** | Terraform full-stack IaC, single `terraform apply` to deploy all resources |
+
+### 1.2 Architecture Diagram
+
+```
+  User Browser
+       |
+   Azure Front Door / CDN (optional)
+       |
+   Azure Blob Static Website (Frontend SPA)
+       |
+   Azure Container Apps (Backend API, 2 replicas)
+       |
+   +----+----+
+   |         |
+PostgreSQL  Azure Queue Storage
+(16 vCore)  (Async remittance)
+```
+
+### 1.3 Component Relationships
+
+| Component | Technology | Purpose |
+|-----------|-----------|---------|
+| Frontend Hosting | Azure Blob Storage Static Website | Serves React SPA build output |
+| Backend API | Azure Container Apps (FastAPI) | REST API with JWT auth |
+| Database | Azure PostgreSQL Flexible Server | Primary data store |
+| Async Queue | Azure Queue Storage | Processes remittance asynchronously |
+| Secrets | Azure Key Vault | Stores DB passwords, JWT secrets, API keys |
+| CI/CD | GitHub Actions → Docker Hub → ACA | Automated build and deploy |
+
+---
+
+## 2. Data Flow & Request Routing
+
+### 2.1 Normal Request Flow
+
+```
+User → Blob Static Website (HTTPS) → ACA Backend → PostgreSQL
+                                              → Key Vault (secrets)
+```
+
+### 2.2 Remittance Flow (Async)
+
+```
+User → ACA Backend → Queue Storage → ACA Worker → PostgreSQL
+```
+
+### 2.3 Rate Polling Flow
+
+```
+ACA Rate Generator (5s interval) → Frankfurter API (ECB) → PostgreSQL
+```
+
+---
+
+## 3. Component Details
+
+### 3.1 Frontend Hosting — Azure Blob Static Website
+
+| Feature | Configuration |
+|---------|--------------|
+| Hosting | `$web` container in Storage Account |
+| Custom Domain | Configure via Azure CDN |
+| HTTPS | Enabled by default |
+| Fallback | 404 → `index.html` for SPA routing |
+| Cache | CDN caching with versioned build assets |
+
+### 3.2 Backend API — Azure Container Apps
+
+| Feature | Configuration |
+|---------|--------------|
+| Runtime | Python 3.10+ (FastAPI on uvicorn) |
+| Replicas | 2 (fixed, not auto-scaling) |
+| CPU | 0.5 vCPU per replica |
+| Memory | 1 GiB per replica |
+| Ingress | External HTTPS on port 80 |
+| Health Probe | `GET /api/v1/utils/health-check/` |
+| Environment | via Key Vault references + direct env vars |
+
+### 3.3 Database — Azure PostgreSQL Flexible Server
+
+| Feature | Configuration |
+|---------|--------------|
+| SKU | Standard_D2ds_v4 (2 vCPU, 8 GiB) |
+| Storage | 32 GiB (minimum) |
+| Backup | Geo-redundant backup (7-day retention) |
+| SSL | Enforced |
+| Firewall | Azure services only + ACA outbound IPs |
+
+### 3.4 Secrets — Azure Key Vault
+
+| Secret Name | Purpose |
+|-------------|---------|
+| `postgres-password` | PostgreSQL admin password |
+| `secret-key` | JWT signing secret |
+| `sentry-dsn` | Sentry error monitoring DSN |
+| `smtp-password` | SMTP email password |
+
+---
+
+## 4. High Availability Design
+
+| Layer | Strategy | RTO | RPO |
+|-------|----------|-----|-----|
+| Frontend | Blob geo-redundant storage + CDN | < 1 min | 0 |
+| Backend | 2 ACA replicas | < 30s | 0 |
+| Database | PostgreSQL zone-redundant HA (manual) | < 1 hr | < 1 hr |
+| Queue | Storage geo-redundant | < 1 min | < 15 min |
+
+---
+
+## 5. Security Design
+
+| Domain | Implementation |
+|--------|---------------|
+| Network | Azure VNet integration (ACA), private endpoints for DB |
+| Auth | JWT (HS256), OAuth2 password flow, role-based access |
+| Encryption | TLS 1.2+ in transit, AES-256 at rest |
+| Secrets | Key Vault with access policies, no plaintext secrets |
+| Monitoring | Sentry error tracking, ACA logs to Log Analytics |
+
+---
+
+## 6. Terraform Resource Plan
+
+All resources defined in `tf/` directory. See the Chinese section below for the full Terraform resource listing.
+
+| Resource | Terraform File |
+|----------|---------------|
+| Resource Group | `main.tf` |
+| Container App Environment + Apps | `containerapps.tf` |
+| PostgreSQL Flexible Server | `postgresql.tf` |
+| Key Vault | `keyvault.tf` |
+| Storage Account (Queue + Blob) | `storage.tf` |
+| Variables | `variables.tf` |
+| Outputs | `outputs.tf` |
+
+---
+
+## 7. Cost Estimation
+
+| Component | Estimated Monthly Cost (USD) |
+|-----------|------------------------------|
+| Container Apps (2 × 0.5 vCPU, 1 GiB) | ~$30 |
+| PostgreSQL (D2ds_v4, 32 GiB) | ~$50 |
+| Storage Account (LRS, Queue + Blob) | ~$2 |
+| Key Vault | ~$1 |
+| Data Transfer (estimated) | ~$5 |
+| **Total Estimated** | **~$88/month** |
+
+See Chinese section below for detailed cost breakdown.
+
+---
+
+## 8. Architecture Diagram
+
+Refer to `tf/` directory for the complete Terraform configuration and the Chinese section below for the detailed architecture diagram in text.
+
+---
+
 # ForeXchange — Azure 云架构设计文档（学生订阅版）
 
 > **日期**: 2026-06-08  

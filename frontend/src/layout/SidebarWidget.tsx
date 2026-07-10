@@ -1,3 +1,5 @@
+/** Sidebar footer widget displaying branding or promotional content. */
+
 export default function SidebarWidget() {
   return (
     <div
@@ -13,7 +15,7 @@ export default function SidebarWidget() {
       <a
         href="https://tailadmin.com/pricing"
         target="_blank"
-        rel="nofollow"
+        rel="noopener noreferrer"
         className="flex items-center justify-center p-3 font-medium text-white rounded-lg bg-brand-500 text-theme-sm hover:bg-brand-600"
       >
         Purchase Plan

@@ -1,3 +1,5 @@
+/** Recent transactions table on the dashboard homepage showing latest 10 entries. */
+
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import {

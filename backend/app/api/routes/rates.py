@@ -222,8 +222,6 @@ def lock_rate(
     Lock the current exchange rate for a currency pair.
     Returns a lock_id valid for 30 seconds.
     """
-    from app.models import RateLockResponse
-
     pair = pair.replace("-", "/").upper()
     parts = pair.split("/")
     if len(parts) != 2:

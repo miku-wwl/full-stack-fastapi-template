@@ -22,7 +22,7 @@
 
 | # | 需求 / Requirement | 描述 / Description | 实现位置 / Implementation | Sprint |
 |---|---|---|---|---|
-| FR-01 | **用户注册** | 游客可通过表单注册新账户（邮箱、密码、姓名），默认角色为 `customer`。 | `backend/app/api/routes/login.py` → `POST /api/v1/login/access-token`<br>`frontend/src/routes/signup.tsx` | Sprint 1-2 |
+| FR-01 | **用户注册** | 游客可通过表单注册新账户（邮箱、密码、姓名），默认角色为 `customer`。 | `backend/app/api/routes/users.py` → `POST /api/v1/users/signup`<br>`frontend/src/routes/signup.tsx` | Sprint 1-2 |
 | FR-02 | **用户登录** | 已注册用户可通过邮箱+密码进行 OAuth2 密码流认证，获取 JWT access token。 | `backend/app/api/routes/login.py` → `POST /api/v1/login/access-token`<br>`frontend/src/routes/login.tsx` | Sprint 1-2 |
 | FR-03 | **用户登出（前端清除 Token）** | 用户点击登出后，前端清除本地存储的 Token，跳转回登录页。 | `frontend/src/hooks/useAuth.ts` | Sprint 2 |
 | FR-04 | **密码找回 / 重置** | 用户可通过注册邮箱发起密码重置流程，系统发送含令牌的重置邮件，用户使用令牌设置新密码。 | `backend/app/api/routes/login.py` → `POST /password-recovery/{email}` 和 `POST /reset-password/`<br>`frontend/src/routes/recover-password.tsx` + `reset-password.tsx` | Sprint 2 |

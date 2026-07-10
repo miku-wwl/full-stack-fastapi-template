@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-07-10T12:00:00.000Z" agent="Mozilla/5.0" version="24.6.5">
+  <diagram name="Sequence Diagram" id="Sequence Diagram">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="800" background="#ffffff">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="ForeXchange - Sequence Diagram: Login Authentication Flow" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=18;fontStyle=1;fontColor=#1a1a2e;" parent="1" vertex="1">
+          <mxGeometry x="150" y="5" width="1000" height="30" as="geometry"/>
+        </mxCell>
+        <mxCell id="sub" value="MSE800 Assessment 2 | Group R | Zhe Wang, Weilai Wang" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=10;fontColor=#666666;" parent="1" vertex="1">
+          <mxGeometry x="150" y="32" width="1000" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll-cli" value="Client&#10;(Browser)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=9;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="50" y="70" width="110" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll-cli-line" value="" style="shape=line;strokeColor=#999999;dashed=1;strokeWidth=1;html=1;" parent="1" vertex="1">
+          <mxGeometry x="104" y="118" width="2" height="600" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll-ngx" value="Nginx&#10;(Reverse Proxy)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=9;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="230" y="70" width="110" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll-ngx-line" value="" style="shape=line;strokeColor=#999999;dashed=1;strokeWidth=1;html=1;" parent="1" vertex="1">
+          <mxGeometry x="284" y="118" width="2" height="600" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll-log" value="login.py&#10;(Route Handler)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=9;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="420" y="70" width="110" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll-log-line" value="" style="shape=line;strokeColor=#999999;dashed=1;strokeWidth=1;html=1;" parent="1" vertex="1">
+          <mxGeometry x="474" y="118" width="2" height="600" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll-crd" value="crud.py&#10;authenticate()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=9;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="610" y="70" width="110" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll-crd-line" value="" style="shape=line;strokeColor=#999999;dashed=1;strokeWidth=1;html=1;" parent="1" vertex="1">
+          <mxGeometry x="664" y="118" width="2" height="600" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll-sec" value="security.py&#10;verify_password()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=9;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="790" y="70" width="110" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll-sec-line" value="" style="shape=line;strokeColor=#999999;dashed=1;strokeWidth=1;html=1;" parent="1" vertex="1">
+          <mxGeometry x="844" y="118" width="2" height="600" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll-db" value="PostgreSQL&#10;(Database)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=9;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="980" y="70" width="110" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll-db-line" value="" style="shape=line;strokeColor=#999999;dashed=1;strokeWidth=1;html=1;" parent="1" vertex="1">
+          <mxGeometry x="1034" y="118" width="2" height="600" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll-jwt" value="security.py&#10;create_token()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=9;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="1150" y="70" width="110" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll-jwt-line" value="" style="shape=line;strokeColor=#999999;dashed=1;strokeWidth=1;html=1;" parent="1" vertex="1">
+          <mxGeometry x="1204" y="118" width="2" height="600" as="geometry"/>
+        </mxCell>
+        <mxCell id="m01-as" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="104" y="134" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m01-at" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="284" y="134" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m01-arr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;strokeWidth=1;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" parent="1" source="m01-as" target="m01-at" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m01-lbl" value="1. POST /login/access-token&#10;    (email + password)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#1565c0;" parent="1" vertex="1">
+          <mxGeometry x="115" y="121" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="m02-as" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="284" y="184" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m02-at" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="474" y="184" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m02-arr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;strokeWidth=1;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" parent="1" source="m02-as" target="m02-at" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m02-lbl" value="2. Forward request to login.py" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#1565c0;" parent="1" vertex="1">
+          <mxGeometry x="295" y="171" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="m03-as" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="474" y="234" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m03-at" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="664" y="234" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m03-arr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;strokeWidth=1;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" parent="1" source="m03-as" target="m03-at" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m03-lbl" value="3. authenticate(session, email, password)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#1565c0;" parent="1" vertex="1">
+          <mxGeometry x="485" y="221" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="m04-as" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="664" y="284" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m04-at" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="1034" y="284" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m04-arr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;strokeWidth=1;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" parent="1" source="m04-as" target="m04-at" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m04-lbl" value="4. get_user_by_email(session, email)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#1565c0;" parent="1" vertex="1">
+          <mxGeometry x="675" y="271" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="m05-as" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="1034" y="329" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m05-at" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="664" y="329" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m05-arr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;strokeWidth=1;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" parent="1" source="m05-as" target="m05-at" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m05-lbl" value="5. return User | None" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#1565c0;" parent="1" vertex="1">
+          <mxGeometry x="1045" y="316" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="m06-as" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="664" y="379" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m06-at" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="844" y="379" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m06-arr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;strokeWidth=1;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" parent="1" source="m06-as" target="m06-at" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m06-lbl" value="6. verify_password(plain, hash)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#1565c0;" parent="1" vertex="1">
+          <mxGeometry x="675" y="366" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="m07-as" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="844" y="424" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m07-at" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="664" y="424" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m07-arr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;strokeWidth=1;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" parent="1" source="m07-as" target="m07-at" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m07-lbl" value="7. return (valid, updated_hash)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#1565c0;" parent="1" vertex="1">
+          <mxGeometry x="855" y="411" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="m08-as" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="664" y="474" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m08-at" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="844" y="474" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m08-arr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#e65100;strokeWidth=1;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" parent="1" source="m08-as" target="m08-at" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m08-lbl" value="8. [if user not found]&#10;    Dummy hash check (timing protection)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#e65100;" parent="1" vertex="1">
+          <mxGeometry x="675" y="461" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="m09-as" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="664" y="524" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m09-at" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="474" y="524" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m09-arr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;strokeWidth=1;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" parent="1" source="m09-as" target="m09-at" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m09-lbl" value="9. return authenticated User object" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#1565c0;" parent="1" vertex="1">
+          <mxGeometry x="675" y="511" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="m10-as" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="474" y="574" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m10-at" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="1204" y="574" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m10-arr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;strokeWidth=1;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" parent="1" source="m10-as" target="m10-at" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m10-lbl" value="10. create_access_token(user_id)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#1565c0;" parent="1" vertex="1">
+          <mxGeometry x="485" y="561" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="m11-as" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="1204" y="619" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m11-at" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="474" y="619" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m11-arr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;strokeWidth=1;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" parent="1" source="m11-as" target="m11-at" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m11-lbl" value="11. return signed JWT token" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#1565c0;" parent="1" vertex="1">
+          <mxGeometry x="1215" y="606" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="m12-as" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="474" y="664" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m12-at" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="284" y="664" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m12-arr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;strokeWidth=1;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" parent="1" source="m12-as" target="m12-at" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m12-lbl" value="12. return Token(access_token, role)" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#1565c0;" parent="1" vertex="1">
+          <mxGeometry x="485" y="651" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="m13-as" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="284" y="709" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m13-at" value="" style="ellipse;html=1;fillColor=none;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="104" y="709" width="2" height="2" as="geometry"/>
+        </mxCell>
+        <mxCell id="m13-arr" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;strokeWidth=1;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" parent="1" source="m13-as" target="m13-at" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="m13-lbl" value="13. HTTP 200 OK + JWT token" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=8;fontColor=#1565c0;" parent="1" vertex="1">
+          <mxGeometry x="295" y="696" width="280" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-ngx" value="" style="shape=rect;html=1;fillColor=#1565c0;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="282" y="125" width="6" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-log" value="" style="shape=rect;html=1;fillColor=#1565c0;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="472" y="175" width="6" height="505" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-crd" value="" style="shape=rect;html=1;fillColor=#1565c0;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="662" y="225" width="6" height="305" as="geometry"/>
+        </mxCell>
+        <mxCell id="act-jwt" value="" style="shape=rect;html=1;fillColor=#1565c0;strokeColor=none;pointerEvents=0;" parent="1" vertex="1">
+          <mxGeometry x="1202" y="565" width="6" height="65" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

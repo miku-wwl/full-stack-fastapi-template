@@ -1,3 +1,5 @@
+/** Reusable data table component with sorting, pagination, and column definitions. */
+
 import {
   type ColumnDef,
   flexRender,

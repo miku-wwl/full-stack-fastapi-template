@@ -1,3 +1,5 @@
+/** Page metadata component that sets the document title and meta description via react-helmet. */
+
 import { HelmetProvider, Helmet } from "react-helmet-async";
 
 const PageMeta = ({

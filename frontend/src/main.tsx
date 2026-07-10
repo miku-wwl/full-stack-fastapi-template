@@ -1,3 +1,10 @@
+/**
+ * Application entry point.
+ *
+ * Initialises React Query, TanStack Router, theme provider, i18n,
+ * and configures the OpenAPI client base URL and auth token injection.
+ */
+
 import {
   MutationCache,
   QueryCache,
@@ -16,11 +23,13 @@ import "./index.css"
 import "./i18n"
 import { routeTree } from "./routeTree.gen"
 
+// Configure OpenAPI client: backend URL from env, token from localStorage
 OpenAPI.BASE = import.meta.env.VITE_API_URL
 OpenAPI.TOKEN = async () => {
   return localStorage.getItem("access_token") || ""
 }
 
+/** Handle 401/403 API errors by clearing session and redirecting to login. */
 const handleApiError = (error: Error) => {
   if (error instanceof ApiError && [401, 403].includes(error.status)) {
     localStorage.removeItem("access_token")
@@ -47,7 +56,11 @@ declare module "@tanstack/react-router" {
   }
 }
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
+// Assert root element exists — guaranteed by index.html template
+const rootElement = document.getElementById("root")
+if (!rootElement) throw new Error("Root element #root not found in index.html")
+
+ReactDOM.createRoot(rootElement).render(
   <StrictMode>
     <HelmetProvider>
       <ThemeProvider>

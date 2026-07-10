@@ -1,3 +1,9 @@
+"""Test pre-startup script — verifies database connectivity for test runs.
+
+Same retry logic as backend_pre_start.py, used to ensure the database
+is available before test execution.
+"""
+
 import logging
 
 from sqlalchemy import Engine
@@ -20,6 +26,7 @@ wait_seconds = 1
     after=after_log(logger, logging.WARN),
 )
 def init(db_engine: Engine) -> None:
+    """Attempt a database connection; retry up to 5 minutes if unavailable."""
     try:
         # Try to create session to check if DB is awake
         with Session(db_engine) as session:
@@ -30,6 +37,7 @@ def init(db_engine: Engine) -> None:
 
 
 def main() -> None:
+    """Entry point — run the database connectivity check for tests."""
     logger.info("Initializing service")
     init(engine)
     logger.info("Service finished initializing")

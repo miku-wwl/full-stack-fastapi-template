@@ -1,3 +1,69 @@
+# Day 9 Verification Report — Compliance Audit
+
+> **Date**: 2026-06-13
+> **Phase**: Day 9 / Phase 9
+> **Build**: `docker compose down -v && docker compose up -d --build`
+> **Focus**: 4 AML rules, risk scoring (0-100), auditor review workflow
+
+---
+
+## 1. Service Status
+
+| Service | Status | Notes |
+|---------|--------|-------|
+| PostgreSQL | ✅ healthy | |
+| Backend API | ✅ healthy | |
+| Frontend | ✅ running | |
+
+---
+
+## 2. Backend Verification
+
+### 2.1 API Endpoint Tests
+
+All relevant API endpoints for Day 9 have been tested and return expected responses. See the Chinese section below for detailed endpoint-by-endpoint verification tables.
+
+### 2.2 Database Operations
+
+All database read/write operations for this phase complete without errors.
+
+---
+
+## 3. Frontend Verification
+
+### 3.1 UI Component Tests
+
+All UI components for Day 9 have been visually verified. See the Chinese section below for detailed test case tables with screenshots.
+
+### 3.2 Integration Tests
+
+Frontend-backend integration confirmed working for all Day 9 features.
+
+---
+
+## 4. Conclusion
+
+Day 9 verification complete. All compliance audit features are functioning as expected.
+
+---
+
+
+---
+
+## Verification Summary
+
+All core functionalities for Day 9 have been implemented and verified. The verification covers service status, API endpoint testing, and integration validation.
+
+**Key Results:**
+- All services started successfully
+- API endpoints return expected responses
+- Database operations complete without errors
+- Frontend rendering matches design specifications
+
+See the Chinese section below for detailed verification tables and test results.
+
+---
+
 # Day 9 验证报告 — Compliance Audit（合规审计）
 
 > **日期**: 2026-06-07  

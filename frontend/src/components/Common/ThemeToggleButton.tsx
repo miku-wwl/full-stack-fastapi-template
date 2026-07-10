@@ -1,3 +1,5 @@
+/** Button that toggles between light and dark theme modes. */
+
 import { useTheme } from "../../components/theme-provider";
 
 export const ThemeToggleButton: React.FC = () => {
@@ -9,10 +11,13 @@ export const ThemeToggleButton: React.FC = () => {
 
   return (
     <button
+      type="button"
+      aria-label="Toggle theme"
       onClick={toggleTheme}
       className="relative flex items-center justify-center text-gray-500 transition-colors bg-white border border-gray-200 rounded-full hover:text-dark-900 h-11 w-11 hover:bg-gray-100 hover:text-gray-700 dark:border-gray-800 dark:bg-gray-900 dark:text-gray-400 dark:hover:bg-gray-800 dark:hover:text-white"
     >
       <svg
+        aria-label="Dark mode moon icon"
         className="hidden dark:block"
         width="20"
         height="20"
@@ -28,6 +33,7 @@ export const ThemeToggleButton: React.FC = () => {
         />
       </svg>
       <svg
+        aria-label="Light mode sun icon"
         className="dark:hidden"
         width="20"
         height="20"

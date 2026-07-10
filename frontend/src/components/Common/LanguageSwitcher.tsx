@@ -1,3 +1,5 @@
+/** Language toggle component switching between English and Te Reo Māori. */
+
 import { useTranslation } from "react-i18next"
 import { useState, useEffect } from "react"
 
@@ -28,6 +30,7 @@ export default function LanguageSwitcher() {
         const isActive = currentLang.startsWith(lang.code)
         return (
           <button
+            type="button"
             key={lang.code}
             onClick={() => handleChange(lang.code)}
             title={lang.full}

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-07-10T12:00:00.000Z" agent="Mozilla/5.0" version="24.6.5">
+  <diagram name="Use Case Diagram" id="Use Case Diagram">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" background="#ffffff">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="ForeXchange - UML Use Case Diagram" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=20;fontStyle=1;fontColor=#1a1a2e;" parent="1" vertex="1">
+          <mxGeometry x="250" y="5" width="900" height="32" as="geometry"/>
+        </mxCell>
+        <mxCell id="sub" value="MSE800 Assessment 2 | Group R | Zhe Wang, Weilai Wang" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=10;fontColor=#666666;" parent="1" vertex="1">
+          <mxGeometry x="250" y="35" width="900" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="sysb" value="ForeXchange System" style="shape=umlFrame;whiteSpace=wrap;html=1;fillColor=none;strokeColor=#1565c0;fontSize=13;fontStyle=1;verticalAlign=top;align=left;spacingTop=8;" parent="1" vertex="1">
+          <mxGeometry x="270" y="75" width="800" height="700" as="geometry"/>
+        </mxCell>
+        <mxCell id="actor-cust" value="Customer" style="shape=umlActor;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="200" width="100" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="actor-aud" value="Auditor" style="shape=umlActor;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#e65100;fontSize=12;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="500" width="100" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="actor-ext" value="Frankfurter&#10;API (ECB)" style="shape=umlActor;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#c62828;fontSize=10;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="80" y="710" width="70" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-reg" value="Register Account" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="320" y="100" width="150" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-log" value="Login / Logout" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="550" y="100" width="150" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-dash" value="View Dashboard" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="320" y="165" width="150" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-rate" value="View Live Rates" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="550" y="165" width="150" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-chart" value="View Rate Charts" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="320" y="230" width="150" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-lock" value="Lock Exchange Rate" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="550" y="230" width="150" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-remit" value="Make Remittance" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="320" y="295" width="150" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-hist" value="View Transaction History" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="550" y="295" width="150" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-sett" value="Manage Settings" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="320" y="360" width="150" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-recover" value="Password Recovery" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="550" y="360" width="150" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-comp" value="Compliance Overview" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="400" y="460" width="150" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-review" value="Review Flagged Txn" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="580" y="460" width="150" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-report" value="Compliance Reports" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="400" y="530" width="150" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc-fetch" value="Fetch ECB Rates" style="ellipse;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="450" y="710" width="150" height="34" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-cust-reg" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;" parent="1" source="actor-cust" target="uc-reg" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-cust-log" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;" parent="1" source="actor-cust" target="uc-log" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-cust-dash" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;" parent="1" source="actor-cust" target="uc-dash" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-cust-rate" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;" parent="1" source="actor-cust" target="uc-rate" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-cust-chart" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;" parent="1" source="actor-cust" target="uc-chart" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-cust-lock" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;" parent="1" source="actor-cust" target="uc-lock" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-cust-remit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;" parent="1" source="actor-cust" target="uc-remit" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-cust-hist" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;" parent="1" source="actor-cust" target="uc-hist" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-cust-sett" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;" parent="1" source="actor-cust" target="uc-sett" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-cust-recover" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;" parent="1" source="actor-cust" target="uc-recover" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-aud-comp" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#e65100;" parent="1" source="actor-aud" target="uc-comp" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-aud-review" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#e65100;" parent="1" source="actor-aud" target="uc-review" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-aud-report" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#e65100;" parent="1" source="actor-aud" target="uc-report" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-ext-fetch" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#c62828;" parent="1" source="actor-ext" target="uc-fetch" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-inc-remit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2e7d32;dashed=1;startArrow=open;startFill=0;endArrow=block;" parent="1" source="uc-remit" target="uc-lock" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="l-inc1" value="«include»" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=8;fontColor=#2e7d32;" parent="1" vertex="1">
+          <mxGeometry x="440" y="255" width="60" height="16" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-inc-dash" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2e7d32;dashed=1;startArrow=open;startFill=0;endArrow=block;" parent="1" source="uc-dash" target="uc-rate" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="l-inc2" value="«include»" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=8;fontColor=#2e7d32;" parent="1" vertex="1">
+          <mxGeometry x="440" y="148" width="60" height="16" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-ext-reg" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2e7d32;dashed=1;startArrow=open;startFill=0;endArrow=block;" parent="1" source="uc-reg" target="uc-log" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="l-ext1" value="«extend»" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=8;fontColor=#2e7d32;" parent="1" vertex="1">
+          <mxGeometry x="540" y="80" width="60" height="16" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

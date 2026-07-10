@@ -1,3 +1,5 @@
+/** Dashboard statistics card displaying an icon, label, value, and optional color indicator. */
+
 import type { ReactNode } from "react";
 
 interface StatCardProps {

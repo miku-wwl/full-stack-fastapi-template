@@ -1,3 +1,5 @@
+/** Reusable card container for grouping related UI components with a title. */
+
 interface ComponentCardProps {
   title: string;
   children: React.ReactNode;

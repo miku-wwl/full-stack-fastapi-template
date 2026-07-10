@@ -1,3 +1,5 @@
+/** Blank placeholder page for future module development. */
+
 import PageBreadcrumb from "../components/Common/PageBreadCrumb";
 import PageMeta from "../components/Common/PageMeta";
 

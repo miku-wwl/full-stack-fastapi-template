@@ -1,3 +1,5 @@
+/** Decorative grid pattern SVG used as a background shape on auth pages. */
+
 export default function GridShape() {
   return (
     <>

@@ -1,3 +1,5 @@
+/** Dashboard home page with real-time forex rates, statistics cards, and charts. */
+
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import {

@@ -1,3 +1,5 @@
+/** Alternative theme toggle with sun/moon icon switch. */
+
 import { useTheme } from "../../components/theme-provider";
 
 export default function ThemeTogglerTwo() {
@@ -7,10 +9,13 @@ export default function ThemeTogglerTwo() {
   };
   return (
     <button
+      type="button"
+      aria-label="Toggle theme"
       onClick={toggleTheme}
       className="inline-flex items-center justify-center text-white transition-colors rounded-full size-14 bg-brand-500 hover:bg-brand-600"
     >
       <svg
+        aria-label="Dark mode moon icon"
         className="hidden dark:block"
         width="20"
         height="20"
@@ -26,6 +31,7 @@ export default function ThemeTogglerTwo() {
         />
       </svg>
       <svg
+        aria-label="Light mode sun icon"
         className="dark:hidden"
         width="20"
         height="20"
