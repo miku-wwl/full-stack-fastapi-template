@@ -1,3 +1,5 @@
+/** 404 page displayed when no route matches the current URL. */
+
 import { Link } from "@tanstack/react-router"
 import { Button } from "@/components/ui/button"
 import { Home, SearchX } from "lucide-react"

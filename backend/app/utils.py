@@ -1,3 +1,10 @@
+"""Email utility functions for ForeXchange.
+
+Handles rendering HTML email templates from Jinja2 files, sending emails via
+SMTP, and generating password-reset or new-account notification messages.
+Also provides JWT-based password reset token creation and verification.
+"""
+
 import logging
 from dataclasses import dataclass
 from datetime import datetime, timedelta, timezone
@@ -18,11 +25,19 @@ logger = logging.getLogger(__name__)
 
 @dataclass
 class EmailData:
+    """Data class holding the rendered HTML content and subject line for an email."""
     html_content: str
     subject: str
 
 
 def render_email_template(*, template_name: str, context: dict[str, Any]) -> str:
+    """
+    Render a Jinja2 HTML email template with the given context variables.
+
+    :param template_name: Filename of the template inside email-templates/build/
+    :param context: Dictionary of variables to inject into the template
+    :returns: Rendered HTML string
+    """
     template_str = (
         Path(__file__).parent / "email-templates" / "build" / template_name
     ).read_text()
@@ -36,6 +51,15 @@ def send_email(
     subject: str = "",
     html_content: str = "",
 ) -> None:
+    """
+    Send an email via the configured SMTP server.
+
+    Supports TLS and SSL encryption. Requires emails_enabled config to be set.
+
+    :param email_to: Recipient email address
+    :param subject: Email subject line
+    :param html_content: Rendered HTML body of the email
+    """
     assert settings.emails_enabled, "no provided configuration for email variables"
     message = emails.Message(
         subject=subject,
@@ -56,6 +80,7 @@ def send_email(
 
 
 def generate_test_email(email_to: str) -> EmailData:
+    """Generate a test email to verify SMTP configuration is working."""
     project_name = settings.PROJECT_NAME
     subject = f"{project_name} - Test email"
     html_content = render_email_template(
@@ -66,6 +91,11 @@ def generate_test_email(email_to: str) -> EmailData:
 
 
 def generate_reset_password_email(email_to: str, email: str, token: str) -> EmailData:
+    """
+    Generate a password reset email with a secure token link.
+
+    The link points to the frontend reset-password page with the token as a query param.
+    """
     project_name = settings.PROJECT_NAME
     subject = f"{project_name} - Password recovery for user {email}"
     link = f"{settings.FRONTEND_HOST}/reset-password?token={token}"
@@ -85,6 +115,7 @@ def generate_reset_password_email(email_to: str, email: str, token: str) -> Emai
 def generate_new_account_email(
     email_to: str, username: str, password: str
 ) -> EmailData:
+    """Generate a welcome email for newly created accounts with login credentials."""
     project_name = settings.PROJECT_NAME
     subject = f"{project_name} - New account for user {username}"
     html_content = render_email_template(

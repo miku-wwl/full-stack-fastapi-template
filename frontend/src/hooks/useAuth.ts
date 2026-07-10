@@ -1,3 +1,10 @@
+/**
+ * Authentication hook and utilities for the ForeXchange frontend.
+ *
+ * Provides login/logout/signup mutations, current user state via React Query,
+ * and helper functions for checking authentication and role status.
+ */
+
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useNavigate } from "@tanstack/react-router"
 
@@ -11,10 +18,15 @@ import {
 import { handleError } from "@/utils"
 import useCustomToast from "./useCustomToast"
 
+/** Check if a user is logged in by verifying the access token exists in localStorage. */
 const isLoggedIn = () => {
   return localStorage.getItem("access_token") !== null
 }
 
+/**
+ * Custom hook providing auth state, login/logout mutations, and role checking.
+ * Fetches the current user profile via /users/me when authenticated.
+ */
 const useAuth = () => {
   const navigate = useNavigate()
   const queryClient = useQueryClient()
@@ -43,6 +55,10 @@ const useAuth = () => {
     },
   })
 
+  /**
+   * Authenticate via email+password, store the JWT and user role.
+   * The role is cached in localStorage to avoid an extra API call for sidebar rendering.
+   */
   const login = async (data: AccessToken) => {
     const response = await LoginService.loginAccessToken({
       formData: data,

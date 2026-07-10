@@ -1,3 +1,5 @@
+/** User avatar dropdown with profile, settings, and logout options. */
+
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dropdown } from "../ui/dropdown/Dropdown";
@@ -23,6 +25,7 @@ export default function UserDropdown() {
   return (
     <div className="relative">
       <button
+        type="button"
         onClick={toggleDropdown}
         className="flex items-center text-gray-700 dropdown-toggle dark:text-gray-400"
       >
@@ -32,6 +35,7 @@ export default function UserDropdown() {
 
         <span className="block mr-1 font-medium text-theme-sm">{displayName}</span>
         <svg
+          aria-label="Dropdown indicator"
           className={`stroke-gray-500 dark:stroke-gray-400 transition-transform duration-200 ${
             isOpen ? "rotate-180" : ""
           }`}
@@ -93,6 +97,7 @@ export default function UserDropdown() {
           </li>
         </ul>
         <button
+          type="button"
           onClick={() => {
             closeDropdown();
             logout();

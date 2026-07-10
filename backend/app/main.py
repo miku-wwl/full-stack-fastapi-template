@@ -1,3 +1,10 @@
+"""FastAPI application entry point for ForeXchange.
+
+Initialises the FastAPI app, configures middleware (CORS, security headers),
+registers global exception handlers, and includes all API route routers.
+Also triggers forex data seeding and the background rate generator on startup.
+"""
+
 import logging
 
 import sentry_sdk
@@ -15,6 +22,7 @@ logger = logging.getLogger(__name__)
 
 
 def custom_generate_unique_id(route: APIRoute) -> str:
+    """Generate a unique operation ID for each route using tag + function name."""
     return f"{route.tags[0]}-{route.name}"
 
 
@@ -27,13 +35,48 @@ if settings.SENTRY_DSN and settings.ENVIRONMENT != "local":
 # ──────────────────────────────────────────────
 
 class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """Middleware that adds security-related HTTP headers to every response.
+
+    Headers added: X-Content-Type-Options, X-Frame-Options, X-XSS-Protection,
+    Referrer-Policy, and Permissions-Policy. Provides utility methods for
+    header construction and validation.
+    """
+
+    SECURITY_HEADERS = {
+        "X-Content-Type-Options": "nosniff",
+        "X-Frame-Options": "DENY",
+        "X-XSS-Protection": "1; mode=block",
+        "Referrer-Policy": "strict-origin-when-cross-origin",
+        "Permissions-Policy": "camera=(), microphone=(), geolocation=()",
+    }
+
+    def get_security_headers(self) -> dict[str, str]:
+        """Return the dict of security headers applied by this middleware.
+
+        Useful for testing and logging to verify which headers are set.
+        """
+        return dict(self.SECURITY_HEADERS)
+
+    def validate_response_headers(self, response_headers: dict) -> list[str]:
+        """Check if all required security headers are present in a response.
+
+        Args:
+            response_headers: A dict-like object of response header key-value pairs.
+
+        Returns:
+            A list of missing header names (empty if all are present).
+        """
+        missing = []
+        for header in self.SECURITY_HEADERS:
+            if header not in response_headers:
+                missing.append(header)
+        return missing
+
     async def dispatch(self, request: Request, call_next):
+        """Intercept request, call the next handler, then add security headers."""
         response = await call_next(request)
-        response.headers["X-Content-Type-Options"] = "nosniff"
-        response.headers["X-Frame-Options"] = "DENY"
-        response.headers["X-XSS-Protection"] = "1; mode=block"
-        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
-        response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
+        for header, value in self.SECURITY_HEADERS.items():
+            response.headers[header] = value
         return response
 
 
@@ -65,6 +108,7 @@ app.include_router(api_router, prefix=settings.API_V1_STR)
 
 @app.exception_handler(ValueError)
 async def value_error_handler(request: Request, exc: ValueError) -> JSONResponse:
+    """Return a 400 response with the ValueError message for validation errors."""
     logger.warning("ValueError: %s", exc)
     return JSONResponse(
         status_code=400,
@@ -74,6 +118,7 @@ async def value_error_handler(request: Request, exc: ValueError) -> JSONResponse
 
 @app.exception_handler(Exception)
 async def global_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    """Catch-all exception handler returning a generic 500 error to avoid leaking internals."""
     logger.exception("Unhandled exception: %s", exc)
     return JSONResponse(
         status_code=500,

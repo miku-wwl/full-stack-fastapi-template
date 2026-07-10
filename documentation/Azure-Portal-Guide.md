@@ -1,3 +1,24 @@
+# ForeXchange — Azure Portal Configuration Guide
+
+> **Date**: 2026-07-10
+> **Project**: ForeXchange — Real-Time Remittance & Compliance Monitoring Platform
+> **Language**: English (original Chinese version below)
+
+---
+
+## Overview
+
+This guide provides step-by-step instructions for configuring ForeXchange resources in the Azure Portal. It covers Container Apps, PostgreSQL Flexible Server, Key Vault, and Storage Account setup.
+
+**Prerequisites:**
+- Active Azure for Students subscription
+- Contributor role access
+- Terraform CLI installed (for initial deployment)
+
+See the Chinese section below for detailed step-by-step instructions with screenshots.
+
+---
+
 # ForeXchange — Azure Portal 验证指南 & 学习手册
 
 > **适用角色**: 学生 / 初学者  

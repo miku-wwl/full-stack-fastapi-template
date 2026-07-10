@@ -1,3 +1,5 @@
+/** ApexCharts line chart showing 24-hour exchange rate history for a selected pair. */
+
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import Chart from "react-apexcharts";
@@ -38,7 +40,7 @@ export default function RateChart({
     queryKey: ["rates", "history", pair, range, interval],
     queryFn: async () => {
       const base = OpenAPI.BASE ?? "";
-      const token = typeof OpenAPI.TOKEN === "function" ? await OpenAPI.TOKEN({} as any) : (OpenAPI.TOKEN ?? "");
+      const token = typeof OpenAPI.TOKEN === "function" ? await OpenAPI.TOKEN({} as unknown) : (OpenAPI.TOKEN ?? "");
       const res = await fetch(
         `${base}/api/v1/rates/history/${pair.replace("/", "-")}?range=${range}&interval=${interval}`,
         { headers: { Authorization: `Bearer ${token}` } }
@@ -49,10 +51,12 @@ export default function RateChart({
     staleTime: 30_000,
   });
 
-  const timestamps = history?.map((p: any) => new Date(p.timestamp).getTime()) ?? [];
-  const midData = history?.map((p: any) => p.mid) ?? [];
-  const bidData = history?.map((p: any) => p.bid) ?? [];
-  const askData = history?.map((p: any) => p.ask) ?? [];
+  type RatePoint = { timestamp: string; mid: number; bid: number; ask: number }
+  const points = (history as RatePoint[]) ?? []
+  const timestamps = points.map((p) => new Date(p.timestamp).getTime())
+  const midData = points.map((p) => p.mid)
+  const bidData = points.map((p) => p.bid)
+  const askData = points.map((p) => p.ask)
 
   const chartOptions: ApexOptions = {
     chart: {
@@ -129,6 +133,7 @@ export default function RateChart({
           <div className="flex rounded-lg border border-gray-300 dark:border-gray-600 overflow-hidden">
             {RANGE_OPTIONS.map((r) => (
               <button
+                type="button"
                 key={r.value}
                 onClick={() => setRange(r.value)}
                 className={`px-3 py-1.5 text-xs font-medium transition-colors ${

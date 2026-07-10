@@ -1,3 +1,5 @@
+/** Authentication page layout wrapper with brand display and decorative shapes. */
+
 import React from "react";
 import GridShape from "../../components/Common/GridShape";
 import { Link } from '@tanstack/react-router';

@@ -1,3 +1,5 @@
+/** Sign-in page composing PageMeta, AuthLayout, and SignInForm. */
+
 import PageMeta from "../../components/Common/PageMeta";
 import AuthLayout from "./AuthPageLayout";
 import SignInForm from "../../components/auth/SignInForm";

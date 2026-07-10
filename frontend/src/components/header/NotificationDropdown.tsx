@@ -1,3 +1,5 @@
+/** Notification bell dropdown in the dashboard header. */
+
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Dropdown } from "../ui/dropdown/Dropdown";

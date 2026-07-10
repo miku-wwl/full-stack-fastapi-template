@@ -1,3 +1,5 @@
+/** Registration form with data sovereignty consent and Māori privacy disclosure. */
+
 import { useState } from "react";
 import { Link } from '@tanstack/react-router';
 import { ChevronLeftIcon, EyeCloseIcon, EyeIcon } from "../../icons";
@@ -31,8 +33,9 @@ export default function SignUpForm() {
           </div>
           <div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-5">
-              <button className="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
+              <button type="button" aria-label="Sign up with Google" className="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
                 <svg
+                  aria-label="Google logo"
                   width="20"
                   height="20"
                   viewBox="0 0 20 20"
@@ -58,8 +61,9 @@ export default function SignUpForm() {
                 </svg>
                 Sign up with Google
               </button>
-              <button className="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
+              <button type="button" aria-label="Sign up with X" className="inline-flex items-center justify-center gap-3 py-3 text-sm font-normal text-gray-700 transition-colors bg-gray-100 rounded-lg px-7 hover:bg-gray-200 hover:text-gray-800 dark:bg-white/5 dark:text-white/90 dark:hover:bg-white/10">
                 <svg
+                  aria-label="X logo"
                   width="21"
                   className="fill-current"
                   height="20"
@@ -132,7 +136,9 @@ export default function SignUpForm() {
                       placeholder="Enter your password"
                       type={showPassword ? "text" : "password"}
                     />
-                    <span
+                    <button
+                      type="button"
+                      aria-label={showPassword ? "Hide password" : "Show password"}
                       onClick={() => setShowPassword(!showPassword)}
                       className="absolute z-30 -translate-y-1/2 cursor-pointer right-4 top-1/2"
                     >
@@ -141,7 +147,7 @@ export default function SignUpForm() {
                       ) : (
                         <EyeCloseIcon className="fill-gray-500 dark:fill-gray-400 size-5" />
                       )}
-                    </span>
+                    </button>
                   </div>
                 </div>
                 {/* <!-- Checkbox --> */}
@@ -170,7 +176,7 @@ export default function SignUpForm() {
                 </div>
                 {/* <!-- Button --> */}
                 <div>
-                  <button className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
+                  <button type="submit" className="flex items-center justify-center w-full px-4 py-3 text-sm font-medium text-white transition rounded-lg bg-brand-500 shadow-theme-xs hover:bg-brand-600">
                     Sign Up
                   </button>
                 </div>

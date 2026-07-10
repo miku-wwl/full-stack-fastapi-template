@@ -1,3 +1,5 @@
+/** Main dashboard layout wrapping sidebar, header, and page content via Outlet. */
+
 import { SidebarProvider, useSidebar } from "../context/SidebarContext";
 import { Outlet } from '@tanstack/react-router';
 import AppHeader from "./AppHeader";

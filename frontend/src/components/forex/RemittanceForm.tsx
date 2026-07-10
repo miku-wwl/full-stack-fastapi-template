@@ -1,3 +1,5 @@
+/** Cross-border remittance form with rate locking, IBAN validation, and fee calculation. */
+
 import { useState, useEffect, useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { OpenAPI } from "../../client";

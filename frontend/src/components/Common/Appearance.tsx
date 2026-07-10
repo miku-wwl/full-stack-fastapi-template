@@ -1,3 +1,5 @@
+/** Theme appearance selector with light/dark/system options. */
+
 import { Monitor, Moon, Sun } from "lucide-react"
 
 import { type Theme, useTheme } from "@/components/theme-provider"

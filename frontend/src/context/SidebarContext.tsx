@@ -1,3 +1,10 @@
+/**
+ * Sidebar state management context.
+ *
+ * Manages sidebar expand/collapse, mobile open/close, active navigation
+ * item tracking, and submenu toggling across the dashboard layout.
+ */
+
 import { createContext, useContext, useState, useEffect } from "react";
 
 type SidebarContextType = {
@@ -15,6 +22,7 @@ type SidebarContextType = {
 
 const SidebarContext = createContext<SidebarContextType | undefined>(undefined);
 
+/** Hook to access sidebar state; throws if used outside SidebarProvider. */
 export const useSidebar = () => {
   const context = useContext(SidebarContext);
   if (!context) {
@@ -23,6 +31,10 @@ export const useSidebar = () => {
   return context;
 };
 
+/**
+ * Provider component that manages sidebar state (expanded, mobile, active item, submenus).
+ * Automatically collapses on screens below 768px.
+ */
 export const SidebarProvider: React.FC<{ children: React.ReactNode }> = ({
   children,
 }) => {

@@ -1,0 +1,272 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-07-10T12:00:00.000Z" agent="Mozilla/5.0" version="24.6.5">
+  <diagram name="Function Decomposition" id="fdd-001">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1600" pageHeight="1300" background="#ffffff">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="ForeXchange - Function Decomposition Diagram" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=22;fontStyle=1;fontColor=#1a1a2e;" parent="1" vertex="1">
+          <mxGeometry x="300" y="10" width="900" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="l1" value="LAYER 1: FRONTEND (React SPA  -  TypeScript 5.7  +  Tailwind CSS 4  +  TanStack Router)" style="text;html=1;strokeColor=none;fillColor=#e3f2fd;align=center;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#1565c0;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="30" y="65" width="1500" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-main" value="main.tsx" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565c0;fontStyle=1;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="60" y="110" width="120" height="36" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-providers" value="App Providers&#10;QueryClientProvider | ThemeProvider | RouterProvider" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="60" y="170" width="240" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-sdk" value="Auto-Generated API SDK&#10;(@hey-api/openapi-ts)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#90caf9;strokeColor=#1565c0;fontSize=10;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="380" y="165" width="190" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-sdk-login" value="LoginService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="610" y="158" width="105" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-sdk-users" value="UsersService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="725" y="158" width="105" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-sdk-rates" value="RatesService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="840" y="158" width="105" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-sdk-tx" value="TransactionsService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="610" y="192" width="105" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-sdk-dash" value="DashboardService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="725" y="192" width="105" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-sdk-comp" value="ComplianceService" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="840" y="192" width="105" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-http" value="HTTP /api/v1/*  (REST JSON)" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;fontSize=10;fontColor=#666666;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="380" y="240" width="190" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-pages" value="Pages / Routes" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=11;startSize=22;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="280" width="280" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-dash" value="Dashboard (/)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="75" y="315" width="115" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-rates" value="Rates (/rates)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="205" y="315" width="115" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-remit" value="Remittance (/remittance)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="75" y="352" width="115" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-hist" value="History (/history)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="205" y="352" width="115" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-comp" value="Compliance (/compliance)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="75" y="389" width="115" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-sett" value="Settings (/settings)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="205" y="389" width="115" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-hooks" value="Custom Hooks" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e3f2fd;strokeColor=#1565c0;fontSize=11;startSize=22;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="380" y="280" width="280" height="160" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-hk-auth" value="useAuth()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="395" y="315" width="115" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-hk-rate" value="useForexRates()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="525" y="315" width="120" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-hk-toast" value="useCustomToast()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="395" y="352" width="115" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-hk-mobile" value="useIsMobile()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="525" y="352" width="120" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="fe-hk-online" value="useOnlineStatus()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#1565c0;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="395" y="389" width="115" height="26" as="geometry"/>
+        </mxCell>
+        <mxCell id="l2" value="LAYER 2: BACKEND (FastAPI Python 3.10+  -  SQLModel ORM  -  JWT Auth)" style="text;html=1;strokeColor=none;fillColor=#e8f5e9;align=center;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#2e7d32;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="30" y="480" width="1500" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-main" value="main.py&#10;(FastAPI App)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#2e7d32;fontStyle=1;fontSize=11;" parent="1" vertex="1">
+          <mxGeometry x="60" y="530" width="140" height="44" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-mw" value="Middleware Stack&#10;SecurityHeaders | CORS | Exception Handlers" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=9;" parent="1" vertex="1">
+          <mxGeometry x="60" y="600" width="220" height="55" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-router" value="api_router&#10;(api/main.py)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#2e7d32;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="685" width="140" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-routes" value="Route Modules" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=11;startSize=22;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="320" y="530" width="620" height="210" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-r-login" value="login.py&#10;- POST /login/access-token&#10;- POST /password-recovery&#10;- POST /reset-password" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e7d32;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="338" y="568" width="190" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-r-users" value="users.py&#10;- GET | POST /users/*&#10;- PATCH | DELETE /users/me&#10;- GET /users/me/dashboard" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e7d32;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="545" y="568" width="190" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-r-rates" value="rates.py&#10;- GET /rates/live&#10;- GET /rates/history/{pair}&#10;- POST /rates/lock/{pair}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e7d32;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="745" y="568" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-r-tx" value="transactions.py&#10;- POST /transactions/&#10;- GET /transactions/&#10;- GET /transactions/receipt/{id}" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e7d32;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="338" y="648" width="190" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-r-comp" value="compliance.py&#10;- GET /compliance/overview&#10;- POST /compliance/review&#10;- GET /compliance/reports" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e7d32;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="545" y="648" width="190" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-r-util" value="utils.py&#10;- GET /utils/health-check&#10;- GET /utils/test-email&#10;- GET /utils/data-sovereignty" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e7d32;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="745" y="648" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-core" value="Core Utilities" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=11;startSize=22;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="770" width="230" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-core-sec" value="security.py&#10;- create_access_token()&#10;- verify_password()&#10;- get_password_hash()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e7d32;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="75" y="805" width="95" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-core-db" value="db.py&#10;- engine&#10;- init_db()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e7d32;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="180" y="805" width="95" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-core-cfg" value="config.py&#10;- Settings class&#10;- Environment vars" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e7d32;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="75" y="882" width="95" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-core-deps" value="deps.py&#10;- get_db()&#10;- get_current_user()&#10;- get_superuser()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e7d32;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="180" y="882" width="95" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-svc" value="Service Layer" style="swimlane;whiteSpace=wrap;html=1;fillColor=#e8f5e9;strokeColor=#2e7d32;fontSize=11;startSize=22;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="320" y="770" width="620" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-svc-crud" value="crud.py&#10;- create_user() | update_user()&#10;- get_user_by_email()&#10;- authenticate() [timing-safe]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e7d32;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="338" y="805" width="190" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-svc-forex" value="forex.py&#10;- ForexSimulator class&#10;- fetch_frankfurter_base_rates()&#10;- generate_rate_snapshots()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e7d32;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="545" y="805" width="190" height="64" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-svc-seed" value="seed_forex.py&#10;- seed_forex_data()&#10;- start_rate_generator()&#10;- backfill_rate_history() [5s poll]" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e7d32;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="338" y="885" width="190" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-svc-email" value="utils.py (email)&#10;- send_email()&#10;- generate_*_email()&#10;- render_email_template()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e7d32;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="545" y="885" width="190" height="48" as="geometry"/>
+        </mxCell>
+        <mxCell id="be-model" value="models.py  (SQLModel ORM)&#10;User | CurrencyPair | RateSnapshot | Transaction" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#a5d6a7;strokeColor=#2e7d32;fontSize=10;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="970" width="230" height="40" as="geometry"/>
+        </mxCell>
+        <mxCell id="chain-label" value="Key Call Chain (Login Authentication Flow):" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;fontSize=10;fontColor=#e65100;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="338" y="715" width="260" height="20" as="geometry"/>
+        </mxCell>
+        <mxCell id="chain-1" value="login.py&#10;POST /login" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#e65100;fontSize=8;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="338" y="738" width="80" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="chain-2" value="authenticate()&#10;(crud.py)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#e65100;fontSize=8;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="428" y="738" width="90" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="chain-3" value="get_user_by_email()&#10;(crud.py)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#e65100;fontSize=8;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="528" y="738" width="90" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="chain-4" value="verify_password()&#10;(security.py)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#e65100;fontSize=8;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="628" y="738" width="90" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="chain-5" value="create_access_token()&#10;(security.py)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#e65100;fontSize=8;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="728" y="738" width="100" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-chain-1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#e65100;strokeWidth=1;" parent="1" source="chain-1" target="chain-2" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-chain-2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#e65100;strokeWidth=1;" parent="1" source="chain-2" target="chain-3" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-chain-3" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#e65100;strokeWidth=1;" parent="1" source="chain-3" target="chain-4" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-chain-4" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#e65100;strokeWidth=1;" parent="1" source="chain-4" target="chain-5" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="startup-label" value="Startup Sequence" style="swimlane;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#e65100;fontSize=11;startSize=22;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="980" y="530" width="290" height="190" as="geometry"/>
+        </mxCell>
+        <mxCell id="st-1" value="1. backend_pre_start.py&#10;   -&gt; DB health check (retry 5min)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e65100;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="995" y="565" width="260" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="st-2" value="2. main.py on_startup() event&#10;   -&gt; seed_forex_data()" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e65100;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="995" y="603" width="260" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="st-3" value="3. start_rate_generator()&#10;   -&gt; background 5s polling loop" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e65100;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="995" y="641" width="260" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="st-4" value="4. Seed 12 currency pairs&#10;   -&gt; initial rate snapshots" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#e65100;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="995" y="679" width="260" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="l3" value="LAYER 3: DATABASE &amp; INFRASTRUCTURE" style="text;html=1;strokeColor=none;fillColor=#fce4ec;align=center;verticalAlign=middle;fontSize=13;fontStyle=1;fontColor=#c62828;rounded=1;" parent="1" vertex="1">
+          <mxGeometry x="30" y="1040" width="1500" height="28" as="geometry"/>
+        </mxCell>
+        <mxCell id="infra-db" value="PostgreSQL 16" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcdd2;strokeColor=#c62828;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="60" y="1090" width="270" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="infra-db-d" value="Tables:&#10;- user (role-based access)&#10;- currencypair (12 pairs)&#10;- ratesnapshot (time-series)&#10;- transaction (audit trail)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#c62828;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="60" y="1136" width="270" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="infra-az" value="Azure Cloud (Terraform IaC)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcdd2;strokeColor=#c62828;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="350" y="1090" width="270" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="infra-az-d" value="Resources:&#10;- Container Apps (backend+frontend)&#10;- PostgreSQL Flexible Server&#10;- Key Vault (secrets mgmt)&#10;- Queue Storage (async tasks)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#c62828;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="350" y="1136" width="270" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="infra-dk" value="Docker Compose" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcdd2;strokeColor=#c62828;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="640" y="1090" width="270" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="infra-dk-d" value="Services:&#10;- backend (FastAPI uvicorn)&#10;- frontend (Nginx static)&#10;- db (PostgreSQL 16)&#10;- mailcatcher (dev email)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#c62828;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="640" y="1136" width="270" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="infra-mon" value="CI-CD &amp; Monitoring" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcdd2;strokeColor=#c62828;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="930" y="1090" width="270" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="infra-mon-d" value="- GitHub Actions (Pylint lint)&#10;- Sentry Error Tracking&#10;- Health-check endpoint&#10;- Swagger /docs auto-docs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#c62828;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="930" y="1136" width="270" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="infra-ext" value="External APIs" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcdd2;strokeColor=#c62828;fontSize=11;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="1220" y="1090" width="270" height="38" as="geometry"/>
+        </mxCell>
+        <mxCell id="infra-ext-d" value="- Frankfurter API (ECB rates)&#10;- SMTP Email Service" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fce4ec;strokeColor=#c62828;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="1220" y="1136" width="270" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="legend" value="Legend" style="swimlane;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=10;startSize=20;fontStyle=1;" parent="1" vertex="1">
+          <mxGeometry x="980" y="770" width="290" height="180" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg-entry" value="Entry Point / App" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#bbdefb;strokeColor=#1565c0;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="995" y="800" width="120" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg-route" value="Route / Controller" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#c8e6c9;strokeColor=#2e7d32;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="995" y="826" width="120" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg-svc" value="Service / Utility" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#2e7d32;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="995" y="852" width="120" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg-infra" value="Infrastructure" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffcdd2;strokeColor=#c62828;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="995" y="878" width="120" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="leg-chain" value="Call Chain Flow" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff3e0;strokeColor=#e65100;fontSize=8;" parent="1" vertex="1">
+          <mxGeometry x="1135" y="800" width="120" height="18" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-fe-main-prov" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;" parent="1" source="fe-main" target="fe-providers" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-fe-prov-sdk" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;strokeWidth=1;" parent="1" source="fe-providers" target="fe-sdk" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-fe-prov-pages" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#1565c0;strokeWidth=1;" parent="1" source="fe-providers" target="fe-pages" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-be-main-mw" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2e7d32;strokeWidth=1;" parent="1" source="be-main" target="be-mw" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-be-mw-router" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2e7d32;strokeWidth=1;" parent="1" source="be-mw" target="be-router" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-be-router-routes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2e7d32;strokeWidth=1;" parent="1" source="be-router" target="be-routes" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-be-router-core" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2e7d32;strokeWidth=1;" parent="1" source="be-router" target="be-core" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+        <mxCell id="e-be-routes-svc" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;strokeColor=#2e7d32;strokeWidth=1;" parent="1" source="be-routes" target="be-svc" edge="1">
+          <mxGeometry relative="1" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

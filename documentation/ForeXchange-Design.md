@@ -1,3 +1,350 @@
+# ForeXchange — Complete Detailed Design Document
+
+> **Proposal**: Proposal 3
+> **Project**: ForeXchange: High-Availability Real-Time Remittance and Compliance Telemetry Dashboard
+> **Architecture**: Azure Container Apps + Azure PostgreSQL + Azure Queue Storage + Docker Hub + Terraform IaC
+> **Language**: English (original Chinese version below)
+
+---
+
+## Table of Contents
+
+- [Part 1: Frontend Detailed Design](#part-1-frontend-detailed-design)
+- [Part 2: Backend Detailed Design](#part-2-backend-detailed-design)
+- [Part 3: Deployment & IaC Detailed Design](#part-3-deployment--iac-detailed-design)
+
+---
+
+## Part 1: Frontend Detailed Design
+
+### 1.1 Technology Stack
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| React | 19.x | UI Framework |
+| TypeScript | 5.7+ | Type Safety |
+| TanStack Router | 1.x | File-based routing + route guards |
+| TanStack React Query | 5.x | Server state management + real-time polling |
+| Tailwind CSS | 4.x | Atomic CSS styling |
+| ApexCharts / react-apexcharts | latest | Exchange rate trend charts |
+| react-hook-form + zod | latest | Form validation |
+| @hey-api/openapi-ts | latest | Auto-generated API client |
+| react-helmet-async | latest | Page metadata management |
+
+### 1.2 Route Structure
+
+Routes are based on TanStack Router file-system routing. `_layout` is a protected layout route (requires login).
+
+```
+routes/
+├── __root.tsx                    # Root route (error boundary, global Provider)
+├── login.tsx                     # Login page (public)
+├── signup.tsx                    # Signup page (public)
+├── reset-password.tsx            # Password reset (public)
+├── recover-password.tsx          # Password recovery (public)
+├── _layout.tsx                   # Protected layout (Dashboard AppLayout)
+├── _layout/
+│   ├── index.tsx                 # Dashboard homepage (real-time rate overview)
+│   ├── remittance.tsx            # Remittance operation page
+│   ├── history.tsx               # Transaction history page (immutable ledger)
+│   ├── compliance.tsx            # Compliance audit page (Auditor only)
+│   ├── rates.tsx                 # Real-time rate monitoring page
+│   └── settings.tsx              # User settings page
+```
+
+### 1.3 Page Detailed Design
+
+#### 1.3.1 Login Page `/login` (public)
+
+Retains existing JWT OAuth2 password flow authentication:
+
+- **Form fields**: Email (username), Password
+- **Validation**: Email format, minimum password length (8 chars)
+- **Error handling**: "Incorrect email or password" (generic, prevents email enumeration)
+- **Success**: Redirect to `/`, JWT token stored in localStorage
+- **Links**: "Sign Up" → `/signup`, "Forgot Password" → `/recover-password`
+
+#### 1.3.2 Signup Page `/signup` (public)
+
+- **Form fields**: Email, Password, Confirm Password, Full Name
+- **Role**: Defaults to `customer` (no role selection on UI)
+- **Validation**: Password strength indicator, email format, confirm match
+- **Privacy Notice**: Checkbox for data processing consent
+- **Success**: Auto-login after registration, redirect to `/`
+
+#### 1.3.3 Dashboard Homepage `/` (protected)
+
+- **Statistics Cards**: Active pairs, today's transactions, total volume (USD), flagged count, avg processing time
+- **Recent Transactions**: Last 5 transactions table
+- **Live Rate Ticker**: Top 4 currency pairs with bid/ask spread
+- **Data Refresh**: Polling every 30 seconds via React Query
+
+#### 1.3.4 Remittance Page `/remittance` (protected)
+
+- **Step 1**: Select currency pair (dropdown from live pairs)
+- **Step 2**: Enter source amount → auto-calculate target amount
+- **Step 3**: Click "Lock Rate" → 30-second countdown timer
+- **Step 4**: Fill recipient info (name, IBAN, purpose)
+- **Step 5**: Submit → AML compliance check → confirmation
+- **IBAN Validation**: Format check (15-34 chars, country code + checksum)
+
+#### 1.3.5 Transaction History `/history` (protected)
+
+- **Table columns**: Date, Pair, Amount, Recipient, Status
+- **Pagination**: 10 per page, page navigation
+- **Filters**: Status dropdown (all/pending/completed/flagged/rejected)
+- **Detail Modal**: Click row to see full transaction details
+
+#### 1.3.6 Compliance Audit `/compliance` (Auditor only)
+
+- **Overview Cards**: Flagged count, reviewed today, approved/rejected, pass rate
+- **Flagged List**: Transactions sorted by risk score (descending)
+- **Detail View**: Triggered AML rules, compliance details JSON
+- **Actions**: Approve / Reject buttons with confirmation dialog
+- **Audit Log**: Immutable record of all review actions
+
+#### 1.3.7 Live Rates `/rates` (protected)
+
+- **Rate Cards**: 12 currency pairs showing bid/ask/mid/spread/change%
+- **Auto-Refresh**: 5-second polling
+- **Chart**: 24-hour ApexCharts line chart with pair selector
+- **Rate Lock**: Click "Lock" to freeze rate for 30 seconds
+
+#### 1.3.8 Settings `/settings` (protected)
+
+- **Profile**: Full name, email (with verification)
+- **Password**: Current + new password change form
+- **Theme**: Dark/Light mode toggle
+- **Danger Zone**: Delete account button (with confirmation)
+
+### 1.4 Component Tree
+
+```
+App
+├── Providers (QueryClient, Theme, Router)
+│   └── Router
+│       ├── PublicRoute
+│       │   ├── LoginPage
+│       │   ├── SignupPage
+│       │   ├── RecoverPassword
+│       │   └── ResetPassword
+│       └── ProtectedLayout (AppLayout)
+│           ├── AppSidebar
+│           ├── AppHeader (UserDropdown, NotificationDropdown)
+│           └── Content
+│               ├── DashboardHome
+│               │   ├── StatCard (×5)
+│               │   └── RecentTransactions
+│               ├── RatesPage
+│               │   ├── RateCard (×12)
+│               │   └── RateChart (ApexCharts)
+│               ├── RemittancePage
+│               │   └── RemittanceForm
+│               ├── HistoryPage
+│               │   └── DataTable
+│               ├── CompliancePage
+│               │   ├── ComplianceOverview
+│               │   └── DataTable (flagged)
+│               └── SettingsPage
+```
+
+### 1.5 Custom Hooks
+
+| Hook | Purpose |
+|------|---------|
+| `useAuth()` | Login, signup, logout, token management, current user state |
+| `useForexRates()` | 5s polling for live rates, returns rate array + loading/error |
+| `useCustomToast()` | Unified success/error toast notifications via sonner |
+| `useIsMobile()` | Responsive breakpoint detection for sidebar collapse |
+| `useOnlineStatus()` | Network connectivity monitoring |
+
+---
+
+## Part 2: Backend Detailed Design
+
+### 2.1 Technology Stack
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| Python | 3.10+ | Runtime |
+| FastAPI | 0.114.2+ | Web framework (async) |
+| SQLModel | 0.0.21+ | ORM (SQLAlchemy + Pydantic) |
+| PostgreSQL | 16 | Database |
+| Alembic | 1.12+ | Schema migrations |
+| JWT (python-jose) | — | Token-based auth (HS256) |
+| Argon2id + Bcrypt | — | Password hashing (via pwdlib) |
+| Sentry SDK | — | Error monitoring |
+| pytest | 7.4+ | Testing |
+
+### 2.2 API Route Structure
+
+```
+/api/v1/
+├── login/
+│   ├── POST /login/access-token        # OAuth2 login
+│   ├── POST /login/test-token          # Verify token
+│   ├── POST /password-recovery/{email}
+│   └── POST /reset-password/
+├── users/
+│   ├── POST /users/signup              # Self-registration
+│   ├── GET /users/                     # List (superuser)
+│   ├── POST /users/                    # Create (superuser)
+│   ├── GET /users/me                   # Current user profile
+│   ├── PATCH /users/me                 # Update profile
+│   ├── PATCH /users/me/password        # Change password
+│   ├── DELETE /users/me                # Delete account
+│   └── GET /users/me/dashboard         # Dashboard stats
+├── rates/
+│   ├── GET /rates/live                 # All live rates
+│   ├── GET /rates/live/{pair}          # Single pair rate
+│   ├── GET /rates/history/{pair}       # 24h history
+│   └── POST /rates/lock                # Lock rate (30s TTL)
+├── transactions/
+│   ├── POST /transactions/             # Create (with AML check)
+│   ├── GET /transactions/              # List (paginated, filterable)
+│   └── GET /transactions/{id}          # Detail
+├── compliance/
+│   ├── GET /compliance/overview        # Stats (Auditor only)
+│   ├── GET /compliance/flagged         # Flagged list
+│   ├── GET /compliance/{tx_id}         # Detail
+│   └── POST /compliance/review/{tx_id} # Approve/reject
+└── utils/
+    ├── GET /utils/health-check/
+    ├── POST /utils/test-email/
+    └── GET /utils/data-sovereignty
+```
+
+### 2.3 Database Schema (SQLModel ORM)
+
+#### User
+| Column | Type | Notes |
+|--------|------|-------|
+| id | UUID (PK) | Auto-generated |
+| email | String (unique, indexed) | Max 255 |
+| hashed_password | String | Argon2id + Bcrypt |
+| full_name | String? | Max 255 |
+| role | String | "customer" or "auditor" |
+| is_active | Boolean | Default true |
+| is_superuser | Boolean | Default false |
+| created_at | DateTime (tz) | UTC |
+
+#### CurrencyPair
+| Column | Type | Notes |
+|--------|------|-------|
+| id | UUID (PK) | |
+| base_currency | String(3) | e.g. "USD" |
+| quote_currency | String(3) | e.g. "EUR" |
+| is_active | Boolean | Default true |
+| created_at | DateTime | |
+
+#### RateSnapshot
+| Column | Type | Notes |
+|--------|------|-------|
+| id | UUID (PK) | |
+| pair_id | UUID (FK → CurrencyPair) | |
+| bid | Float | |
+| ask | Float | |
+| mid | Float | |
+| spread | Float | ask - bid |
+| change_pct | Float | vs benchmark |
+| timestamp | DateTime | Auto-generated |
+
+#### Transaction
+| Column | Type | Notes |
+|--------|------|-------|
+| id | UUID (PK) | |
+| user_id | UUID (FK → User) | |
+| pair_id | UUID (FK → CurrencyPair) | |
+| source_amount | Float | |
+| target_amount | Float? | |
+| locked_rate | Float | |
+| fee_amount | Float | |
+| recipient_name | String | |
+| recipient_iban | String | |
+| purpose | String | |
+| status | String | pending/completed/flagged/rejected |
+| compliance_status | String? | pass/flagged/pending |
+| compliance_score | Int? | 0-100 |
+| compliance_details | JSON? | Triggered rules |
+| created_at | DateTime | |
+| updated_at | DateTime | |
+| completed_at | DateTime? | |
+
+### 2.4 Key Backend Components
+
+| Component | File | Responsibility |
+|-----------|------|----------------|
+| FastAPI App | `main.py` | App initialisation, middleware, exception handlers |
+| Models | `models.py` | All SQLModel ORM classes + Pydantic schemas |
+| CRUD | `crud.py` | Data access layer (create_user, authenticate, etc.) |
+| Security | `core/security.py` | JWT creation, password hashing, verification |
+| Config | `core/config.py` | Environment settings (Pydantic BaseSettings) |
+| DB | `core/db.py` | Engine creation, init_db() |
+| Dependencies | `api/deps.py` | get_db, get_current_user, get_superuser |
+| Forex | `forex.py` | ForexSimulator class, rate generation |
+| Seed | `seed_forex.py` | Currency pair seeding, background rate generator |
+
+### 2.5 Authentication Flow
+
+```
+Client → POST /login/access-token
+  → login.py → crud.authenticate()
+    → get_user_by_email() [DB query]
+    → verify_password() [Argon2id check]
+    → create_access_token() [JWT HS256]
+  → Return Token {access_token, token_type, role}
+```
+
+### 2.6 AML Compliance Rules
+
+| Rule | Trigger | Score Contribution |
+|------|---------|-------------------|
+| Large Amount | Amount > $10,000 | +30 |
+| High-Risk Country | IBAN prefix matches risk list | +35 |
+| Random Spot Check | 5% probability | +20 |
+| Structuring Pattern | Amount near round thresholds | +25 |
+| **Total (capped)** | | **0-100** |
+
+Flagged if score >= 60. Auditor must review flagged transactions.
+
+---
+
+## Part 3: Deployment & IaC Detailed Design
+
+### 3.1 Docker Compose Services
+
+| Service | Image | Ports | Depends On |
+|---------|-------|-------|------------|
+| db | postgres:16 | 5432 | — |
+| prestart | backend (local) | — | db (healthy) |
+| backend | backend (local) | 8000 | db (healthy) |
+| frontend | nginx:alpine | 5173 | backend |
+| mailcatcher | mailcatcher | 1080, 1025 | — |
+
+### 3.2 Azure Resources (Terraform)
+
+| Resource | SKU | Purpose |
+|----------|-----|---------|
+| Resource Group | — | Logical container |
+| Container App Environment | Consumption | Serverless hosting |
+| Container App (backend) | 0.5 vCPU, 1 GiB | FastAPI API |
+| PostgreSQL Flexible Server | D2ds_v4 (2 vCPU, 8 GiB) | Database |
+| Key Vault | Standard | Secrets management |
+| Storage Account | LRS (Queue + Blob) | Async queue |
+
+### 3.3 CI/CD Pipeline
+
+| Stage | Tool | Action |
+|-------|------|--------|
+| Lint | GitHub Actions (Pylint) | `uv run pylint app` |
+| Test | pytest | `python -m pytest tests/` |
+| Build | Docker Buildx | Build and push to Docker Hub |
+| Deploy | Terraform | `terraform apply` to Azure |
+
+---
+
+
+---
 # ForeXchange — 全量详细设计文档
 
 > **提案编号**: Proposal 3  

@@ -1,3 +1,5 @@
+/** Authentication page layout with centered card, appearance toggle, and footer. */
+
 import { Appearance } from "@/components/Common/Appearance"
 import { Footer } from "./Footer"
 

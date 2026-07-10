@@ -1,3 +1,5 @@
+/** Theme provider context for dark/light mode with localStorage persistence. */
+
 import {
   createContext,
   useCallback,

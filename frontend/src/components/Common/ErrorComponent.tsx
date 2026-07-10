@@ -1,3 +1,5 @@
+/** Error boundary UI with retry and navigation options for route errors. */
+
 import { Link } from "@tanstack/react-router"
 import { Button } from "@/components/ui/button"
 import { AlertTriangle, RefreshCw } from "lucide-react"

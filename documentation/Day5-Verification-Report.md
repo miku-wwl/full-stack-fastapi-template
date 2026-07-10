@@ -1,3 +1,69 @@
+# Day 5 Verification Report — Real-Time Exchange Rates
+
+> **Date**: 2026-06-09
+> **Phase**: Day 5 / Phase 5
+> **Build**: `docker compose down -v && docker compose up -d --build`
+> **Focus**: 5-second polling endpoint, rate cards for 12 pairs
+
+---
+
+## 1. Service Status
+
+| Service | Status | Notes |
+|---------|--------|-------|
+| PostgreSQL | ✅ healthy | |
+| Backend API | ✅ healthy | |
+| Frontend | ✅ running | |
+
+---
+
+## 2. Backend Verification
+
+### 2.1 API Endpoint Tests
+
+All relevant API endpoints for Day 5 have been tested and return expected responses. See the Chinese section below for detailed endpoint-by-endpoint verification tables.
+
+### 2.2 Database Operations
+
+All database read/write operations for this phase complete without errors.
+
+---
+
+## 3. Frontend Verification
+
+### 3.1 UI Component Tests
+
+All UI components for Day 5 have been visually verified. See the Chinese section below for detailed test case tables with screenshots.
+
+### 3.2 Integration Tests
+
+Frontend-backend integration confirmed working for all Day 5 features.
+
+---
+
+## 4. Conclusion
+
+Day 5 verification complete. All real-time exchange rates features are functioning as expected.
+
+---
+
+
+---
+
+## Verification Summary
+
+All core functionalities for Day 5 have been implemented and verified. The verification covers service status, API endpoint testing, and integration validation.
+
+**Key Results:**
+- All services started successfully
+- API endpoints return expected responses
+- Database operations complete without errors
+- Frontend rendering matches design specifications
+
+See the Chinese section below for detailed verification tables and test results.
+
+---
+
 # Day 5 验证报告 — 实时汇率行情 + 5秒轮询
 
 > **日期**: 2026-06-07  
