@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import Chart from "react-apexcharts";
 import type { ApexOptions } from "apexcharts";
 import { OpenAPI } from "../../client";
+import type { ApiRequestOptions } from "../../client/core/ApiRequestOptions";
 import { useState } from "react";
 
 const PAIR_OPTIONS = [
@@ -40,7 +41,7 @@ export default function RateChart({
     queryKey: ["rates", "history", pair, range, interval],
     queryFn: async () => {
       const base = OpenAPI.BASE ?? "";
-      const token = typeof OpenAPI.TOKEN === "function" ? await OpenAPI.TOKEN({} as unknown) : (OpenAPI.TOKEN ?? "");
+      const token = typeof OpenAPI.TOKEN === "function" ? await OpenAPI.TOKEN({} as ApiRequestOptions<string>) : (OpenAPI.TOKEN ?? "");
       const res = await fetch(
         `${base}/api/v1/rates/history/${pair.replace("/", "-")}?range=${range}&interval=${interval}`,
         { headers: { Authorization: `Bearer ${token}` } }

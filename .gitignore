@@ -1,4 +1,5 @@
 .idea/
+tmp/
 .DS_Store
 .vscode/*
 !.vscode/extensions.json
