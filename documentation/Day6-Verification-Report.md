@@ -203,7 +203,7 @@ curl "http://localhost:8000/api/v1/rates/history/USD-EUR?range=24h&interval=5m" 
 
 ## 四、系统验证（浏览器测试）
 
-> 测试账号：`admin@example.com` / `changethis`（Auditor 角色）
+> 测试账号：`locally generated test credentials (not included)（Auditor 角色）
 
 ---
 

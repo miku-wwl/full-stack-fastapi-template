@@ -3,11 +3,11 @@
 > **Date**: 2026-06-08
 > **Project**: ForeXchange — Real-Time Remittance & Compliance Monitoring Platform
 > **Cloud Platform**: Microsoft Azure
-> **Subscription**: Azure for Students (Subscription ID: `7c73b89d-485e-43a9-8d66-b12b766d567f`)
+> **Subscription**: Azure for Students (Subscription ID: `00000000-0000-0000-0000-000000000000`)
 > **Region**: `australiaeast`
 > **Quota**: Total Regional vCPUs = 6 (student subscription hard limit)
 > **IaC**: Terraform one-click deployment
-> **Image Registry**: Docker Hub (`minglai/forexchange-backend`)
+> **Image Registry**: Docker Hub (`<private-registry>/forexchange-backend`)
 
 ---
 
@@ -18,7 +18,7 @@
 | Item | Value |
 |------|-------|
 | Subscription Name | Azure for Students |
-| Subscription ID | `7c73b89d-485e-43a9-8d66-b12b766d567f` |
+| Subscription ID | `00000000-0000-0000-0000-000000000000` |
 | Tenant ID | `96e2f052-4512-4d4c-b2c0-cd0d36ad6437` |
 | User | `569144003@qq.com` |
 | Region | `australiaeast` ✅ |
@@ -228,11 +228,11 @@ Refer to `tf/` directory for the complete Terraform configuration and the Chines
 > **日期**: 2026-06-08  
 > **项目**: ForeXchange — 高可用实时换汇与合规审计平台  
 > **云平台**: Microsoft Azure  
-> **订阅**: Azure for Students (Subscription ID: `7c73b89d-485e-43a9-8d66-b12b766d567f`)  
+> **订阅**: Azure for Students (Subscription ID: `00000000-0000-0000-0000-000000000000`)  
 > **区域**: `australiaeast` 🇦🇺（亚太最低延迟）  
 > **配额**: **Total Regional vCPUs = 6**（学生订阅硬限制）  
 > **IaC**: Terraform 一键部署  
-> **镜像仓库**: Docker Hub (`minglai/forexchange-backend`)  
+> **镜像仓库**: Docker Hub (`<private-registry>/forexchange-backend`)  
 
 ---
 
@@ -243,7 +243,7 @@ Refer to `tf/` directory for the complete Terraform configuration and the Chines
 | 项目 | 值 |
 |------|-----|
 | 订阅名称 | Azure for Students |
-| 订阅 ID | `7c73b89d-485e-43a9-8d66-b12b766d567f` |
+| 订阅 ID | `00000000-0000-0000-0000-000000000000` |
 | Tenant ID | `96e2f052-4512-4d4c-b2c0-cd0d36ad6437` |
 | 用户 | `569144003@qq.com` |
 | 区域 | `australiaeast` ✅ |
@@ -627,7 +627,7 @@ tf/
 # main.tf
 provider "azurerm" {
   features {}
-  subscription_id = var.subscription_id  # 7c73b89d-...
+  subscription_id = var.subscription_id  # 00000000-0000-0000-0000-000000000000
 }
 
 resource "azurerm_resource_group" "rg" {
@@ -645,8 +645,8 @@ resource "azurerm_resource_group" "rg" {
 # === 0. 前置 === (已完成 az login → 569144003@qq.com)
 
 # === 1. 后端镜像（GitHub Actions 自动构建，或手动）===
-docker build -t minglai/forexchange-backend:latest -f backend/Dockerfile .
-docker push minglai/forexchange-backend:latest
+docker build -t <private-registry>/forexchange-backend:latest -f backend/Dockerfile .
+docker push <private-registry>/forexchange-backend:latest
 
 # === 2. 一键部署全栈 ===
 cd tf
@@ -675,7 +675,7 @@ cd tf && terraform destroy -auto-approve
 
 | 镜像 | Docker Hub Path | 用途 |
 |------|----------------|------|
-| `forexchange-backend` | `minglai/forexchange-backend:latest` | FastAPI 后端（GitHub Actions 自动构建推送） |
+| `forexchange-backend` | `<private-registry>/forexchange-backend:latest` | FastAPI 后端（GitHub Actions 自动构建推送） |
 | （前端不需要镜像） | — | 静态站托管于 Blob，本地 `npm run build` + `az storage blob upload-batch` 上传 |
 
 ### 7.2 Dockerfile（后端 — 保留现有）
@@ -691,7 +691,7 @@ CMD ["fastapi", "run", "--workers", "4", "app/main.py"]
 
 ```
 GitHub Push (main / cloudarchitf, backend/** 变更) → GitHub Actions
-  ├─ docker/build-push-action → Docker Hub (minglai/forexchange-backend:latest)
+  ├─ docker/build-push-action → Docker Hub (<private-registry>/forexchange-backend:latest)
   └─ 前端: 手动 npm run build → az storage blob upload-batch
 ```
 

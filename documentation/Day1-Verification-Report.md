@@ -41,7 +41,7 @@ curl http://localhost:8000/api/v1/utils/health-check/
 ### 2.2 Login (admin → auditor)
 
 ```bash
-curl -X POST http://localhost:8000/api/v1/login/access-token   -H "Content-Type: application/x-www-form-urlencoded"   -d "username=admin@example.com&password=changethis"
+curl -X POST http://localhost:8000/api/v1/login/access-token   -H "Content-Type: application/x-www-form-urlencoded"   -d "username=locally-generated-test-user&password=[REDACTED_TEST_PASSWORD]"
 ```
 
 | Expected | Actual | Result |
@@ -124,7 +124,7 @@ Visit each route in browser and check tab title:
 
 ## 4. System Verification (Manual Browser Testing)
 
-> Test account: `admin@example.com` / `changethis`
+> Test account: `locally generated test credentials (not included)
 
 ### TC-01: Unauthenticated access to protected pages → redirect to login
 
@@ -161,8 +161,8 @@ Screenshot: `______`  Result: ☐ Pass ☐ Fail  Notes: `______`
 
 | # | Action | Expected Result |
 |---|--------|----------------|
-| 1 | Enter Email: `admin@example.com` | Input shows content |
-| 2 | Enter Password: `changethis` | Password masked |
+| 1 | Enter Email: `locally-generated-test-user` | Input shows content |
+| 2 | Enter Password: `[REDACTED_TEST_PASSWORD]` | Password masked |
 | 3 | Click [Login] button | Button shows loading state |
 | 4 | Wait for response | Redirect to `/` (Dashboard) |
 | 5 | Check localStorage | JWT token stored |
@@ -240,7 +240,7 @@ curl http://localhost:8000/api/v1/utils/health-check/
 ```bash
 curl -X POST http://localhost:8000/api/v1/login/access-token \
   -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "username=admin@example.com&password=changethis"
+  -d "username=locally-generated-test-user&password=[REDACTED_TEST_PASSWORD]"
 ```
 
 | 期望 | 实际 | 结果 |
@@ -326,7 +326,7 @@ curl -o /dev/null -w "%{http_code}" http://localhost:5173/
 ## 四、系统验证（浏览器手动测试）
 
 > 以下用例需在浏览器中手动操作并截图。  
-> 测试账号：`admin@example.com` / `changethis`
+> 测试账号：`locally generated test credentials (not included)
 
 ---
 
@@ -369,8 +369,8 @@ curl -o /dev/null -w "%{http_code}" http://localhost:5173/
 
 | # | 操作 | 期望结果 |
 |---|------|----------|
-| 1 | 在登录页输入 Email: `admin@example.com` | 输入框显示内容 |
-| 2 | 输入 Password: `changethis` | 输入框显示密码遮盖 |
+| 1 | 在登录页输入 Email: `locally-generated-test-user` | 输入框显示内容 |
+| 2 | 输入 Password: `[REDACTED_TEST_PASSWORD]` | 输入框显示密码遮盖 |
 | 3 | 点击 [Login] 按钮 | 按钮显示 loading 状态 |
 | 4 | 等待登录完成 | 页面跳转到 `/`（仪表盘） |
 | 5 | 观察浏览器标签标题 | 显示 `Dashboard - ForeXchange` |
@@ -494,7 +494,7 @@ curl -o /dev/null -w "%{http_code}" http://localhost:5173/
 
 | 问题 | 影响 | 处理计划 |
 |------|------|----------|
-| `SECRET_KEY` 使用默认值 `changethis` | 仅限本地开发 | Day 10 上线前替换 |
+| `SECRET_KEY` 使用默认值 `[REDACTED_TEST_PASSWORD]` | 仅限本地开发 | Day 10 上线前替换 |
 | 前端 API 客户端为静态 `openapi.json` | 后端接口变更后需重新生成 | Phase 2 运行 `npm run generate-client` |
 
 ---

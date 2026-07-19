@@ -6,7 +6,7 @@
 
 # ── Azure ────────────────────────────────────────────────────
 
-subscription_id = "7c73b89d-485e-43a9-8d66-b12b766d567f"
+subscription_id = "00000000-0000-0000-0000-000000000000"
 location        = "australiaeast"
 environment     = "prod"
 

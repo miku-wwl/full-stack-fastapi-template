@@ -32,10 +32,8 @@ To require passing Pylint checks before merging, go to **Settings > Branches > B
 
 ## Test Accounts
 
-| Role | Email | Password |
-|------|-------|----------|
-| Auditor (Admin) | admin@example.com | changethis |
-| Customer (self-register) | — | — |
+Use assessor-provided or locally generated test credentials. No default
+credentials are distributed in this repository.
 
 ## Features
 
@@ -73,6 +71,10 @@ To require passing Pylint checks before merging, go to **Settings > Branches > B
 ```
 
 ## Documentation
+
+## Feasibility Summary
+
+ForeXchange is technically feasible as a classroom prototype because it uses a containerised FastAPI/React/PostgreSQL stack, a reference-rate API with a local fallback, and Terraform-managed deployment configuration. Operational feasibility is supported by the two-person role split, documented API boundary, automated backend tests and verification records. Market and legal feasibility remain exploratory: the prototype demonstrates a remittance workflow and classroom compliance screening, but it is not a regulated financial service and would require production legal review, privacy governance, security assurance and stakeholder validation.
 
 | Document | Description |
 |----------|-------------|
@@ -133,11 +135,8 @@ This project embeds the **four Tikanga Māori principles** throughout its archit
 
 **Māori Data Sovereignty** is implemented across the data lifecycle — collection (minimal data, explicit consent), storage (encryption, hashing), access (role-based JWT), deletion (full account removal), and audit (structured JSON compliance logs). These practices protect all users and align with New Zealand funding body requirements (MBIE, HRC).
 
-We welcome feedback from Māori communities and stakeholders. If you have
-suggestions, questions, or would like to discuss how ForeXchange can better
-serve diverse cultural needs, please
-[open an issue](https://github.com/minglai/forexchange/issues) or contact the
-maintainer directly.
+Future production development would require formal consultation with Māori
+stakeholders and data-governance specialists. This classroom prototype does
+not claim to represent formal community validation.
 
 See [`documentation/Māori Principles and Data Sovereignty.md`](documentation/M%C4%81ori%20Principles%20and%20Data%20Sovereignty.md) for the full one-page report.
-

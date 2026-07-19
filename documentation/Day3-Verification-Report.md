@@ -57,7 +57,7 @@ curl http://localhost:8000/api/v1/rates/live
 
 | User Role | Badge Text | Result |
 |-----------|------------|--------|
-| admin@example.com | Auditor | ☐ |
+| locally-generated-test-user | Auditor | ☐ |
 | customer@example.com | Customer | ☐ |
 
 ### 3.3 Page Titles
@@ -248,7 +248,7 @@ curl http://localhost:8000/api/v1/openapi.json
 
 ## 四、系统验证（浏览器手动测试）
 
-> 测试账号：`admin@example.com` / `changethis`（Auditor 角色）
+> 测试账号：`locally generated test credentials (not included)（Auditor 角色）
 
 ---
 
@@ -307,7 +307,7 @@ curl http://localhost:8000/api/v1/openapi.json
 |---|------|----------|
 | 1 | admin 登录，观察右上角 | 显示 `admin`（邮箱前缀） |
 | 2 | 点击用户头像 | 下拉菜单展开 |
-| 3 | 下拉菜单顶部 | 显示 `admin@example.com` |
+| 3 | 下拉菜单顶部 | 显示 `locally-generated-test-user` |
 | 4 | 角色信息 | 显示角色（auditor 或 customer） |
 
 截图：`______`

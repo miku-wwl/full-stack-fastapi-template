@@ -277,7 +277,7 @@ curl http://localhost:8000/api/v1/openapi.json
 
 ## 四、系统验证（浏览器手动测试）
 
-> 测试账号：`admin@example.com` / `changethis`（Auditor 角色）  
+> 测试账号：`locally generated test credentials (not included)（Auditor 角色）  
 > **此部分由用户亲自在网页上验证**
 
 ---

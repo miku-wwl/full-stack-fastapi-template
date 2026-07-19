@@ -238,7 +238,7 @@ curl http://localhost:8000/api/v1/compliance/overview \
 
 ### 4.1 端到端流程
 
-1. 登录 `admin@example.com / changethis`（auditor 角色）
+1. 登录 `locally-generated-test-user / [REDACTED_TEST_PASSWORD]`（auditor 角色）
 2. 进入 `/remittance` 创建一笔大额转账（$10,000+）
 3. 等待后台自动处理（pending → processing → flagged，约 10s）
 4. 切换到 `/compliance` 页面

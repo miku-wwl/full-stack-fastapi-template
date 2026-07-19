@@ -25,7 +25,7 @@
 Verify that the login endpoint returns the user's role field:
 
 ```bash
-curl -X POST http://localhost:8000/api/v1/login/access-token   -H "Content-Type: application/x-www-form-urlencoded"   -d "username=admin@example.com&password=changethis"
+curl -X POST http://localhost:8000/api/v1/login/access-token   -H "Content-Type: application/x-www-form-urlencoded"   -d "username=locally-generated-test-user&password=[REDACTED_TEST_PASSWORD]"
 ```
 
 | Expected | Actual | Result |
@@ -47,7 +47,7 @@ curl http://localhost:8000/api/v1/users/me/dashboard   -H "Authorization: Bearer
 ### 2.3 Password Recovery Flow
 
 ```bash
-curl -X POST http://localhost:8000/api/v1/password-recovery/admin@example.com
+curl -X POST http://localhost:8000/api/v1/password-recovery/locally-generated-test-user
 ```
 
 | Expected | Actual | Result |
@@ -156,7 +156,7 @@ curl -X POST http://localhost:8000/api/v1/users/signup \
 ```bash
 curl -X POST http://localhost:8000/api/v1/login/access-token \
   -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "username=admin@example.com&password=changethis"
+  -d "username=locally-generated-test-user&password=[REDACTED_TEST_PASSWORD]"
 ```
 
 | 期望 | 实际 | 结果 |
@@ -279,7 +279,7 @@ const handleApiError = (error: Error) => {
 
 ## 四、系统验证（浏览器手动测试）
 
-> 测试账号：`admin@example.com` / `changethis`
+> 测试账号：`locally generated test credentials (not included)
 
 ---
 
@@ -301,8 +301,8 @@ const handleApiError = (error: Error) => {
 
 | # | 操作 | 期望结果 |
 |---|------|----------|
-| 1 | Email 输入 `admin@example.com` | 显示内容 |
-| 2 | Password 输入 `changethis` | 密码遮盖 |
+| 1 | Email 输入 `locally-generated-test-user` | 显示内容 |
+| 2 | Password 输入 `[REDACTED_TEST_PASSWORD]` | 密码遮盖 |
 | 3 | 点击 [Log In] | 按钮显示 loading |
 | 4 | 等待 | 跳转到 `/`（仪表盘） |
 | 5 | DevTools → Application → Local Storage | 存在 `access_token` 和 `user_role: auditor` |
@@ -320,7 +320,7 @@ const handleApiError = (error: Error) => {
 |---|------|----------|
 | 1 | 登录状态下按 F5 | 页面重新加载 |
 | 2 | 页面状态 | 仍在仪表盘，未跳回登录 |
-| 3 | 右上角用户信息 | 显示邮箱（admin@example.com） |
+| 3 | 右上角用户信息 | 显示邮箱（locally-generated-test-user） |
 
 截图：`______`　　结果：☐ 通过 ☐ 不通过　　备注：`______`
 
@@ -332,7 +332,7 @@ const handleApiError = (error: Error) => {
 |---|------|----------|
 | 1 | 登录状态下，观察右上角 | 显示 `admin`（邮箱前缀）或全名 |
 | 2 | 点击用户头像 | 展开下拉菜单 |
-| 3 | 下拉菜单顶部 | 显示 `admin@example.com` |
+| 3 | 下拉菜单顶部 | 显示 `locally-generated-test-user` |
 | 4 | Edit profile 项 | 灰色，点击无反应 |
 | 5 | Account settings 项 | 灰色，点击无反应 |
 | 6 | Support 项 | 灰色，点击无反应 |
@@ -460,7 +460,7 @@ const handleApiError = (error: Error) => {
 | 问题 | 影响 | 处理计划 |
 |------|------|----------|
 | 注册接口路径 `/users/signup` 而非 `/users/register` | 前端已适配，不影响功能 | 后续统一命名 |
-| `SECRET_KEY` 使用默认值 `changethis` | 仅限本地开发 | Day 10 上线前替换 |
+| `SECRET_KEY` 使用默认值 `[REDACTED_TEST_PASSWORD]` | 仅限本地开发 | Day 10 上线前替换 |
 
 ---
 
