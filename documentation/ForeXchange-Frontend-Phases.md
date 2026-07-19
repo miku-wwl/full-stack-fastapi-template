@@ -241,21 +241,21 @@ curl -X POST http://localhost:8000/api/v1/users/register \
 # 2. 登录获取 token
 curl -X POST http://localhost:8000/api/v1/login/access-token \
   -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "username=admin@example.com&password=changethis"
+  -d "username=locally-generated-test-user&password=[REDACTED_TEST_PASSWORD]"
 # → {"access_token":"eyJ...","token_type":"bearer"}
 
 # 3. 获取当前用户（含 role）
 export TOKEN="eyJ..."
 curl http://localhost:8000/api/v1/users/me \
   -H "Authorization: Bearer $TOKEN"
-# → {"email":"admin@example.com","role":"auditor",...}
+# → {"email":"locally-generated-test-user","role":"auditor",...}
 ```
 
 ### 前端验证
 
 ```
 1. 浏览器打开 http://localhost:5173 → 看到登录页（Dashboard AuthLayout 样式）
-2. 输入 admin@example.com / changethis → 登录成功 → 跳转仪表盘
+2. 输入 locally-generated-test-user / [REDACTED_TEST_PASSWORD] → 登录成功 → 跳转仪表盘
 3. 刷新页面 → 仍保持登录状态（token 在 localStorage）
 4. 打开浏览器 DevTools → Application → Local Storage → 存在 access_token
 5. 点击右上角用户菜单 → [Log Out] → 清除 token → 跳回登录页

@@ -56,7 +56,7 @@ resource "azurerm_container_app" "backend" {
 
     container {
       name    = "backend"
-      image   = "docker.io/minglai/forexchange-backend:latest"
+      image   = "docker.io/<private-registry>/forexchange-backend:latest"
       cpu     = var.aca_backend_cpu    # 1.0
       memory  = var.aca_backend_memory # "2Gi"
 

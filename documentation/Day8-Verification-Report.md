@@ -161,7 +161,7 @@ See the Chinese section below for detailed verification tables and test results.
 
 ## 四、系统验证（浏览器测试）
 
-> 测试账号：`admin@example.com` / `changethis`
+> 测试账号：`locally generated test credentials (not included)
 
 ---
 

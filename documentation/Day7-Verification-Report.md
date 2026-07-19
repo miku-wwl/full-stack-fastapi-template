@@ -193,7 +193,7 @@ curl -X POST http://localhost:8000/api/v1/transactions \
 
 ## 四、系统验证（浏览器测试）
 
-> 测试账号：`admin@example.com` / `changethis`
+> 测试账号：`locally generated test credentials (not included)
 
 ---
 

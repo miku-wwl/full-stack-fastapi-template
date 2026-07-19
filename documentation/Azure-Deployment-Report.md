@@ -32,7 +32,7 @@ See the Chinese section below for detailed deployment logs and troubleshooting s
 
 > **日期**: 2026-06-08  
 > **区域**: `australiaeast` 🇦🇺  
-> **订阅**: Azure for Students (`7c73b89d...`)  
+> **订阅**: Azure for Students (`00000000-0000-0000-0000-000000000000`)  
 > **工具**: Terraform v1.x + azurerm provider v4.76.0  
 > **状态**: ✅ **生产就绪** — 全栈部署成功，前后端均在线  
 
@@ -156,8 +156,8 @@ ACA Backend (2 副本): 2 vCPUs ← 33% usage
 | # | 任务 | 状态 |
 |---|------|------|
 | 1 | `docker login` | ✅ 用户已配置 `minglai` |
-| 2 | `docker build -t minglai/forexchange-backend:latest -f backend/Dockerfile .` | ✅ |
-| 3 | `docker push minglai/forexchange-backend:latest` | ✅ |
+| 2 | `docker build -t <private-registry>/forexchange-backend:latest -f backend/Dockerfile .` | ✅ |
+| 3 | `docker push <private-registry>/forexchange-backend:latest` | ✅ |
 | 4 | `bun run build` 构建前端 | ✅ |
 | 5 | `az storage blob upload-batch` 上传 `dist/` 到 Blob `$web` | ✅ |
 | 6 | `terraform apply` 用真实镜像部署 | ✅ |
